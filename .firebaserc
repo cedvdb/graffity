@@ -1,0 +1,11 @@
+{
+  "targets": {
+    "coroshare": {
+      "hosting": {
+        "graffity": [
+          "coroshare"
+        ]
+      }
+    }
+  }
+}
