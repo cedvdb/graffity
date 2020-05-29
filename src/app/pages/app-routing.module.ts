@@ -1,15 +1,14 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { SignInPageComponent } from './sign-in-page/sign-in-page.component';
-import { WalletPageComponent } from './wallet-page/wallet-page.component';
-import { ChatPageComponent } from './chat-page/chat-page.component';
+import { SignInPageComponent } from './auth-page/sign-in-page/sign-in-page.component';
+import { WalletPageComponent } from './main-page/wallet-page/wallet-page.component';
+import { ChatPageComponent } from './main-page/chat-page/chat-page.component';
 import { AngularFireAuthGuard, redirectLoggedInTo, redirectUnauthorizedTo } from '@angular/fire/auth-guard';
-import { MainPageComponent } from '../main-page/main-page.component';
-import { AuthPageComponent } from '../auth-page/auth-page.component';
+import { MainPageComponent } from './main-page/main-page.component';
+import { AuthPageComponent } from './auth-page/auth-page.component';
+import { SharedModule } from '../shared/shared.module';
+import { FirebaseUIModule } from 'firebaseui-angular';
 
-
-const redirectUnauthorizedToLogin = () => redirectUnauthorizedTo(['auth', 'login']);
-const redirectLoggedInToItems = () => redirectLoggedInTo(['chat']);
 
 const routes: Routes = [
   {
@@ -24,7 +23,7 @@ const routes: Routes = [
     path: '',
     component: MainPageComponent,
     canActivate: [AngularFireAuthGuard],
-    data: { authGuardPipe: () => redirectUnauthorizedTo(['auth', 'login']) },
+    data: { authGuardPipe: () => redirectUnauthorizedTo(['auth', 'sign-in']) },
     children: [
       { path: 'wallet', component: WalletPageComponent },
       { path: 'chat', component: ChatPageComponent },
@@ -41,7 +40,7 @@ const routes: Routes = [
     WalletPageComponent,
     ChatPageComponent
   ],
-  imports: [RouterModule.forRoot(routes)],
+  imports: [RouterModule.forRoot(routes), SharedModule, FirebaseUIModule],
   exports: [RouterModule]
 })
 export class AppRoutingModule { }
