@@ -5,6 +5,8 @@ export const firebaseUiAuthConfig: firebaseui.auth.Config = {
   signInOptions: [
     firebase.auth.GoogleAuthProvider.PROVIDER_ID,
   ],
+  signInSuccessUrl: './wallet',
+
   // tosUrl: '<your-tos-link>',
   // privacyPolicyUrl: '<your-privacyPolicyUrl-link>',
   // credentialHelper: firebaseui.auth.CredentialHelper.ACCOUNT_CHOOSER_COM

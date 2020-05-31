@@ -1,5 +1,8 @@
 import { Component, HostListener, OnInit } from '@angular/core';
 import { faBars, faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
+import { AngularFireAuth } from '@angular/fire/auth';
+import { Router } from '@angular/router';
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -13,6 +16,11 @@ export class AppComponent implements OnInit {
   barsIcon = faBars;
   signOutIcon = faSignOutAlt;
   isNavOpened = false;
+
+  constructor(
+    private auth: AngularFireAuth,
+    private router: Router
+  ) {}
 
   ngOnInit() {
     this.onResize();
@@ -33,5 +41,10 @@ export class AppComponent implements OnInit {
   onResize() {
     (document.querySelector(':root') as any).style
     .setProperty('--vh', window.innerHeight + 'px');
+  }
+
+  signOut() {
+    this.auth.signOut();
+    this.router.navigate(['sign-in']);
   }
 }

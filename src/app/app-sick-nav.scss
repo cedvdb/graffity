@@ -22,7 +22,7 @@
   main {
     flex-grow: 1;
     transition: transform 0.3s cubic-bezier(.25,.8,.25,1), width 0.3s cubic-bezier(.25,.8,.25,1);  
-    border-radius: 0.4rem;
+    padding: var(--spacing-s);
   }
 
   &.nav-opened {
@@ -32,6 +32,7 @@
     }
     main {
       transform: scale(0.9) translateX(20%);
+      border-radius: 0.4rem;
     }
   }
 
