@@ -8,6 +8,7 @@ import { environment } from '../environments/environment';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './pages';
 import { firebaseUiAuthConfig } from './firebase-ui-config';
+import { SharedModule } from './components/shared.module';
 
 
 
@@ -23,7 +24,8 @@ import { firebaseUiAuthConfig } from './firebase-ui-config';
     ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
     AngularFireModule.initializeApp(environment.firebase),
     AngularFireAuthModule,
-    FirebaseUIModule.forRoot(firebaseUiAuthConfig)
+    FirebaseUIModule.forRoot(firebaseUiAuthConfig),
+    SharedModule
   ],
   providers: [],
   bootstrap: [AppComponent]

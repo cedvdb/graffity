@@ -1,4 +1,19 @@
 
+<nav>
+  <div>
+    <div class="header">Logo</div>
+    <a routerLink="./chat" routerLinkActive="selected">chat</a>
+    <a routerLink="./wallet" routerLinkActive="selected">wallet</a>
+  </div>
+  <div class="spacer"></div>
+  <div>
+    <fa-icon [icon]="signOutIcon"></fa-icon> 
+    SignOut
+  </div>
+</nav>
 
-
-<router-outlet></router-outlet>
+<main class="z-2">
+  <fa-icon [icon]="barsIcon" (click)="openNav($event)"></fa-icon>
+  <router-outlet></router-outlet>
+</main>
+  
