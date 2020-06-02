@@ -25,7 +25,7 @@ import { SharedModule } from './components/shared.module';
     AngularFireModule.initializeApp(environment.firebase),
     AngularFireAuthModule,
     FirebaseUIModule.forRoot(firebaseUiAuthConfig),
-    SharedModule
+    SharedModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

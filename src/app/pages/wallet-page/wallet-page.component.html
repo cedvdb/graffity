@@ -1,1 +1,5 @@
 {{ walletSrv.walletStatus$ | async | json }}
+
+<ng-container *ngIf="(walletSrv.walletStatus$ | async) === 'success'">
+  <qrcode [qrdata]="(walletSrv.wallet$ | async).accounts[0].address" [width]="256"></qrcode>
+</ng-container>

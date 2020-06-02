@@ -2,14 +2,16 @@ import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { wallet } from 'nanocurrency-web';
+import { Wallet } from 'nanocurrency-web/dist/lib/address-importer';
 import { BehaviorSubject, ReplaySubject } from 'rxjs';
 import { filter, switchMap } from 'rxjs/operators';
 import { Col } from 'shared/collections.enum';
 import { encrypt, decrypt } from 'crypto-js/aes';
+import { enc } from 'crypto-js';
 
 @Injectable({ providedIn: 'root' })
 export class WalletService {
-  wallet$ = new ReplaySubject(1);
+  wallet$ = new ReplaySubject<Wallet>(1);
   walletStatus$: BehaviorSubject<'pending' | 'success' | 'lost'> = new BehaviorSubject('pending');
 
   constructor(
@@ -39,19 +41,22 @@ export class WalletService {
   }
 
   private createIfNotExist(addressDoc: any, uid: string) {
+    const key = `nano-${uid}`;
     if (!addressDoc) {
       const wlt = wallet.generate();
       const address = wlt.accounts[0].address;
-      const encryptedWallet = encrypt(JSON.stringify(wlt), uid);
-      localStorage.setItem(`nano-${uid}`, encryptedWallet);
+      const encryptedWallet = encrypt(JSON.stringify(wlt), uid).toString();
+      localStorage.setItem(key, encryptedWallet);
       return this.firestore.collection(Col.NANO_ADDRESSES).doc(uid)
       .set({ addresses: [address] })
       .then(_ => this.wallet$.next(wlt))
       .then(_ => this.walletStatus$.next('success'));
     } else {
-      const encryptedWallet = localStorage.getItem('nano-wallet');
+      const encryptedWallet = localStorage.getItem(key);
       if (encryptedWallet) {
-        const decryptedWallet = JSON.parse(decrypt(encryptedWallet, uid));
+        const bytes = decrypt(encryptedWallet, uid);
+        const decryptedWallet = bytes.toString(enc.Utf8);
+        // TODO check if address is present in wallet
         this.wallet$.next(JSON.parse(decryptedWallet));
         this.walletStatus$.next('success');
       } else {
