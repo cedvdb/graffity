@@ -13,6 +13,9 @@ export const environment = {
     messagingSenderId: '1052551251897',
     appId: '1:1052551251897:web:4276a6c01d25db01a25868',
     measurementId: 'G-3LX40WGTH3'
+  },
+  nanoApi: {
+    url: 'https://mynano.ninja/api/node'
   }
 };
 

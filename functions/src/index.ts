@@ -1,6 +1,6 @@
 import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
-import { Col } from '../../shared/collections.enum';
+import { Col } from '../../shared/collections';
 import { v4 as uuid } from 'uuid';
 
 admin.initializeApp();

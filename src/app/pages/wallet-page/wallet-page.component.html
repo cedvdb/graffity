@@ -1,5 +1,15 @@
 {{ walletSrv.walletStatus$ | async | json }}
 
+{{ walletSrv.wallet$ | async | json }}
+
 <ng-container *ngIf="(walletSrv.walletStatus$ | async) === 'success'">
+  <h3>Seed</h3>
   <qrcode [qrdata]="(walletSrv.wallet$ | async).accounts[0].address" [width]="256"></qrcode>
+  <h3>Mnemonic</h3>
+  <qrcode [qrdata]="(walletSrv.wallet$ | async).mnemonic" [width]="256"></qrcode>
+  <h3>Address</h3>
+  <qrcode [qrdata]="(walletSrv.wallet$ | async).accounts[0].address" [width]="256"></qrcode>
+
 </ng-container>
+
+

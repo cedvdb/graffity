@@ -2,8 +2,8 @@ import { Component, HostListener, OnInit } from '@angular/core';
 import { faBars, faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { Router } from '@angular/router';
-import { Col } from 'shared/collections.enum';
-import { WalletService } from './services/wallet.service';
+import { Col } from 'shared/collections';
+import { NanoService } from './services/nano/nano.service';
 
 @Component({
   selector: 'app-root',
@@ -22,8 +22,9 @@ export class AppComponent implements OnInit {
   constructor(
     private auth: AngularFireAuth,
     private router: Router,
-    private walletSrv: WalletService
-  ) {}
+    private walletSrv: NanoService
+  ) {
+  }
 
   ngOnInit() {
     this.onResize();

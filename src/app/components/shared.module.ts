@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { SickNavModule } from './sick-nav/sick-nav.module';
+import { HttpClientModule } from '@angular/common/http';
 
 
 
@@ -10,6 +11,7 @@ import { SickNavModule } from './sick-nav/sick-nav.module';
   exports: [
     CommonModule,
     FontAwesomeModule,
+    HttpClientModule,
     SickNavModule
   ]
 })
