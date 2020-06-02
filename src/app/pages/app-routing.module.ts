@@ -37,7 +37,7 @@ const routes: Routes = [
     WalletPageComponent,
     ChatPageComponent
   ],
-  imports: [RouterModule.forRoot(routes, { enableTracing: true  }), SharedModule, FirebaseUIModule],
+  imports: [RouterModule.forRoot(routes, { enableTracing: false  }), SharedModule, FirebaseUIModule],
   exports: [RouterModule]
 })
 export class AppRoutingModule { }

@@ -2,6 +2,8 @@ import { Component, HostListener, OnInit } from '@angular/core';
 import { faBars, faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { Router } from '@angular/router';
+import { Col } from 'shared/collections.enum';
+import { WalletService } from './services/wallet.service';
 
 @Component({
   selector: 'app-root',
@@ -19,7 +21,8 @@ export class AppComponent implements OnInit {
 
   constructor(
     private auth: AngularFireAuth,
-    private router: Router
+    private router: Router,
+    private walletSrv: WalletService
   ) {}
 
   ngOnInit() {

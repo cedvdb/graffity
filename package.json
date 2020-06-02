@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
+    "start": "ng serve --ssl --ssl-key d:/certificates//localhost.key  --ssl-cert d:/certificates/localhost.crt",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
@@ -26,6 +26,7 @@
     "@fortawesome/free-brands-svg-icons": "^5.13.0",
     "@fortawesome/free-regular-svg-icons": "^5.13.0",
     "@fortawesome/free-solid-svg-icons": "^5.13.0",
+    "angularx-qrcode": "^2.1.1",
     "firebase": "^7.14.5",
     "firebaseui": "^4.5.0",
     "firebaseui-angular": "^5.0.0",
