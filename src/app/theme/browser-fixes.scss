@@ -10,4 +10,22 @@ a {
   display: block;
   text-decoration: none;
   color: inherit;
+  cursor: pointer;
+}
+
+/* width */
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: var(--color-primary);
+  border-radius:  0.2rem;
 }

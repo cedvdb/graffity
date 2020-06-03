@@ -2,18 +2,18 @@
 <nav>
   <div>
     <div class="header">Logo</div>
-    <a routerLink="./chat" routerLinkActive="selected">chat</a>
-    <a routerLink="./wallet" routerLinkActive="selected">wallet</a>
+    <a [routerLink]="['/', 'chat']" routerLinkActive="selected">chat</a>
+    <a [routerLink]="['/', 'wallet']" routerLinkActive="selected">wallet</a>
   </div>
   <div class="spacer"></div>
-  <div (click)="signOut()">
+  <a class="signout" (click)="signOut()">
     <fa-icon [icon]="signOutIcon"></fa-icon> 
-    SignOut
-  </div>
+    Sign Out
+  </a>
 </nav>
 
 <main class="z-2">
-  <fa-icon [icon]="barsIcon" (click)="openNav($event)"></fa-icon>
+  <fa-icon class="trigger" [icon]="barsIcon" (click)="openNav($event)"></fa-icon>
   <router-outlet></router-outlet>
 </main>
   

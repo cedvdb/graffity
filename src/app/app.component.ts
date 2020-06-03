@@ -3,6 +3,12 @@ import { Component, HostListener, OnInit } from '@angular/core';
 @Component({
   selector: 'app-root',
   template: '<router-outlet></router-outlet>',
+  styles: [`
+    :host {
+      display: block;
+      height: var(--vh);
+    }
+  `]
 })
 export class AppComponent implements OnInit {
 

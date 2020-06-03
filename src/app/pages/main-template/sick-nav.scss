@@ -1,44 +1,79 @@
 :host {
   display: flex;
+  align-items: center;
   width: 100%;
+
+  main {
+    flex-grow: 1;
+    padding: var(--spacing-s);
+    overflow-y: auto;
+  }
+
   nav {
-    transition: transform 0.3s cubic-bezier(.25,.8,.25,1), width 0.3s cubic-bezier(.25,.8,.25,1);    
-    overflow: hidden;
+    width: 15%;
+    height: 100%;
     color: var(--color-txt-nav);
+    flex-shrink: 0;
+    box-sizing: border-box;
+    overflow: hidden;
+    padding: var(--spacing-l) 0 0 var(--spacing-m);
     .header {
       margin-bottom: var(--spacing-l);
     }
-    > * {
-      margin-left: var(--spacing-s);
-    }
     a {
       margin-bottom: var(--spacing-m);
+    }
+    a:hover {
+      color: var(--color-accent);
     }
     a.selected {
       border-left: 2px solid var(--color-accent);
       padding-left: var(--spacing-s);
     }
   }
-  main {
-    flex-grow: 1;
-    transition: transform 0.3s cubic-bezier(.25,.8,.25,1), width 0.3s cubic-bezier(.25,.8,.25,1);  
-    padding: var(--spacing-s);
+
+  .trigger {
+    visibility: hidden;
   }
 
-  &.nav-opened {
+  @media screen and (min-width: 1280px) {
+    main {
+      margin-right: var(--spacing-m);
+      height: 90%;
+      border-radius: var(--spacing-border-radius);
+    }
+  }
+
+
+  @media screen and (max-width: 1279px) {
     nav {
-      width: 30%;
-      padding: var(--spacing-l) 0 var(--spacing-m) 0;
+      transition: transform 0.3s cubic-bezier(.25,.8,.25,1), width 0.3s cubic-bezier(.25,.8,.25,1), 
+      padding 0.3s cubic-bezier(.25,.8,.25,1), opacity 0.3s cubic-bezier(.25,.8,.25,1) ;
+      width: 0;  
     }
     main {
-      transform: scale(0.9) translateX(20%);
-      border-radius: 0.4rem;
+      transition: transform 0.3s cubic-bezier(.25,.8,.25,1), width 0.3s cubic-bezier(.25,.8,.25,1); 
+      height: 100%; 
     }
-  }
-
-  &.nav-closed {
-    nav {
-      width: 0;
+  
+    &.nav-opened {
+      nav {
+        width: 30%;
+      }
+      main {
+        transform: scale(0.9) translateX(20%);
+        border-radius: 0.4rem;
+      }
+    }
+  
+    &.nav-closed {
+      nav {
+        padding-left: 0;
+        opacity: 0;
+      }
+      .trigger {
+        visibility: visible;
+      }
     }
   }
 }
