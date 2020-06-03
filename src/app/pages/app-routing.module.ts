@@ -1,48 +1,20 @@
 import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
-import { SignInPageComponent } from './sign-in-page/sign-in-page.component';
-import { WalletPageComponent } from './wallet-page/wallet-page.component';
-import { ChatPageComponent } from './chat-page/chat-page.component';
-import { AngularFireAuthGuard, redirectLoggedInTo, redirectUnauthorizedTo } from '@angular/fire/auth-guard';
+import { RouterModule } from '@angular/router';
 import { SharedModule } from '../components/shared.module';
-import { FirebaseUIModule } from 'firebaseui-angular';
-import { QRCodeModule } from 'angularx-qrcode';
+import { routes } from './routes';
+import { MainTemplateModule } from './main-template/main-template.module';
+import { SignInPageModule } from './sign-in-page/sign-in-page.module';
+import { WalletPageModule } from './wallet-page/wallet-page.module';
 
 
-const routes: Routes = [
-
-      {
-        path: 'sign-in',
-        component: SignInPageComponent,
-        canActivate: [ AngularFireAuthGuard],
-        data: { authGuardPipe: () => redirectLoggedInTo(['chat']) },
-
-      },
-      {
-        path: 'wallet',
-        component: WalletPageComponent,
-        canActivate: [AngularFireAuthGuard],
-        data: { authGuardPipe: () => redirectUnauthorizedTo(['sign-in']) }
-      },
-      {
-        path: 'chat',
-        component: ChatPageComponent,
-        canActivate: [AngularFireAuthGuard],
-        data: { authGuardPipe: () => redirectUnauthorizedTo(['sign-in']) }
-      }
-];
 
 @NgModule({
-  declarations: [
-    SignInPageComponent,
-    WalletPageComponent,
-    ChatPageComponent
-  ],
   imports: [
+    MainTemplateModule,
+    SignInPageModule,
+    WalletPageModule,
     RouterModule.forRoot(routes, { enableTracing: false  }),
     SharedModule,
-    FirebaseUIModule,
-    QRCodeModule
   ],
   exports: [RouterModule]
 })

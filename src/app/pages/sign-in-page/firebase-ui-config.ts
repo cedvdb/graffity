@@ -1,4 +1,4 @@
-import { FirebaseUIModule, firebase, firebaseui } from 'firebaseui-angular';
+import { firebase } from 'firebaseui-angular';
 
 export const firebaseUiAuthConfig: firebaseui.auth.Config = {
   signInFlow: 'popup',

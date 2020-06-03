@@ -1,8 +1,8 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { SickNavModule } from './sick-nav/sick-nav.module';
 import { HttpClientModule } from '@angular/common/http';
+import { NgModule } from '@angular/core';
+import { RouterModule } from '@angular/router';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 
 
@@ -11,8 +11,8 @@ import { HttpClientModule } from '@angular/common/http';
   exports: [
     CommonModule,
     FontAwesomeModule,
+    RouterModule,
     HttpClientModule,
-    SickNavModule
   ]
 })
 export class SharedModule { }

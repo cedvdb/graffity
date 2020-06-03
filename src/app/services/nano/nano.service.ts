@@ -107,7 +107,6 @@ export class NanoService {
     ]).pipe(
       switchMap(([accountInfo, blockInfo]) => this.getSignedBlock(wlt, accountInfo, blockInfo, hash)),
       switchMap(signedBlock => this.nanoRpc.process('receive', signedBlock)),
-      tap(d => { debugger; }),
       switchMap(successResp => this.nanoRpc.getAccountInfo(address))
     );
   }
@@ -117,7 +116,6 @@ export class NanoService {
   private async getSignedBlock(wlt: Wallet, accountInfo: AccountInfo, info: BlockInfo, transactionHash: string) {
     const worker = new Worker('./nano.worker', { type: 'module' });
     const hashToCompute = accountInfo.frontier || wlt.accounts[0].publicKey;
-    debugger;
     const work: string = await new Promise(resolve => {
       worker.postMessage(hashToCompute);
       worker.onmessage = ev => {
