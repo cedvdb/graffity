@@ -13,8 +13,5 @@ export class WalletPageComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  receive() {
-
-  }
 
 }

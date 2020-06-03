@@ -5,7 +5,7 @@ export interface PendingResp {
 }
 
 
-export interface BlockInfoResp {
+export interface BlocksInfoResp {
   [key: string]: BlockInfo;
 }
 

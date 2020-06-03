@@ -1,17 +1,15 @@
 import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { wallet } from 'nanocurrency-web';
-import { Wallet } from 'nanocurrency-web/dist/lib/address-importer';
-import { BehaviorSubject, ReplaySubject, concat, of, Observable } from 'rxjs';
-import { filter, switchMap, map, tap, mergeMap, concatMap } from 'rxjs/operators';
-import { Col, NanoAddressesDoc } from 'shared/collections';
-import { encrypt, decrypt } from 'crypto-js/aes';
 import { enc } from 'crypto-js';
-import { block } from 'nanocurrency-web';
-import { HttpClient } from '@angular/common/http';
-import { environment } from 'src/environments/environment';
-import { PendingResp, BlockInfoResp, BlockInfo, AccountInfo } from './nano.interfaces';
+import { decrypt, encrypt } from 'crypto-js/aes';
+import { block, wallet } from 'nanocurrency-web';
+import { Wallet } from 'nanocurrency-web/dist/lib/address-importer';
+import { BehaviorSubject, combineLatest, ReplaySubject } from 'rxjs';
+import { concatAll, filter, first, map, switchMap, tap } from 'rxjs/operators';
+import { Col, NanoAddressesDoc } from 'shared/collections';
+import { NanoRpcService } from './nano-rpc.service';
+import { AccountInfo, BlockInfo } from './nano.interfaces';
 
 @Injectable({ providedIn: 'root' })
 export class NanoService {
@@ -20,13 +18,12 @@ export class NanoService {
   walletStatus$ = new BehaviorSubject<'pending' | 'success' | 'lost'> ('pending');
   private accountInfo$ = new ReplaySubject<AccountInfo>(1);
   balance$ = this.accountInfo$.asObservable().pipe(map(info => info.balance));
-
   //  TODO add token
 
   constructor(
     private auth: AngularFireAuth,
     private firestore: AngularFirestore,
-    private http: HttpClient
+    private nanoRpc: NanoRpcService
   ) {
     // on auth get wallet
     this.auth.user.pipe(
@@ -36,8 +33,12 @@ export class NanoService {
 
     // get account info when we have one
     this.wallet$.pipe(
-      // switchMap(wlt => this.getAccountInfo(wlt), wlt => wlt),
-      // switchMap()
+      switchMap(wlt => this.nanoRpc.getAccountInfo(this.getWalletAddr(wlt))),
+    ).subscribe(info => this.accountInfo$.next(info));
+    this.accountInfo$.pipe(
+      first(),
+      switchMap(_ => this.wallet$),
+      switchMap(wlt => this.fetchFunds(wlt))
     ).subscribe();
   }
 
@@ -54,33 +55,6 @@ export class NanoService {
       .doc<NanoAddressesDoc>(user.uid)
       .get()
       .pipe(switchMap((doc) => this.createIfNotExist(doc.data() as NanoAddressesDoc, user.uid)));
-  }
-
-  private getFunds(wlt: Wallet) {
-    const address = this.getWalletAddr(wlt);
-    const pendingBlocks$ = this.getAccountInfo(address).pipe(
-      // we actually don't care about the call above
-      switchMap(_ => this.http.post<PendingResp>(environment.nanoApi.url, { action: 'pending', account: address })),
-      map(pending => pending.blocks),
-      switchMap(hashes => this.http.post<BlockInfoResp>(environment.nanoApi.url,
-        { action: 'block_info', json_block: true, hashes })),
-    );
-
-    return pendingBlocks$.pipe(
-      map(blockInfos => Object.entries(blockInfos).map(([hash, blockInfo]) =>
-      // before every block confirmation we reget the user info
-        this.getAccountInfo(address).pipe(
-          switchMap(accountInfo => this.sendReceiveBlock(address, accountInfo, blockInfo, hash))
-        )
-      )),
-      switchMap(obsArr => concat(obsArr))
-    );
-  }
-
-  private getAccountInfo(address: string) {
-    return this.http.post<AccountInfo>(environment.nanoApi.url, { action: 'account_info', account: address }).pipe(
-      tap(info => this.accountInfo$.next(info))
-    );
   }
 
   private createIfNotExist(addressesDoc: NanoAddressesDoc, uid: string) {
@@ -114,27 +88,61 @@ export class NanoService {
     }
   }
 
+  private fetchFunds(wlt: Wallet) {
+    const address = this.getWalletAddr(wlt);
+    const rpc = this.nanoRpc;
+
+    return rpc.getPendingHashes(address).pipe(
+      map(hashes => hashes.map(hash => this.receiveBlock(wlt, hash))),
+      concatAll(),
+      concatAll()
+    );
+  }
+
+  private receiveBlock(wlt: Wallet, hash: string) {
+    const address = this.getWalletAddr(wlt);
+    return combineLatest([
+      this.accountInfo$,
+      this.nanoRpc.getBlockInfo(hash)
+    ]).pipe(
+      switchMap(([accountInfo, blockInfo]) => this.getSignedBlock(wlt, accountInfo, blockInfo, hash)),
+      switchMap(signedBlock => this.nanoRpc.process('receive', signedBlock)),
+      tap(d => { debugger; }),
+      switchMap(successResp => this.nanoRpc.getAccountInfo(address))
+    );
+  }
 
 
-  private sendReceiveBlock(address: string, accountInfo: AccountInfo, info: BlockInfo, transactionHash: string): Observable<any> {
+
+  private async getSignedBlock(wlt: Wallet, accountInfo: AccountInfo, info: BlockInfo, transactionHash: string) {
+    const worker = new Worker('./nano.worker', { type: 'module' });
+    const hashToCompute = accountInfo.frontier || wlt.accounts[0].publicKey;
+    debugger;
+    const work: string = await new Promise(resolve => {
+      worker.postMessage(hashToCompute);
+      worker.onmessage = ev => {
+        resolve(ev.data);
+        worker.terminate();
+      };
+    });
     const data = {
       // Your current balance in RAW
-      walletBalanceRaw: accountInfo.balance,
+      walletBalanceRaw: accountInfo.balance || '0',
       // Your address
-      toAddress: address,
+      toAddress: this.getWalletAddr(wlt),
       // From wallet info
       representativeAddress: info.contents.representative,
       // From wallet info
-      frontier: accountInfo.frontier,
+      frontier: accountInfo.frontier ||
+      '0000000000000000000000000000000000000000000000000000000000000000',
       // From the pending transaction
       transactionHash,
       // From the pending transaction in RAW
       amountRaw: info.amount,
-      // work: this.pow
+      work
     };
     // Returns a correctly formatted and signed block ready to be sent to the blockchain
-    // const signedBlock = block.receive(data, privateKey);
-    return of();
+    return block.receive(data, wlt.accounts[0].privateKey);
   }
 
   private getWalletAddr(wlt: Wallet) {
