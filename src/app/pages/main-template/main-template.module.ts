@@ -9,7 +9,15 @@ import { MainTemplateComponent } from './main-template.component';
   declarations: [MainTemplateComponent],
   imports: [
     SharedModule,
-    RouterModule.forChild([ { path: '', component: MainTemplateComponent }])
+    RouterModule.forChild([ {
+      path: '',
+      component: MainTemplateComponent,
+      children: [
+        { path: 'wallet', loadChildren: () => import('../wallet-page/wallet-page.module').then(m => m.WalletPageModule), },
+        { path: 'theming', loadChildren: () => import('../theming-page/theming-page.module').then(m => m.ThemingPageModule), },
+        { path: '', pathMatch: 'full', redirectTo: 'wallet' }
+      ]
+    }])
   ]
 })
 export class MainTemplateModule { }

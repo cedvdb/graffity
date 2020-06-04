@@ -16,12 +16,8 @@ export const routes: Routes = [
   },
   {
     path: '',
-    component: MainTemplateComponent,
+    loadChildren: () => import('./main-template/main-template.module').then(m => m.MainTemplateModule),
     canActivate: [AngularFireAuthGuard],
-    data: { authGuardPipe: () => redirectUnauthorizedTo(['sign-in']) },
-    children: [
-      { path: 'wallet', component: WalletPageComponent },
-      { path: '', pathMatch: 'full', redirectTo: 'wallet' }
-    ]
+    data: { authGuardPipe: () => redirectUnauthorizedTo(['sign-in']) }
   }
 ];

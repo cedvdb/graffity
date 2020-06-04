@@ -1,4 +1,5 @@
 import { Component, HostListener, OnInit } from '@angular/core';
+import { ThemingService } from './pages/theming-page/theming-service';
 
 @Component({
   selector: 'app-root',
@@ -12,8 +13,11 @@ import { Component, HostListener, OnInit } from '@angular/core';
 })
 export class AppComponent implements OnInit {
 
+  constructor(private themingSrv: ThemingService) {}
+
   ngOnInit() {
     this.onResize();
+    this.themingSrv.loadTheme();
   }
 
   /** needed so we can get full height on mobile */

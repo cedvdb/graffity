@@ -1,0 +1,29 @@
+
+<h3>Background</h3>
+<div>
+  <input (colorPickerChange)="onChange()" [(colorPicker)]="theme.bg" [style.background]="theme.bg"/>
+</div>
+
+<h3>Background Nav</h3>
+<div>
+  <input (colorPickerChange)="onChange()" [(colorPicker)]="theme.bgNav1" [style.background]="theme.bgNav1"/>
+  <input (colorPickerChange)="onChange()" [(colorPicker)]="theme.bgNav2" [style.background]="theme.bgNav2"/>
+  <input (colorPickerChange)="onChange()" [(colorPicker)]="theme.bgNav3" [style.background]="theme.bgNav3"/>
+</div>
+
+<h3>Primary</h3>
+<div>
+  <input (colorPickerChange)="onChange()" [(colorPicker)]="theme.primary" [style.background]="theme.primary"/>
+</div>
+
+<h3>Accent</h3>
+<div>
+  <input (colorPickerChange)="onChange()" [(colorPicker)]="theme.accent" [style.background]="theme.accent"/>
+</div>
+
+<h3>Text</h3>
+<div>
+  <input (colorPickerChange)="onChange()" [(colorPicker)]="theme.txt1" [style.background]="theme.txt1"/>
+</div>
+
+<button (click)="reset()">Reset</button>
