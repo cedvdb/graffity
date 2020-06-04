@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Renderer2, ViewChild, ElementRef } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { Col, Message } from 'shared/collections';
 import { AngularFireAuth } from '@angular/fire/auth';
@@ -15,10 +15,12 @@ export class ChatPageComponent extends AutoUnsub implements OnInit {
   newMsgContent = '';
   messages$: Observable<Message[]>;
   user: firebase.User;
+  @ViewChild('inp') textarea: ElementRef<HTMLTextAreaElement>;
 
   constructor(
     private firestore: AngularFirestore,
-    private auth: AngularFireAuth
+    private auth: AngularFireAuth,
+    private renderer: Renderer2
   ) { super(); }
 
   ngOnInit(): void {
@@ -43,6 +45,11 @@ export class ChatPageComponent extends AutoUnsub implements OnInit {
     };
     this.newMsgContent = '';
     this.firestore.collection(Col.MESSAGES).add(message);
+  }
+
+  onInput() {
+    const el = this.textarea.nativeElement;
+    this.renderer.setStyle(el, 'height', el.scrollHeight + 'px');
   }
 
 }

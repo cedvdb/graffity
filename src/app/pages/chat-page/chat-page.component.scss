@@ -5,16 +5,20 @@
 }
 
 .messages {
+  /** small hack, flex grow will make it grow until it's good */
+  height: 0;
   margin: 0.45rem;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
 textarea {
   border: none;
   border-radius: var(--spacing-border-radius);
   padding: var(--spacing-xs);
+  box-sizing: border-box;
   outline: none;
   flex-grow: 1;
-  height: 1rem;
   resize: none;
   overflow: hidden;
 }
