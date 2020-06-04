@@ -5,7 +5,7 @@
     *ngFor="let message of (messages$ | async)"
     class="mg-bottom-s"
     [message]="message"
-    [currentUserId]="(currentUser | async)?.uid">
+    [currentUserId]="user?.uid">
   </app-message>
 </div>
 
@@ -13,7 +13,7 @@
   <app-user-picture 
     class="mg-right-s"
     size="2"
-    [url]="(currentUser | async)?.photoURL">
+    [url]="user?.photoURL">
   </app-user-picture>
   <textarea 
     #inp 
@@ -23,6 +23,6 @@
     name="content"
     autofocus
     [(ngModel)]="newMsgContent"
-    (keyup.enter)="postMessage()">
+    (keydown.enter)="postMessage($event)">
   </textarea>
 </div>

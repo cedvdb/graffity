@@ -3,38 +3,42 @@ import { AngularFirestore } from '@angular/fire/firestore';
 import { Col, Message } from 'shared/collections';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { Observable } from 'rxjs';
+import { AutoUnsub } from 'src/app/components/abstract-auto-unsub.component';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-chat-page',
   templateUrl: './chat-page.component.html',
   styleUrls: ['./chat-page.component.scss']
 })
-export class ChatPageComponent implements OnInit {
+export class ChatPageComponent extends AutoUnsub implements OnInit {
   newMsgContent = '';
   messages$: Observable<Message[]>;
-  currentUser: Observable<firebase.User>;
+  user: firebase.User;
 
   constructor(
     private firestore: AngularFirestore,
     private auth: AngularFireAuth
-  ) { }
+  ) { super(); }
 
   ngOnInit(): void {
-    this.currentUser = this.auth.user;
+    this.auth.user.pipe(
+      takeUntil(this.destroy$)
+    ).subscribe(user => this.user = user);
     this.messages$ = this.firestore.collection<Message>(Col.MESSAGES).valueChanges();
   }
 
-  async postMessage() {
+  async postMessage(event: InputEvent) {
+    event.preventDefault();
     if (! this.newMsgContent) {
       return;
     }
-    const user = await this.currentUser.toPromise();
     const message = {
       content: this.newMsgContent,
       createdBy: {
-        uid: user.uid,
-        picture: user.photoURL,
-        name: user.displayName
+        uid: this.user.uid,
+        picture: this.user.photoURL,
+        name: this.user.displayName
       }
     };
     this.newMsgContent = '';
