@@ -1,5 +1,7 @@
 import { Component, HostListener, OnInit } from '@angular/core';
 import { ThemingService } from './pages/theming-page/theming-service';
+import { GeolocationService } from './services/geolocation.service';
+import { MessageService } from './services/message.service';
 
 @Component({
   selector: 'app-root',
@@ -13,11 +15,17 @@ import { ThemingService } from './pages/theming-page/theming-service';
 })
 export class AppComponent implements OnInit {
 
-  constructor(private themingSrv: ThemingService) {}
+  constructor(
+    private themingSrv: ThemingService,
+    private geolocationSrv: GeolocationService,
+    private messageSrv: MessageService
+  ) {}
 
   ngOnInit() {
     this.onResize();
+    this.geolocationSrv.getUserCoordinates();
     this.themingSrv.loadTheme();
+    this.messageSrv.init();
   }
 
   /** needed so we can get full height on mobile */

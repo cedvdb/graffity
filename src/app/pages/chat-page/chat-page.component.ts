@@ -5,6 +5,10 @@ import { AngularFireAuth } from '@angular/fire/auth';
 import { Observable } from 'rxjs';
 import { AutoUnsub } from 'src/app/components/abstract-auto-unsub.component';
 import { takeUntil } from 'rxjs/operators';
+import { GeoCollectionReference, GeoFirestore, GeoQuery, GeoQuerySnapshot } from 'geofirestore';
+import { MessageService } from 'src/app/services/message.service';
+
+
 
 @Component({
   selector: 'app-chat-page',
@@ -13,12 +17,12 @@ import { takeUntil } from 'rxjs/operators';
 })
 export class ChatPageComponent extends AutoUnsub implements OnInit {
   newMsgContent = '';
-  messages$: Observable<Message[]>;
+  messages$: Observable<Message[]> = this.messageSrv.messages$;
   user: firebase.User;
   @ViewChild('inp') textarea: ElementRef<HTMLTextAreaElement>;
 
   constructor(
-    private firestore: AngularFirestore,
+    private messageSrv: MessageService,
     private auth: AngularFireAuth,
     private renderer: Renderer2
   ) { super(); }
@@ -27,7 +31,6 @@ export class ChatPageComponent extends AutoUnsub implements OnInit {
     this.auth.user.pipe(
       takeUntil(this.destroy$)
     ).subscribe(user => this.user = user);
-    this.messages$ = this.firestore.collection<Message>(Col.MESSAGES).valueChanges();
   }
 
   async postMessage(event: InputEvent) {
@@ -35,16 +38,9 @@ export class ChatPageComponent extends AutoUnsub implements OnInit {
     if (! this.newMsgContent) {
       return;
     }
-    const message = {
-      content: this.newMsgContent,
-      createdBy: {
-        uid: this.user.uid,
-        picture: this.user.photoURL,
-        name: this.user.displayName
-      }
-    };
-    this.newMsgContent = '';
-    this.firestore.collection(Col.MESSAGES).add(message);
+
+    this.messageSrv.send(this.newMsgContent)
+      .subscribe(_ => this.newMsgContent = '');
   }
 
   onInput() {
