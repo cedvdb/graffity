@@ -4,7 +4,7 @@
 }
 
 main {
-  background: var(--color-bg);
+  background: linear-gradient(var(--color-bg), transparent), url('/assets/images/shattered.png');
   display: flex;
   flex-direction: column;
   .content {

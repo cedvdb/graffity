@@ -4,10 +4,17 @@
   height: 100%;
 }
 
+.messages {
+  margin: 0.45rem;
+}
 
-
-input {
+textarea {
   border: none;
   border-radius: var(--spacing-border-radius);
-  padding: var(--spacing-s);
+  padding: var(--spacing-xs);
+  outline: none;
+  flex-grow: 1;
+  height: 1rem;
+  resize: none;
+  overflow: hidden;
 }

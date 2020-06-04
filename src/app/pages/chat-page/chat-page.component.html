@@ -1,6 +1,6 @@
 
 
-<div class="flexGrow">
+<div class="flexGrow messages">
   <app-message 
     *ngFor="let message of (messages$ | async)"
     class="mg-bottom-s"
@@ -9,17 +9,20 @@
   </app-message>
 </div>
 
-<div class="flex">
+<div class="flexVAlign">
   <app-user-picture 
     class="mg-right-s"
-    [url]="(currentUser | async).photoURL">
+    size="2"
+    [url]="(currentUser | async)?.photoURL">
   </app-user-picture>
-  <input 
+  <textarea 
     #inp 
     class="z-1" 
     type="text" 
     placeholder="Type here..."
     name="content"
+    autofocus
     [(ngModel)]="newMsgContent"
-    (keyup.enter)="postMessage()"/>
+    (keyup.enter)="postMessage()">
+  </textarea>
 </div>

@@ -33,7 +33,7 @@
   }
 
   .trigger {
-    visibility: hidden;
+    display: none;
   }
 
   @media screen and (min-width: 1280px) {
@@ -48,7 +48,7 @@
   @media screen and (max-width: 1279px) {
     nav {
       transform: translate3d(0, 0, 0);
-      will-change: transform;
+      will-change: transform, width, padding, opacity;
       transition: transform 0.3s cubic-bezier(.25,.8,.25,1), width 0.3s cubic-bezier(.25,.8,.25,1), 
       padding 0.3s cubic-bezier(.25,.8,.25,1), opacity 0.3s cubic-bezier(.25,.8,.25,1) ;
       width: 0;  
@@ -57,7 +57,10 @@
       transform: translate3d(0, 0, 0);
       transition: transform 0.3s cubic-bezier(.25,.8,.25,1), width 0.3s cubic-bezier(.25,.8,.25,1); 
       height: 100%; 
-      will-change: transform;
+      will-change: transform, width;
+    }
+    .trigger {
+      visibility: hidden;
     }
   
     &.nav-opened {

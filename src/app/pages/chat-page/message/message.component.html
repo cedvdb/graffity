@@ -1,4 +1,6 @@
-<app-user-picture [url]="message?.createdBy?.picture"></app-user-picture>
+<app-user-picture 
+  [url]="message?.createdBy?.picture">
+</app-user-picture>
 
 <div class="content" [ngClass]="{ 'mine': mine }">
   {{ message?.content }}
