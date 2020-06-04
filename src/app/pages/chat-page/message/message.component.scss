@@ -1,5 +1,16 @@
+:host {
+  display: flex;
+  .content {
+    background: var(--color-primary);
+    padding: var(--spacing-s);
+    border-radius: var(--spacing-border-radius);
+    .mine {
+      background: var(--color-secondary);
+    }
+  }
+  app-user-picture {
+    margin-right: var(--spacing-s);
+  }
 
-.content {
-  background: var(--color-primary);
-  padding: var(--spacing-s);
 }
+

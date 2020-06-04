@@ -4,6 +4,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { FormsModule } from '@angular/forms';
+import { UserPictureModule } from './user-picture/user-picture.module';
 
 
 @NgModule({
@@ -13,7 +14,10 @@ import { FormsModule } from '@angular/forms';
     FontAwesomeModule,
     RouterModule,
     HttpClientModule,
-    FormsModule
+    FormsModule,
+
+    // here
+    UserPictureModule
   ]
 })
 export class SharedModule { }

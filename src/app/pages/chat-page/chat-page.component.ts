@@ -12,12 +12,15 @@ import { Observable } from 'rxjs';
 export class ChatPageComponent implements OnInit {
   newMsgContent = '';
   messages$: Observable<Message[]>;
+  currentUser: Observable<firebase.User>;
+
   constructor(
     private firestore: AngularFirestore,
     private auth: AngularFireAuth
   ) { }
 
   ngOnInit(): void {
+    this.currentUser = this.auth.user;
     this.messages$ = this.firestore.collection<Message>(Col.MESSAGES).valueChanges();
   }
 
@@ -25,7 +28,7 @@ export class ChatPageComponent implements OnInit {
     if (! this.newMsgContent) {
       return;
     }
-    const user = await this.auth.currentUser;
+    const user = await this.currentUser.toPromise();
     const message = {
       content: this.newMsgContent,
       createdBy: {

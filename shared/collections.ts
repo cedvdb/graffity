@@ -12,4 +12,9 @@ export interface NanoAddressesDoc {
 
 export interface Message {
   content: string;
+  createdBy: {
+    uid: string;
+    name: string;
+    picture: string;
+  };
 }

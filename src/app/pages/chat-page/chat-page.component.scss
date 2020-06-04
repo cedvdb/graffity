@@ -6,6 +6,9 @@
 
 .messages {
   flex-grow: 1;
+  app-message {
+    margin-bottom: var(--spacing-s);
+  }
 }
 
 input {

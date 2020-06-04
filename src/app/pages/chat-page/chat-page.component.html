@@ -3,15 +3,19 @@
 <div class="messages">
   <app-message 
     *ngFor="let message of (messages$ | async)"
-    [message]="message">
+    [message]="message"
+    [currentUserId]="(currentUser | async)?.uid">
   </app-message>
 </div>
 
-<input 
-  #inp 
-  class="z-1" 
-  type="text" 
-  placeholder="Type here..."
-  name="content"
-  [(ngModel)]="newMsgContent"
-  (keyup.enter)="postMessage()"/>
+<div class="bottom">
+  <app-user-picture [url]="(currentUser | async).photoURL"></app-user-picture>
+  <input 
+    #inp 
+    class="z-1" 
+    type="text" 
+    placeholder="Type here..."
+    name="content"
+    [(ngModel)]="newMsgContent"
+    (keyup.enter)="postMessage()"/>
+</div>
