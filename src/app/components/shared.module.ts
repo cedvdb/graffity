@@ -3,7 +3,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-
+import { FormsModule } from '@angular/forms';
 
 
 @NgModule({
@@ -13,6 +13,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
     FontAwesomeModule,
     RouterModule,
     HttpClientModule,
+    FormsModule
   ]
 })
 export class SharedModule { }

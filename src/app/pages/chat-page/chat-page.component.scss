@@ -1,0 +1,15 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.messages {
+  flex-grow: 1;
+}
+
+input {
+  border: none;
+  border-radius: var(--spacing-border-radius);
+  padding: var(--spacing-s);
+}

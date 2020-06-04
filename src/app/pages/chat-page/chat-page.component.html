@@ -1,0 +1,17 @@
+
+
+<div class="messages">
+  <app-message 
+    *ngFor="let message of (messages$ | async)"
+    [message]="message">
+  </app-message>
+</div>
+
+<input 
+  #inp 
+  class="z-1" 
+  type="text" 
+  placeholder="Type here..."
+  name="content"
+  [(ngModel)]="newMsgContent"
+  (keyup.enter)="postMessage()"/>

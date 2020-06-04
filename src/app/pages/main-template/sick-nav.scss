@@ -5,6 +5,7 @@
 
   main {
     flex-grow: 1;
+    box-sizing: border-box;
     padding: var(--spacing-s);
     overflow-y: auto;
   }
@@ -12,7 +13,6 @@
   nav {
     width: 15%;
     height: 100%;
-    color: var(--color-txt-nav);
     flex-shrink: 0;
     box-sizing: border-box;
     overflow: hidden;

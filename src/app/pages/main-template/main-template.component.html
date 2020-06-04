@@ -2,6 +2,7 @@
 <nav>
   <div>
     <div class="header">My Nano Wallet</div>
+    <a [routerLink]="['/', 'chat']" routerLinkActive="selected">Chat</a>
     <a [routerLink]="['/', 'wallet']" routerLinkActive="selected">Wallet</a>
     <a [routerLink]="['/', 'theming']" routerLinkActive="selected">Theming</a>
   </div>
@@ -14,6 +15,8 @@
 
 <main class="z-2">
   <fa-icon class="trigger" [icon]="barsIcon" (click)="openNav($event)"></fa-icon>
-  <router-outlet></router-outlet>
+  <div class="content">
+    <router-outlet></router-outlet>
+  </div>
 </main>
   

@@ -5,9 +5,15 @@
 
 main {
   background: var(--color-bg);
+  display: flex;
+  flex-direction: column;
+  .content {
+    flex-grow: 1;
+  }
 }
 
 nav {
+  color: var(--color-txt-nav);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
