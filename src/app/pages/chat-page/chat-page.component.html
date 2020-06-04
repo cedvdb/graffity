@@ -1,15 +1,19 @@
 
 
-<div class="messages">
+<div class="flexGrow">
   <app-message 
     *ngFor="let message of (messages$ | async)"
+    class="mg-bottom-s"
     [message]="message"
     [currentUserId]="(currentUser | async)?.uid">
   </app-message>
 </div>
 
-<div class="bottom">
-  <app-user-picture [url]="(currentUser | async).photoURL"></app-user-picture>
+<div class="flex">
+  <app-user-picture 
+    class="mg-right-s"
+    [url]="(currentUser | async).photoURL">
+  </app-user-picture>
   <input 
     #inp 
     class="z-1" 

@@ -4,12 +4,7 @@
   height: 100%;
 }
 
-.messages {
-  flex-grow: 1;
-  app-message {
-    margin-bottom: var(--spacing-s);
-  }
-}
+
 
 input {
   border: none;
