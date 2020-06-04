@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
+import { AngularFireAuth } from '@angular/fire/auth';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { GeoFirestore } from 'geofirestore';
+import { combineLatest, ReplaySubject } from 'rxjs';
+import { first, map, switchMap } from 'rxjs/operators';
 import { Col, Message } from 'shared/collections';
+import { Coordinates, GeolocationService } from './geolocation.service';
 import * as firebase from 'firebase';
-import { GeolocationService, Coordinates } from './geolocation.service';
-import { switchMap, first, map } from 'rxjs/operators';
-import { Observable, ReplaySubject, combineLatest } from 'rxjs';
-import { AngularFireAuth } from '@angular/fire/auth';
-
+import 'firebase/firestore';
 
 @Injectable({ providedIn: 'root' })
 export class MessageService {
@@ -30,27 +30,22 @@ export class MessageService {
   }
 
   private async getMessages(coords: Coordinates) {
+    console.log('getting messages for', JSON.stringify(coords));
     const query = this.messagesCol.near({
       center: new firebase.firestore.GeoPoint(coords.lat, coords.long),
-      radius: 50000
+      radius: 100
     });
-
-    // get the messages for this coord
-    query.get()
-      .then(snap => snap.docs.map(doc => doc.data()))
-      .then(messages => messages.sort((a, b) => a.createdAt - b.createdAt))
-      .then(messages => this.messages = messages);
 
     // listen for changes
     query.onSnapshot(snap => {
-        snap.docChanges().forEach((change) => {
-          if (change.type === 'added') {
-            const newMsg = change.doc.data();
-            this.messages.push(newMsg);
-            this.messagesSubj$.next(this.messages);
-          }
-      });
+      const messages = snap.docChanges()
+        .filter(change => change.type === 'added')
+        .map((change) => change.doc.data())
+        .sort((a, b) => a.createdAt - b.createdAt);
+      this.messages.push(...messages);
+      this.messagesSubj$.next(this.messages);
     });
+
   }
 
   send(content: string) {
