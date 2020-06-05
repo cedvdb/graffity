@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { SharedModule } from 'src/app/components/shared.module';
 import { MainTemplateComponent } from './main-template.component';
+import { AngularFireAuthGuard, redirectUnauthorizedTo } from '@angular/fire/auth-guard';
 
 
 
@@ -12,6 +13,8 @@ import { MainTemplateComponent } from './main-template.component';
     RouterModule.forChild([ {
       path: '',
       component: MainTemplateComponent,
+      canActivate: [AngularFireAuthGuard],
+      data: { authGuardPipe: () => redirectUnauthorizedTo(['sign-in']) },
       children: [
         { path: 'chat', loadChildren: () => import('../chat-page/chat-page.module').then(m => m.ChatPageModule), },
         { path: 'wallet', loadChildren: () => import('../wallet-page/wallet-page.module').then(m => m.WalletPageModule), },

@@ -3,7 +3,7 @@
   <div>
     <div class="header">My Nano Wallet</div>
     <a [routerLink]="['/', 'chat']" routerLinkActive="selected">Chat</a>
-    <div class="flexColumn pd-left-m">
+    <div class="flexColumn pd-left-m" *ngIf="hasLocation">
       <div 
         class="location mg-bottom-s" 
         [ngClass]="{ 'here': isNy() }"

@@ -3,7 +3,7 @@ import { AngularFireAuth } from '@angular/fire/auth';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { enc } from 'crypto-js';
 import { decrypt, encrypt } from 'crypto-js/aes';
-import { block, wallet } from 'nanocurrency-web';
+import { block, wallet, tools } from 'nanocurrency-web';
 import { Wallet } from 'nanocurrency-web/dist/lib/address-importer';
 import { BehaviorSubject, combineLatest, ReplaySubject } from 'rxjs';
 import { concatAll, filter, first, map, switchMap, tap } from 'rxjs/operators';
@@ -17,7 +17,10 @@ export class NanoService {
   wallet$ = new ReplaySubject<Wallet>(1);
   walletStatus$ = new BehaviorSubject<'pending' | 'success' | 'lost'> ('pending');
   private accountInfo$ = new ReplaySubject<AccountInfo>(1);
-  balance$ = this.accountInfo$.asObservable().pipe(map(info => info.balance));
+  balance$ = this.accountInfo$.asObservable().pipe(
+    map(info => info.balance),
+    map(raw => tools.convert(raw, 'RAW', 'NANO'))
+  );
   //  TODO add token
 
   constructor(
@@ -93,6 +96,7 @@ export class NanoService {
     const rpc = this.nanoRpc;
 
     return rpc.getPendingHashes(address).pipe(
+      filter(x => !!x),
       map(hashes => hashes.map(hash => this.receiveBlock(wlt, hash))),
       concatAll(),
       concatAll()

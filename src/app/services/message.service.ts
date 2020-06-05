@@ -34,6 +34,7 @@ export class MessageService {
 
   private async getMessages(coords: Coordinates) {
     log.info('getting messages for', JSON.stringify(coords));
+    this.messages = [];
     if (this.currentUnsub) {
       this.currentUnsub();
     }

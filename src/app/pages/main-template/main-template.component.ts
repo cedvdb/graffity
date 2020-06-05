@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { faBars, faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
 import { GeolocationService } from 'src/app/services/geolocation.service';
+import { MessageService } from 'src/app/services/message.service';
 
 @Component({
   selector: 'app-main-template',
@@ -13,7 +14,7 @@ import { GeolocationService } from 'src/app/services/geolocation.service';
     '[class.nav-closed]': '!isNavOpened'
   }
 })
-export class MainTemplateComponent {
+export class MainTemplateComponent implements OnInit {
   barsIcon = faBars;
   signOutIcon = faSignOutAlt;
   isNavOpened = false;
@@ -21,8 +22,14 @@ export class MainTemplateComponent {
   constructor(
     private auth: AngularFireAuth,
     private router: Router,
-    private geolocationSrv: GeolocationService
+    private geolocationSrv: GeolocationService,
+    private messageSrv: MessageService,
   ) {
+  }
+
+  ngOnInit() {
+    this.geolocationSrv.getUserCoordinates();
+    this.messageSrv.init();
   }
 
   openNav(event: MouseEvent) {
@@ -41,10 +48,12 @@ export class MainTemplateComponent {
   }
 
   goToNewYork(): void {
+    this.router.navigate(['chat']);
     this.geolocationSrv.goToNewYork();
   }
 
   goToMyLocation(): void {
+    this.router.navigate(['chat']);
     this.geolocationSrv.goToMyLocation();
   }
 
@@ -54,5 +63,9 @@ export class MainTemplateComponent {
 
   isNy() {
     return this.geolocationSrv.userIsAt === 'NY';
+  }
+
+  get hasLocation() {
+    return this.geolocationSrv.hasLocation;
   }
 }

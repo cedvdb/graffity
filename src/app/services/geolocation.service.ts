@@ -14,6 +14,7 @@ export class GeolocationService {
   userCoordinates: Coordinates;
   // this is just temporary, until we can select a location
   userIsAt: 'NY' | 'LOC' = 'NY';
+  hasLocation = false;
 
   getUserCoordinates() {
     navigator.geolocation.getCurrentPosition(
@@ -21,11 +22,13 @@ export class GeolocationService {
         const coords = { lat: location.coords.latitude, long: location.coords.longitude };
         this.userCoordinates = coords;
         this.userIsAt = 'LOC';
+        this.hasLocation = true;
         this.userCoordinates$.next(coords);
       },
       () => {
         this.userCoordinates = this.newYorkCoords;
         this.userIsAt = 'NY';
+        this.hasLocation = false;
         this.userCoordinates$.next(this.newYorkCoords);
       }
     );
