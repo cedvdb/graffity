@@ -1,13 +1,11 @@
-import { CdkVirtualScrollViewport, VIRTUAL_SCROLL_STRATEGY } from '@angular/cdk/scrolling';
 import { Component, ElementRef, OnInit, Renderer2, TrackByFunction, ViewChild } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { Observable } from 'rxjs';
-import { delay, take, takeUntil } from 'rxjs/operators';
+import { delay, takeUntil } from 'rxjs/operators';
 import { Message } from 'shared/collections';
+import { log } from 'simply-logs';
 import { AutoUnsub } from 'src/app/components/abstract-auto-unsub.component';
 import { MessageService } from 'src/app/services/message.service';
-import { CdkAutoSizeVirtualScroll } from '@angular/cdk-experimental/scrolling';
-import { log } from 'simply-logs';
 
 
 @Component({
@@ -15,7 +13,6 @@ import { log } from 'simply-logs';
   templateUrl: './chat-page.component.html',
   styleUrls: ['./chat-page.component.scss'],
   providers: [
-    { provide: VIRTUAL_SCROLL_STRATEGY, useClass: CdkAutoSizeVirtualScroll }
   ]
 })
 export class ChatPageComponent extends AutoUnsub implements OnInit {
@@ -25,8 +22,7 @@ export class ChatPageComponent extends AutoUnsub implements OnInit {
   user: firebase.User;
   private keepBottomScrolled = true;
   @ViewChild('inp') textarea: ElementRef<HTMLTextAreaElement>;
-  @ViewChild(CdkVirtualScrollViewport, { static: false, read: ElementRef }) scrollCtnr: ElementRef<HTMLElement>;
-  @ViewChild(CdkVirtualScrollViewport, { static: false}) scroller: CdkVirtualScrollViewport;
+  @ViewChild('msgCtnr') msgCtnr: ElementRef<HTMLElement>;
 
   trackBy: TrackByFunction<any> = (index, item) => item.id;
 
@@ -66,8 +62,8 @@ export class ChatPageComponent extends AutoUnsub implements OnInit {
     this.renderer.setStyle(el, 'height', el.scrollHeight + 'px');
   }
 
-  onScroll(event) {
-    const el = this.scrollCtnr.nativeElement;
+  onScroll() {
+    const el = this.msgCtnr.nativeElement;
     // we check if we are at bottom minus 20 px to give a bit of marge
     const isBottom = el.scrollTop > (el.scrollHeight - el.offsetHeight) - 20;
     log.debug(el.scrollTop, (el.scrollHeight - el.offsetHeight));
@@ -79,7 +75,8 @@ export class ChatPageComponent extends AutoUnsub implements OnInit {
   }
 
   scrollToBottom() {
-    this.scroller.scrollTo({ bottom: 0 });
+    const el = this.msgCtnr.nativeElement;
+    el.scrollTop = (el.scrollHeight - el.offsetHeight);
   }
 
 }

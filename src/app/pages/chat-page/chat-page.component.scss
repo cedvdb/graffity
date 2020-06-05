@@ -8,11 +8,8 @@
   /** small hack, flex grow will make it grow until it's good */
   height: 0;
   margin: 0.45rem;
-  overflow: hidden;
-}
-
-.cdk-virtual-scroll-viewport {
-  height: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
 textarea {

@@ -18,6 +18,7 @@ export class MessageService {
   private messagesSubj$ = new ReplaySubject<Message[]>(1);
   messages$ = this.messagesSubj$.asObservable().pipe(share());
   private currentUnsub: any;
+  private maxAmount = 30;
 
   constructor(
     private firestore: AngularFirestore,
@@ -39,7 +40,7 @@ export class MessageService {
     const query = this.messagesCol.near({
       center: new firebase.firestore.GeoPoint(coords.lat, coords.long),
       radius: 100
-    }).limit(50);
+    }).limit(this.maxAmount);
 
     // listen for changes
     this.currentUnsub = query.onSnapshot(snap => {
@@ -48,7 +49,8 @@ export class MessageService {
         .filter(change => change.type === 'added')
         .map((change) => change.doc.data())
         .sort((a, b) => a.createdAt - b.createdAt);
-      this.messages = [...this.messages, ...messages];
+      const fromIndex = messages.length > this.maxAmount ? messages.length - this.maxAmount : 0;
+      this.messages = [...this.messages, ...messages].slice(fromIndex);
       this.messagesSubj$.next(this.messages);
     });
 
