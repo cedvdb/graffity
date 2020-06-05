@@ -5,7 +5,7 @@ import { enc } from 'crypto-js';
 import { decrypt, encrypt } from 'crypto-js/aes';
 import { block, wallet, tools } from 'nanocurrency-web';
 import { Wallet } from 'nanocurrency-web/dist/lib/address-importer';
-import { BehaviorSubject, combineLatest, ReplaySubject } from 'rxjs';
+import { BehaviorSubject, combineLatest, ReplaySubject, Observable } from 'rxjs';
 import { concatAll, filter, first, map, switchMap, tap } from 'rxjs/operators';
 import { Col, NanoAddressesDoc } from 'shared/collections';
 import { NanoRpcService } from './nano-rpc.service';
@@ -43,6 +43,26 @@ export class NanoService {
       switchMap(_ => this.wallet$),
       switchMap(wlt => this.fetchFunds(wlt))
     ).subscribe();
+  }
+
+  send(toAddress: string, amountNano: any) {
+    const amountRaw = tools.convert(amountNano, 'NANO', 'RAW');
+    combineLatest([
+      this.accountInfo$,
+      this.wallet$
+    ]).pipe(
+      switchMap(([accountInfo, wlt]) => this.getRepresentativeAddress(accountInfo).pipe(
+        map(address => ({ accountInfo, representativeAddress: address, wlt })),
+        switchMap((data: any) => this.getSignedSendBlock(
+          wlt,
+          data.accountInfo,
+          amountRaw,
+          toAddress,
+          data.representativeAddress
+        )),
+        switchMap(sendBlock => this.nanoRpc.process('send', sendBlock))
+      )),
+    );
   }
 
   private getWallet(user: firebase.User) {
@@ -109,15 +129,15 @@ export class NanoService {
       this.accountInfo$,
       this.nanoRpc.getBlockInfo(hash)
     ]).pipe(
-      switchMap(([accountInfo, blockInfo]) => this.getSignedBlock(wlt, accountInfo, blockInfo, hash)),
+      switchMap(([accountInfo, blockInfo]) => this.getSignedReceiveBlock(wlt, accountInfo, blockInfo, hash)),
       switchMap(signedBlock => this.nanoRpc.process('receive', signedBlock)),
       switchMap(successResp => this.nanoRpc.getAccountInfo(address))
     );
-  }
+    }
 
 
 
-  private async getSignedBlock(wlt: Wallet, accountInfo: AccountInfo, info: BlockInfo, transactionHash: string) {
+  private async getSignedReceiveBlock(wlt: Wallet, accountInfo: AccountInfo, info: BlockInfo, transactionHash: string) {
     const worker = new Worker('./nano.worker', { type: 'module' });
     const hashToCompute = accountInfo.frontier || wlt.accounts[0].publicKey;
     const work: string = await new Promise(resolve => {
@@ -145,6 +165,39 @@ export class NanoService {
     };
     // Returns a correctly formatted and signed block ready to be sent to the blockchain
     return block.receive(data, wlt.accounts[0].privateKey);
+  }
+
+  private async getSignedSendBlock(
+    wlt: Wallet,
+    accountInfo: AccountInfo,
+    amountRaw: any,
+    toAddress: string,
+    representativeAddress: string
+  ) {
+    const worker = new Worker('./nano.worker', { type: 'module' });
+    const hashToCompute = accountInfo.frontier || wlt.accounts[0].publicKey;
+    const work: string = await new Promise(resolve => {
+      worker.postMessage(hashToCompute);
+      worker.onmessage = ev => {
+        resolve(ev.data);
+        worker.terminate();
+      };
+    });
+    const data = {
+      walletBalanceRaw: accountInfo.balance,
+      fromAddress: this.getWalletAddr(wlt),
+      toAddress,
+      representativeAddress,
+      frontier: accountInfo.frontier,
+      amountRaw,
+      work
+    };
+    // Returns a correctly formatted and signed block ready to be sent to the blockchain
+    return block.send(data, wlt.accounts[0].privateKey);
+  }
+
+  private getRepresentativeAddress(accountInfo: AccountInfo): Observable<string> {
+    return this.nanoRpc.getBlockInfo(accountInfo.representative_block).pipe(map(info => info.contents.representative));
   }
 
   private getWalletAddr(wlt: Wallet) {
