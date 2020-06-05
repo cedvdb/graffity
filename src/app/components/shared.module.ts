@@ -6,6 +6,7 @@ import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { UserPictureModule } from './user-picture/user-picture.module';
+import { MatDialogModule } from '@angular/material/dialog';
 
 @NgModule({
   declarations: [],
@@ -18,6 +19,7 @@ import { UserPictureModule } from './user-picture/user-picture.module';
     FontAwesomeModule,
     // cdk
     TextFieldModule,
+    MatDialogModule,
     // here
     UserPictureModule
   ]
