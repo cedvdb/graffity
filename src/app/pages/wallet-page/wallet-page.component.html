@@ -1,8 +1,14 @@
 <ng-container *ngIf="nanoSrv.walletStatus$ | async as status">
   <mat-progress-spinner *ngIf="status === 'pending'" mode="indeterminate"></mat-progress-spinner>
   <ng-container *ngIf="status === 'lost'">
-    Seems like you lost your wallet. If you backed you'll have to wait for recovery 
-    to be implemented here or contact me to tell you how to do it
+    Wallet wasnt found. Recovery is being implemented as you read this
+    <!-- <mat-form-field>
+      <mat-label>Mnemonic</mat-label>
+      <div class="flex">
+        <textarea matInput [(ngModel)]="recoveryMnemonic"></textarea>
+      </div>
+    </mat-form-field>
+    <button mat-button (click)="recover()">Recover</button> -->
   </ng-container>
 
   <ng-container *ngIf="status === 'success'">

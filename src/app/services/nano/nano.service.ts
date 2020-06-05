@@ -52,6 +52,22 @@ export class NanoService {
     ).subscribe();
   }
 
+  fetchFunds() {
+    if (!this.wallet) {
+      return;
+    }
+    const address = this.getWalletAddr(this.wallet);
+    const rpc = this.nanoRpc;
+
+    return rpc.getPendingHashes(address).pipe(
+      filter(x => !!x),
+      tap(_ => this.snackBar.open('Processing pending transactions, this will take a min', 'ok', { duration: 120000 })),
+      map(hashes => hashes.map(hash => this.receiveBlock(this.wallet, hash))),
+      concatAll(),
+      concatAll()
+    );
+  }
+
   send(toAddress = '', amountNano: any = '0') {
     const amountRaw = tools.convert(amountNano, 'NANO', 'RAW');
     const isSendOk = this.isSendOk(toAddress, amountRaw);
@@ -70,6 +86,10 @@ export class NanoService {
       )),
       switchMap(sendBlock => this.nanoRpc.process('send', sendBlock))
     );
+  }
+
+  recover(mnemonic: string) {
+    const wlt = wallet.fromMnemonic(mnemonic);
   }
 
   private getWallet(user: firebase.User) {
@@ -118,21 +138,6 @@ export class NanoService {
     }
   }
 
-  fetchFunds() {
-    if (!this.wallet) {
-      return;
-    }
-    const address = this.getWalletAddr(this.wallet);
-    const rpc = this.nanoRpc;
-
-    return rpc.getPendingHashes(address).pipe(
-      filter(x => !!x),
-      tap(_ => this.snackBar.open('Processing pending transactions, this will take a min', 'ok', { duration: 120000 })),
-      map(hashes => hashes.map(hash => this.receiveBlock(this.wallet, hash))),
-      concatAll(),
-      concatAll()
-    );
-  }
 
   private receiveBlock(wlt: Wallet, hash: string) {
     return this.nanoRpc.getBlockInfo(hash).pipe(
