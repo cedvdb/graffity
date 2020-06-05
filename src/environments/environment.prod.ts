@@ -1,5 +1,8 @@
+import { LogLevel } from 'simply-logs';
+
 export const environment = {
   production: true,
+  logLevel: LogLevel.OFF,
   firebase: {
     apiKey: 'AIzaSyA3lMF9ovG8EGxyTa4G9udvxhOuaq6Oito',
     authDomain: 'graffity-42ed2.firebaseapp.com',

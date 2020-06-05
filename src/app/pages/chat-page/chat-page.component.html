@@ -1,16 +1,14 @@
 
 
 <div class="flexGrow messages">
-  <ng-container *ngIf="(messages$ | async) as messages">
-    <cdk-virtual-scroll-viewport autosize>
-      <app-message 
-        *cdkVirtualFor="let message of messages; trackBy"
-        class="mg-bottom-s"
-        [message]="message"
-        [currentUserId]="user?.uid">
-      </app-message>
-    </cdk-virtual-scroll-viewport>
-  </ng-container>
+  <cdk-virtual-scroll-viewport autosize>
+    <app-message 
+      *cdkVirtualFor="let message of (messages$ | async); trackBy"
+      class="mg-bottom-s"
+      [message]="message"
+      [currentUserId]="user?.uid">
+    </app-message>
+  </cdk-virtual-scroll-viewport>
 </div>
 
 <div class="flexVAlign">

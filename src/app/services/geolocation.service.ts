@@ -12,6 +12,7 @@ export class GeolocationService {
   userCoordinates$ = new ReplaySubject<Coordinates>(1);
   newYorkCoords = { lat: 40.730610, long: 73.935242 };
   userCoordinates: Coordinates;
+  // this is just temporary, until we can select a location
   userIsAt: 'NY' | 'LOC' = 'NY';
 
   getUserCoordinates() {
@@ -32,12 +33,14 @@ export class GeolocationService {
 
   goToNewYork() {
     if (this.userIsAt !== 'NY') {
+      this.userIsAt = 'NY';
       this.userCoordinates$.next(this.newYorkCoords);
     }
   }
 
   goToMyLocation() {
     if (this.userIsAt !== 'LOC') {
+      this.userIsAt = 'LOC';
       this.userCoordinates$.next(this.userCoordinates);
     }
   }

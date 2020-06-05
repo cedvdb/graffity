@@ -2,8 +2,11 @@
 // `ng build --prod` replaces `environment.ts` with `environment.prod.ts`.
 // The list of file replacements can be found in `angular.json`.
 
+import { LogLevel } from 'simply-logs';
+
 export const environment = {
   production: false,
+  logLevel: LogLevel.ALL,
   firebase: {
     apiKey: 'AIzaSyA3lMF9ovG8EGxyTa4G9udvxhOuaq6Oito',
     authDomain: 'graffity-42ed2.firebaseapp.com',

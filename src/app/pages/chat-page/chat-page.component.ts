@@ -1,4 +1,4 @@
-import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
+import { CdkVirtualScrollViewport, VIRTUAL_SCROLL_STRATEGY } from '@angular/cdk/scrolling';
 import { Component, ElementRef, OnInit, Renderer2, TrackByFunction, ViewChild } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { Observable } from 'rxjs';
@@ -6,13 +6,14 @@ import { delay, take, takeUntil } from 'rxjs/operators';
 import { Message } from 'shared/collections';
 import { AutoUnsub } from 'src/app/components/abstract-auto-unsub.component';
 import { MessageService } from 'src/app/services/message.service';
+import { CdkAutoSizeVirtualScroll } from '@angular/cdk-experimental/scrolling';
 
 
 @Component({
   selector: 'app-chat-page',
   templateUrl: './chat-page.component.html',
   styleUrls: ['./chat-page.component.scss'],
-  // providers: [{provide: VIRTUAL_SCROLL_STRATEGY, useClass: CdkAutoSizeVirtualScroll }]
+  providers: [{provide: VIRTUAL_SCROLL_STRATEGY, useClass: CdkAutoSizeVirtualScroll }]
 })
 export class ChatPageComponent extends AutoUnsub implements OnInit {
 
@@ -21,7 +22,7 @@ export class ChatPageComponent extends AutoUnsub implements OnInit {
   user: firebase.User;
   @ViewChild('inp') textarea: ElementRef<HTMLTextAreaElement>;
   @ViewChild(CdkVirtualScrollViewport, { static: false, read: ElementRef }) scrollCtnr: ElementRef<HTMLElement>;
-  trackBy: TrackByFunction<any> = (_, item) => item.id;
+  trackBy: TrackByFunction<any> = (index, item) => index;
 
   constructor(
     private messageSrv: MessageService,

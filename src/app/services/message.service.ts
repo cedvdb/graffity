@@ -8,6 +8,7 @@ import { Col, Message } from 'shared/collections';
 import { Coordinates, GeolocationService } from './geolocation.service';
 import * as firebase from 'firebase';
 import 'firebase/firestore';
+import { log } from 'simply-logs';
 
 @Injectable({ providedIn: 'root' })
 export class MessageService {
@@ -16,6 +17,7 @@ export class MessageService {
   private messages = [];
   private messagesSubj$ = new ReplaySubject<Message[]>(1);
   messages$ = this.messagesSubj$.asObservable().pipe(share());
+  private currentUnsub: any;
 
   constructor(
     private firestore: AngularFirestore,
@@ -30,14 +32,18 @@ export class MessageService {
   }
 
   private async getMessages(coords: Coordinates) {
-    console.log('getting messages for', JSON.stringify(coords));
+    log.info('getting messages for', JSON.stringify(coords));
+    if (this.currentUnsub) {
+      this.currentUnsub();
+    }
     const query = this.messagesCol.near({
       center: new firebase.firestore.GeoPoint(coords.lat, coords.long),
       radius: 100
     }).limit(50);
 
     // listen for changes
-    query.onSnapshot(snap => {
+    this.currentUnsub = query.onSnapshot(snap => {
+      log.debug('new snapshot');
       const messages = snap.docChanges()
         .filter(change => change.type === 'added')
         .map((change) => change.doc.data())
