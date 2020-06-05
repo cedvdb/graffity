@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="512"
+   height="512"
+   viewBox="0 0 135.46751 135.46753"
+   version="1.1"
+   id="svg8"
+   inkscape:version="0.92.4 (5da689c313, 2019-01-14)"
+   sodipodi:docname="favicon-black.svg"
+   inkscape:export-filename="D:\projects\graffity\pwa\graphity\src\assets\icons\icon-128x128.png"
+   inkscape:export-xdpi="27.428743"
+   inkscape:export-ydpi="27.428743">
+  <defs
+     id="defs2" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="1.7092097"
+     inkscape:cx="286.95316"
+     inkscape:cy="261.24048"
+     inkscape:document-units="mm"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     inkscape:window-width="1920"
+     inkscape:window-height="1017"
+     inkscape:window-x="1912"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     units="px" />
+  <metadata
+     id="metadata5">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(0,-161.53297)">
+    <path
+       id="path4562"
+       d="m 68.111827,161.46591 c -37.41232,0 -67.7337608,28.15184 -67.7337608,62.89563 0,14.9982 5.6621199,28.72637 15.0813448,39.52144 -3.307314,15.2401 -14.3669653,28.81709 -14.4992571,28.96826 -0.5820877,0.6955 -0.7408387,1.7236 -0.39687751,2.63075 0.34396016,0.90715 1.08479781,1.45144 1.93147021,1.45144 17.5419854,0 30.6918594,-9.61578 37.2006504,-15.54248 8.65193,3.7193 18.256366,5.86622 28.41643,5.86622 37.412313,0 67.733763,-28.15185 67.733763,-62.89563 0,-34.74379 -30.32145,-62.89563 -67.733763,-62.89563 z"
+       inkscape:connector-curvature="0"
+       style="fill:#000000;fill-opacity:1;stroke-width:0.28285328" />
+    <g
+       id="g4581"
+       transform="matrix(0.07488285,0,0,0.07488285,1.9346269,193.75236)"
+       style="fill:#ffffff;fill-opacity:1">
+	<path
+   id="path4575"
+   d="m 985.7,390 c 0,55.6 -45.1,100.6 -100.6,100.6 -55.5,0 -100.7,-45 -100.7,-100.6 0,-75.5 -25.2,-100.6 -100.6,-100.6 -75.4,0 -100.6,25.2 -100.6,100.6 0,55.6 -45.1,100.6 -100.6,100.6 -55.5,0 -100.7,-45 -100.7,-100.6 0,-55.6 45.1,-100.6 100.6,-100.6 75.5,0 100.6,-25.2 100.6,-100.6 0,-55.6 45.1,-100.6 100.6,-100.6 55.5,0 100.6,45.1 100.6,100.6 0,75.5 25.2,100.6 100.6,100.6 55.8,0 100.8,45.1 100.8,100.6 z"
+   class="st0"
+   inkscape:connector-curvature="0"
+   style="fill:#ffffff;fill-opacity:1" />
+
+	<circle
+   id="circle4577"
+   r="100.6"
+   cy="591.29999"
+   cx="281.20001"
+   class="st0"
+   style="fill:#ffffff;fill-opacity:1" />
+
+	<path
+   id="path4579"
+   d="m 1589.6,188.7 c 0,55.6 -45.1,100.6 -100.6,100.6 -75.5,0 -100.6,25.2 -100.6,100.6 0,55.6 -45.1,100.6 -100.6,100.6 -75.5,0 -100.6,25.2 -100.6,100.6 0,55.6 -45.1,100.6 -100.6,100.6 -55.6,0 -100.6,-45.1 -100.6,-100.6 0,-55.6 45.1,-100.6 100.6,-100.6 75.5,0 100.6,-25.2 100.6,-100.6 0,-55.6 45.1,-100.6 100.6,-100.6 75.5,0 100.6,-25.2 100.6,-100.6 0,-55.6 45.1,-100.6 100.6,-100.6 55.5,0 100.6,45.1 100.6,100.6 z"
+   class="st0"
+   inkscape:connector-curvature="0"
+   style="fill:#ffffff;fill-opacity:1" />
+
+</g>
+  </g>
+  <style
+     id="style4518"
+     type="text/css">
+	.st0{fill:#4A90E2;}
+	.st1{fill:#000034;}
+	.st2{fill:#FFFFFF;}
+</style>
+  <style
+     id="style4573"
+     type="text/css">
+	.st0{fill:#4A90E2;}
+	.st1{fill:#000034;}
+	.st2{fill:#FFFFFF;}
+</style>
+</svg>

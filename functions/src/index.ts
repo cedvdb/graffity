@@ -1,7 +1,4 @@
-import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
-import { Col } from '../../shared/collections';
-import { v4 as uuid } from 'uuid';
 
 admin.initializeApp();
 const db = admin.firestore();
@@ -12,6 +9,6 @@ const db = admin.firestore();
 //  response.send("Hello from Firebase!");
 // });
 
-export const createToken = functions.auth.user().onCreate((user) => {
-  return db.collection(Col.TOKENS).doc(user.uid).set({ token: uuid() });
-});
+// export const createToken = functions.auth.user().onCreate((user) => {
+//   return db.collection(Col.TOKENS).doc(user.uid).set({ token: uuid() });
+// });

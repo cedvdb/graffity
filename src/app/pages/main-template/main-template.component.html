@@ -8,13 +8,13 @@
         class="location mg-bottom-s" 
         [ngClass]="{ 'here': isNy() }"
         (click)="goToNewYork()">
-        Go to New York
+        New York
       </div>
       <div 
         class="location mg-bottom-m" 
         [ngClass]="{ 'here': isLoc() }"
         (click)="goToMyLocation()">
-        Go to my location
+        My location
       </div>
     </div>
     <a [routerLink]="['/', 'wallet']" routerLinkActive="selected">Wallet</a>

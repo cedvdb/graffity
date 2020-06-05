@@ -6,7 +6,7 @@ import { combineLatest, ReplaySubject } from 'rxjs';
 import { first, map, switchMap, share } from 'rxjs/operators';
 import { Col, Message } from 'shared/collections';
 import { Coordinates, GeolocationService } from './geolocation.service';
-import * as firebase from 'firebase';
+import * as firebase from 'firebase/app';
 import 'firebase/firestore';
 import { log } from 'simply-logs';
 import { NanoService } from './nano/nano.service';
@@ -25,7 +25,6 @@ export class MessageService {
     private firestore: AngularFirestore,
     private auth: AngularFireAuth,
     private geolocationSrv: GeolocationService,
-    private nanoSrv: NanoService
   ) {
 
   }
