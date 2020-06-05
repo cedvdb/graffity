@@ -16,7 +16,7 @@ export class MessageService {
   messagesCol = this.geofirestore.collection(Col.MESSAGES);
   private messages = [];
   private messagesSubj$ = new ReplaySubject<Message[]>(1);
-  messages$ = this.messagesSubj$.asObservable().pipe(share());
+  messages$ = this.messagesSubj$.asObservable().pipe();
   private currentUnsub: any;
   private maxAmount = 30;
 

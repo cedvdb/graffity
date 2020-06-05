@@ -19,7 +19,14 @@ export class GeolocationService {
   getUserCoordinates() {
     navigator.geolocation.getCurrentPosition(
       (location: Position) => {
-        const coords = { lat: location.coords.latitude, long: location.coords.longitude };
+        // quick fix we cut to two decimal places to have not too much movement
+        const lat = parseFloat(location.coords.latitude.toFixed(2));
+        const long = parseFloat(location.coords.longitude.toFixed(2));
+        const coords = { lat, long };
+        if (lat === this.userCoordinates?.lat && long === this.userCoordinates?.long) {
+          // user didn't move far enough
+          return;
+        }
         this.userCoordinates = coords;
         this.userIsAt = 'LOC';
         this.hasLocation = true;

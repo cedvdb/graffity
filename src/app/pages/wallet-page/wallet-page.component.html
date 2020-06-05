@@ -16,9 +16,9 @@
     <button mat-button color="primary" (click)="openSendDlg()">Withdrawal</button>
 
     <h3>Seed</h3>
-    <qrcode [qrdata]="(nanoSrv.wallet$ | async)?.seed" [width]="256"></qrcode>
+    <qrcode colordark="#4fb0bd" [qrdata]="(nanoSrv.wallet$ | async)?.seed" [width]="256"></qrcode>
     <h3>Address</h3>
-    <qrcode [qrdata]="(nanoSrv.wallet$ | async)?.accounts[0].address" [width]="256"></qrcode>
+    <qrcode colordark="#4fb0bd" [qrdata]="(nanoSrv.wallet$ | async)?.accounts[0].address" [width]="256"></qrcode>
     <h3>JSON</h3>
     <span id="json-wallet">{{ nanoSrv.wallet$ | async | json }}</span>
   </ng-container>
