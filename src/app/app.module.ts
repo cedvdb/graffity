@@ -7,9 +7,7 @@ import { environment } from '../environments/environment';
 import { AppComponent } from './app.component';
 import { SharedModule } from './components/shared.module';
 import { AppRoutingModule } from './pages/app-routing.module';
-
-
-
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 
 @NgModule({
@@ -23,6 +21,7 @@ import { AppRoutingModule } from './pages/app-routing.module';
     ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
     AngularFireModule.initializeApp(environment.firebase),
     AngularFireAuthModule,
+    BrowserAnimationsModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

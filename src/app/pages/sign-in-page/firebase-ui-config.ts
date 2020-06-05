@@ -1,7 +1,7 @@
 import { firebase } from 'firebaseui-angular';
 
 export const firebaseUiAuthConfig: firebaseui.auth.Config = {
-  signInFlow: 'popup',
+  signInFlow: 'redirect',
   signInOptions: [
     firebase.auth.GoogleAuthProvider.PROVIDER_ID,
   ],

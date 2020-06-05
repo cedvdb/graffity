@@ -13,6 +13,8 @@
     </div>
     <h3>balance</h3>
     {{ walletSrv.balance$ | async}} Nano
+    <button mat-button color="primary" (click)="openSendDlg()">Send</button>
+
     <h3>Seed</h3>
     <qrcode [qrdata]="(walletSrv.wallet$ | async)?.seed" [width]="256"></qrcode>
     <h3>Mnemonic</h3>
@@ -21,14 +23,6 @@
     <qrcode [qrdata]="(walletSrv.wallet$ | async)?.accounts[0].address" [width]="256"></qrcode>
     <h3>JSON</h3>
     {{ walletSrv.wallet$ | async | json }}
-    <h3>Send</h3>
-    <div class="flex">
-      <label for="address">Address</label>
-      <input id="address" type="text" placeholder="nano_3rb4eeqpzo4fikzo9x157kcqezdbi8yakawkzsx6obepzwwh9frcbsbcfi3u"/>
-      <label for="address">Amount</label>
-      <input type="amount"/> nano
-      <!-- <button (click)="send()"></button> -->
-    </div>
   </ng-container>
 </ng-container>
 

@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NanoService } from 'src/app/services/nano/nano.service';
+import { MatDialog } from '@angular/material/dialog';
+import { SendDialogComponent } from './send-dialog/send-dialog.component';
 
 @Component({
   selector: 'app-wallet-page',
@@ -8,9 +10,20 @@ import { NanoService } from 'src/app/services/nano/nano.service';
 })
 export class WalletPageComponent implements OnInit {
 
-  constructor(public walletSrv: NanoService) { }
+  constructor(
+    public walletSrv: NanoService,
+    public dialog: MatDialog
+  ) { }
 
   ngOnInit(): void {
+  }
+
+  openSendDlg() {
+    const dialogRef = this.dialog.open(SendDialogComponent);
+
+    dialogRef.afterClosed().subscribe(result => {
+      debugger;
+    });
   }
 
 

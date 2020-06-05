@@ -1,0 +1,27 @@
+<h1 mat-dialog-title>Send nano</h1>
+<div mat-dialog-content>
+
+  <div class="content flexColumn">
+    <mat-form-field>
+      <mat-label>Address</mat-label>
+      <input matInput type="text" 
+        placeholder="nano_3rb4eeqpzo4fikzo9x157kcqezdbi8yakawkzsx6obepzwwh9frcbsbcfi3u"
+        [(ngModel)]="data.address"/>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Amount</mat-label>
+      <div class="flex">
+        <input matInput type="number"  step="any" placeholder="0.001" [(ngModel)]="data.amount"/>    
+        nano
+      </div>
+    </mat-form-field>
+  </div>
+
+</div>
+
+<div mat-dialog-actions class="flexBetween">
+  <button mat-button mat-dialog-close>No Thanks</button>
+  <button mat-button color="primary" [mat-dialog-close]="data" cdkFocusInitial>
+    Ok
+  </button>
+</div>
