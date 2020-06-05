@@ -1,15 +1,13 @@
 import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { AngularFirestore } from '@angular/fire/firestore';
+import * as firebase from 'firebase/app';
 import { GeoFirestore } from 'geofirestore';
 import { combineLatest, ReplaySubject } from 'rxjs';
-import { first, map, switchMap, share } from 'rxjs/operators';
+import { first, map, switchMap } from 'rxjs/operators';
 import { Col, Message } from 'shared/collections';
-import { Coordinates, GeolocationService } from './geolocation.service';
-import * as firebase from 'firebase/app';
-import 'firebase/firestore';
 import { log } from 'simply-logs';
-import { NanoService } from './nano/nano.service';
+import { Coordinates, GeolocationService } from './geolocation.service';
 
 @Injectable({ providedIn: 'root' })
 export class MessageService {
