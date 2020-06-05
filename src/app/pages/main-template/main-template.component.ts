@@ -2,6 +2,7 @@ import { Component, OnInit, HostListener } from '@angular/core';
 import { Router } from '@angular/router';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { faBars, faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
+import { GeolocationService } from 'src/app/services/geolocation.service';
 
 @Component({
   selector: 'app-main-template',
@@ -20,6 +21,7 @@ export class MainTemplateComponent {
   constructor(
     private auth: AngularFireAuth,
     private router: Router,
+    private geolocationSrv: GeolocationService
   ) {
   }
 
@@ -36,5 +38,21 @@ export class MainTemplateComponent {
   signOut() {
     this.auth.signOut();
     this.router.navigate(['sign-in']);
+  }
+
+  goToNewYork(): void {
+    this.geolocationSrv.goToNewYork();
+  }
+
+  goToMyLocation(): void {
+    this.geolocationSrv.goToMyLocation();
+  }
+
+  isLoc() {
+    return this.geolocationSrv.userIsAt === 'LOC';
+  }
+
+  isNy() {
+    return this.geolocationSrv.userIsAt === 'NY';
   }
 }

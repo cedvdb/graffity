@@ -12,6 +12,10 @@
   overflow-y: auto;
 }
 
+.cdk-virtual-scroll-viewport {
+  height: 100%;
+}
+
 textarea {
   border: none;
   border-radius: var(--spacing-border-radius);

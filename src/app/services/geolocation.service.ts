@@ -12,18 +12,33 @@ export class GeolocationService {
   userCoordinates$ = new ReplaySubject<Coordinates>(1);
   newYorkCoords = { lat: 40.730610, long: 73.935242 };
   userCoordinates: Coordinates;
+  userIsAt: 'NY' | 'LOC' = 'NY';
 
   getUserCoordinates() {
     navigator.geolocation.getCurrentPosition(
       (location: Position) => {
         const coords = { lat: location.coords.latitude, long: location.coords.longitude };
-        this.userCoordinates$.next(coords);
         this.userCoordinates = coords;
+        this.userIsAt = 'LOC';
+        this.userCoordinates$.next(coords);
       },
       () => {
-        this.userCoordinates$.next(this.newYorkCoords);
         this.userCoordinates = this.newYorkCoords;
+        this.userIsAt = 'NY';
+        this.userCoordinates$.next(this.newYorkCoords);
       }
     );
+  }
+
+  goToNewYork() {
+    if (this.userIsAt !== 'NY') {
+      this.userCoordinates$.next(this.newYorkCoords);
+    }
+  }
+
+  goToMyLocation() {
+    if (this.userIsAt !== 'LOC') {
+      this.userCoordinates$.next(this.userCoordinates);
+    }
   }
 }

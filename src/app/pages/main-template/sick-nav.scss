@@ -34,6 +34,13 @@
 
   .trigger {
     display: none;
+    margin-left: 0.45rem;
+    margin-bottom: 0.45rem;
+    color: var(--color-primary);
+    cursor: pointer;
+    &:hover {
+      color: var(--color-accent);
+    }
   }
 
   @media screen and (min-width: 1280px) {

@@ -16,7 +16,7 @@ import { MainTemplateComponent } from './main-template.component';
         { path: 'chat', loadChildren: () => import('../chat-page/chat-page.module').then(m => m.ChatPageModule), },
         { path: 'wallet', loadChildren: () => import('../wallet-page/wallet-page.module').then(m => m.WalletPageModule), },
         { path: 'theming', loadChildren: () => import('../theming-page/theming-page.module').then(m => m.ThemingPageModule), },
-        { path: '', pathMatch: 'full', redirectTo: 'wallet' }
+        { path: '', pathMatch: 'full', redirectTo: 'chat' }
       ]
     }])
   ]

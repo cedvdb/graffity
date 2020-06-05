@@ -18,3 +18,14 @@ nav {
   flex-direction: column;
   justify-content: space-between;
 }
+
+.location {
+  cursor: pointer;
+  &.here {
+    color: var(--color-accent);
+  }
+}
+
+.location:hover {
+  color: var(--color-accent);
+}

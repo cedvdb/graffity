@@ -3,6 +3,20 @@
   <div>
     <div class="header">My Nano Wallet</div>
     <a [routerLink]="['/', 'chat']" routerLinkActive="selected">Chat</a>
+    <div class="flexColumn pd-left-m">
+      <div 
+        class="location mg-bottom-s" 
+        [ngClass]="{ 'here': isNy() }"
+        (click)="goToNewYork()">
+        Go to New York
+      </div>
+      <div 
+        class="location mg-bottom-m" 
+        [ngClass]="{ 'here': isLoc() }"
+        (click)="goToMyLocation()">
+        Go to my location
+      </div>
+    </div>
     <a [routerLink]="['/', 'wallet']" routerLinkActive="selected">Wallet</a>
     <a [routerLink]="['/', 'theming']" routerLinkActive="selected">Theming</a>
   </div>

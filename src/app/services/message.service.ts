@@ -3,7 +3,7 @@ import { AngularFireAuth } from '@angular/fire/auth';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { GeoFirestore } from 'geofirestore';
 import { combineLatest, ReplaySubject } from 'rxjs';
-import { first, map, switchMap } from 'rxjs/operators';
+import { first, map, switchMap, share } from 'rxjs/operators';
 import { Col, Message } from 'shared/collections';
 import { Coordinates, GeolocationService } from './geolocation.service';
 import * as firebase from 'firebase';
@@ -15,7 +15,7 @@ export class MessageService {
   messagesCol = this.geofirestore.collection(Col.MESSAGES);
   private messages = [];
   private messagesSubj$ = new ReplaySubject<Message[]>(1);
-  messages$ = this.messagesSubj$.asObservable();
+  messages$ = this.messagesSubj$.asObservable().pipe(share());
 
   constructor(
     private firestore: AngularFirestore,
@@ -34,7 +34,7 @@ export class MessageService {
     const query = this.messagesCol.near({
       center: new firebase.firestore.GeoPoint(coords.lat, coords.long),
       radius: 100
-    });
+    }).limit(50);
 
     // listen for changes
     query.onSnapshot(snap => {
