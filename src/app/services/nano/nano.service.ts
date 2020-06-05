@@ -20,7 +20,8 @@ export class NanoService {
   private accountInfo: AccountInfo;
   private accountInfo$ = new ReplaySubject<AccountInfo>(1);
   balance$ = this.accountInfo$.asObservable().pipe(
-    map(info => info.balance),
+    map(info => info?.balance),
+    map(balance => balance || '0'),
     map(raw => tools.convert(raw, 'RAW', 'NANO'))
   );
   //  TODO add token
@@ -46,7 +47,7 @@ export class NanoService {
     this.accountInfo$.pipe(
       first(),
       switchMap(_ => this.wallet$),
-      switchMap(wlt => this.fetchFunds(wlt)),
+      switchMap(wlt => this.fetchFunds()),
       catchError(e => of(this.snackBar.open('There was an error retrieving your funds', 'ok', { duration: 3000 })))
     ).subscribe();
   }
@@ -60,14 +61,14 @@ export class NanoService {
     }
 
     return this.getRepresentativeAddress(this.accountInfo).pipe(
-        switchMap(representativeAddress => this.getSignedSendBlock(
-          this.wallet,
-          this.accountInfo,
-          amountRaw,
-          toAddress,
-          representativeAddress
-        )),
-        switchMap(sendBlock => this.nanoRpc.process('send', sendBlock))
+      switchMap(representativeAddress => this.getSignedSendBlock(
+        this.wallet,
+        this.accountInfo,
+        amountRaw,
+        toAddress,
+        representativeAddress
+      )),
+      switchMap(sendBlock => this.nanoRpc.process('send', sendBlock))
     );
   }
 
@@ -117,24 +118,28 @@ export class NanoService {
     }
   }
 
-  private fetchFunds(wlt: Wallet) {
-    const address = this.getWalletAddr(wlt);
+  fetchFunds() {
+    if (!this.wallet) {
+      return;
+    }
+    const address = this.getWalletAddr(this.wallet);
     const rpc = this.nanoRpc;
 
     return rpc.getPendingHashes(address).pipe(
       filter(x => !!x),
-      map(hashes => hashes.map(hash => this.receiveBlock(wlt, hash))),
+      tap(_ => this.snackBar.open('Processing pending transactions, this will take a min', 'ok', { duration: 120000 })),
+      map(hashes => hashes.map(hash => this.receiveBlock(this.wallet, hash))),
       concatAll(),
       concatAll()
     );
   }
 
   private receiveBlock(wlt: Wallet, hash: string) {
-    const address = this.getWalletAddr(wlt);
     return this.nanoRpc.getBlockInfo(hash).pipe(
       switchMap((blockInfo) => this.getSignedReceiveBlock(wlt, this.accountInfo, blockInfo, hash)),
       switchMap(signedBlock => this.nanoRpc.process('receive', signedBlock)),
-      switchMap(successResp => this.getAccountInfo(wlt))
+      switchMap(successResp => this.getAccountInfo(wlt)),
+      tap(_ => this.snackBar.open('You just received nano, check your wallet', 'ok'))
     );
   }
 

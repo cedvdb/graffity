@@ -5,7 +5,8 @@
     *ngFor="let message of (messages$ | async); trackBy"
     class="mg-bottom-s"
     [message]="message"
-    [currentUserId]="user?.uid">
+    [currentUserId]="user?.uid"
+    (userClick)="sendNano($event)">
   </app-message>
 </div>
 

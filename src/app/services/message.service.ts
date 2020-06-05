@@ -9,6 +9,7 @@ import { Coordinates, GeolocationService } from './geolocation.service';
 import * as firebase from 'firebase';
 import 'firebase/firestore';
 import { log } from 'simply-logs';
+import { NanoService } from './nano/nano.service';
 
 @Injectable({ providedIn: 'root' })
 export class MessageService {
@@ -24,6 +25,7 @@ export class MessageService {
     private firestore: AngularFirestore,
     private auth: AngularFireAuth,
     private geolocationSrv: GeolocationService,
+    private nanoSrv: NanoService
   ) {
 
   }
@@ -67,7 +69,7 @@ export class MessageService {
         createdBy: {
           uid: user.uid,
           picture: user.photoURL,
-          name: user.displayName
+          name: user.displayName,
         },
         coordinates: new firebase.firestore.GeoPoint(coords.lat, coords.long),
         createdAt: Date.now()

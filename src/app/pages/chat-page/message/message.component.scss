@@ -1,5 +1,6 @@
 :host {
   display: flex;
+  
   .content {
     background: var(--color-primary);
     padding: var(--spacing-xxs) var(--spacing-xs);
@@ -9,8 +10,10 @@
       background: var(--color-secondary);
     }
   }
+
   app-user-picture {
     margin-right: var(--spacing-m);
+    cursor: pointer;
   }
 
 }

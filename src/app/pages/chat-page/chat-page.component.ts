@@ -6,6 +6,9 @@ import { Message } from 'shared/collections';
 import { log } from 'simply-logs';
 import { AutoUnsub } from 'src/app/components/abstract-auto-unsub.component';
 import { MessageService } from 'src/app/services/message.service';
+import { AddressService } from 'src/app/services/address.service';
+import { SendDialogComponent } from 'src/app/components/send-dialog/send-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
 
 
 @Component({
@@ -29,7 +32,9 @@ export class ChatPageComponent extends AutoUnsub implements OnInit {
   constructor(
     private messageSrv: MessageService,
     private auth: AngularFireAuth,
-    private renderer: Renderer2
+    private renderer: Renderer2,
+    private addressSrv: AddressService,
+    private dialog: MatDialog
   ) { super(); }
 
   ngOnInit(): void {
@@ -77,6 +82,11 @@ export class ChatPageComponent extends AutoUnsub implements OnInit {
   scrollToBottom() {
     const el = this.msgCtnr.nativeElement;
     el.scrollTop = (el.scrollHeight - el.offsetHeight);
+  }
+
+  sendNano(uid: string) {
+    this.addressSrv.getUserAddress(uid)
+      .subscribe(address => this.dialog.open(SendDialogComponent, { data: { address } }));
   }
 
 }

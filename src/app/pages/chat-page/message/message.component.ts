@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, Input, ChangeDetectionStrategy, EventEmitter, Output } from '@angular/core';
 import { Message } from 'shared/collections';
 
 @Component({
@@ -10,7 +10,10 @@ import { Message } from 'shared/collections';
 export class MessageComponent implements OnInit {
   @Input() message: Message;
   @Input() currentUserId: string;
+  @Output() userClick = new EventEmitter<string>();
+
   mine = false;
+
   constructor() { }
 
   ngOnInit(): void {

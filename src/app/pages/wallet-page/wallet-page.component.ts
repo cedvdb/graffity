@@ -16,6 +16,7 @@ export class WalletPageComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.nanoSrv.fetchFunds();
   }
 
   openSendDlg() {
