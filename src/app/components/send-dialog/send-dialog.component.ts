@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { MatDialogRef } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-send-dialog',
@@ -10,9 +11,8 @@ export class SendDialogComponent implements OnInit {
     address: '',
     amount: 0,
   };
-  constructor() { }
+  constructor(private dialogRef: MatDialogRef<SendDialogComponent>) { }
 
   ngOnInit(): void {
   }
-
 }

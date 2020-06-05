@@ -5,17 +5,19 @@ import { enc } from 'crypto-js';
 import { decrypt, encrypt } from 'crypto-js/aes';
 import { block, wallet, tools } from 'nanocurrency-web';
 import { Wallet } from 'nanocurrency-web/dist/lib/address-importer';
-import { BehaviorSubject, combineLatest, ReplaySubject, Observable } from 'rxjs';
-import { concatAll, filter, first, map, switchMap, tap } from 'rxjs/operators';
+import { BehaviorSubject, combineLatest, ReplaySubject, Observable, of } from 'rxjs';
+import { concatAll, filter, first, map, switchMap, tap, catchError } from 'rxjs/operators';
 import { Col, NanoAddressesDoc } from 'shared/collections';
 import { NanoRpcService } from './nano-rpc.service';
 import { AccountInfo, BlockInfo } from './nano.interfaces';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Injectable({ providedIn: 'root' })
 export class NanoService {
-
+  private wallet: Wallet;
   wallet$ = new ReplaySubject<Wallet>(1);
   walletStatus$ = new BehaviorSubject<'pending' | 'success' | 'lost'> ('pending');
+  private accountInfo: AccountInfo;
   private accountInfo$ = new ReplaySubject<AccountInfo>(1);
   balance$ = this.accountInfo$.asObservable().pipe(
     map(info => info.balance),
@@ -26,7 +28,8 @@ export class NanoService {
   constructor(
     private auth: AngularFireAuth,
     private firestore: AngularFirestore,
-    private nanoRpc: NanoRpcService
+    private nanoRpc: NanoRpcService,
+    private snackBar: MatSnackBar
   ) {
     // on auth get wallet
     this.auth.user.pipe(
@@ -36,32 +39,35 @@ export class NanoService {
 
     // get account info when we have one
     this.wallet$.pipe(
-      switchMap(wlt => this.nanoRpc.getAccountInfo(this.getWalletAddr(wlt))),
-    ).subscribe(info => this.accountInfo$.next(info));
+      tap(wlt => this.wallet = wlt),
+      switchMap(wlt => this.getAccountInfo(wlt)),
+    ).subscribe(info => this.accountInfo = info);
+
     this.accountInfo$.pipe(
       first(),
       switchMap(_ => this.wallet$),
-      switchMap(wlt => this.fetchFunds(wlt))
+      switchMap(wlt => this.fetchFunds(wlt)),
+      catchError(e => of(this.snackBar.open('There was an error retrieving your funds')))
     ).subscribe();
   }
 
   send(toAddress: string, amountNano: any) {
     const amountRaw = tools.convert(amountNano, 'NANO', 'RAW');
-    combineLatest([
-      this.accountInfo$,
-      this.wallet$
-    ]).pipe(
-      switchMap(([accountInfo, wlt]) => this.getRepresentativeAddress(accountInfo).pipe(
-        map(address => ({ accountInfo, representativeAddress: address, wlt })),
-        switchMap((data: any) => this.getSignedSendBlock(
-          wlt,
-          data.accountInfo,
+    const isSendOk = this.isSendOk(toAddress, amountRaw);
+
+    if (!isSendOk) {
+      return;
+    }
+    
+    return this.getRepresentativeAddress(this.accountInfo).pipe(
+        switchMap(representativeAddress => this.getSignedSendBlock(
+          this.wallet,
+          this.accountInfo,
           amountRaw,
           toAddress,
-          data.representativeAddress
+          representativeAddress
         )),
         switchMap(sendBlock => this.nanoRpc.process('send', sendBlock))
-      )),
     );
   }
 
@@ -125,15 +131,12 @@ export class NanoService {
 
   private receiveBlock(wlt: Wallet, hash: string) {
     const address = this.getWalletAddr(wlt);
-    return combineLatest([
-      this.accountInfo$,
-      this.nanoRpc.getBlockInfo(hash)
-    ]).pipe(
-      switchMap(([accountInfo, blockInfo]) => this.getSignedReceiveBlock(wlt, accountInfo, blockInfo, hash)),
+    return this.nanoRpc.getBlockInfo(hash).pipe(
+      switchMap((blockInfo) => this.getSignedReceiveBlock(wlt, this.accountInfo, blockInfo, hash)),
       switchMap(signedBlock => this.nanoRpc.process('receive', signedBlock)),
-      switchMap(successResp => this.nanoRpc.getAccountInfo(address))
+      switchMap(successResp => this.getAccountInfo(wlt))
     );
-    }
+  }
 
 
 
@@ -194,6 +197,24 @@ export class NanoService {
     };
     // Returns a correctly formatted and signed block ready to be sent to the blockchain
     return block.send(data, wlt.accounts[0].privateKey);
+  }
+
+  private isSendOk(address: string, amountRaw: any) {
+    if (!tools.validateAddress(address)) {
+      this.snackBar.open('Invalid address');
+      return false;
+    }
+    if (!amountRaw || amountRaw > this.accountInfo.balance) {
+      this.snackBar.open('Invalid amount');
+      return false;
+    }
+    return true;
+  }
+
+  private getAccountInfo(wlt: Wallet): Observable<AccountInfo> {
+    return this.nanoRpc.getAccountInfo(this.getWalletAddr(wlt)).pipe(
+      tap(info => this.accountInfo$.next(info))
+    );
   }
 
   private getRepresentativeAddress(accountInfo: AccountInfo): Observable<string> {

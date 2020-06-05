@@ -11,7 +11,7 @@ import { SendDialogComponent } from '../../components/send-dialog/send-dialog.co
 export class WalletPageComponent implements OnInit {
 
   constructor(
-    public walletSrv: NanoService,
+    public nanoSrv: NanoService,
     public dialog: MatDialog
   ) { }
 
@@ -21,8 +21,11 @@ export class WalletPageComponent implements OnInit {
   openSendDlg() {
     const dialogRef = this.dialog.open(SendDialogComponent);
 
-    dialogRef.afterClosed().subscribe(result => {
-      debugger;
+    dialogRef.afterClosed().pipe(
+    ).subscribe(result => {
+      if (result) {
+        this.nanoSrv.send(result.toAddress, result.amountNano);
+      }
     });
   }
 
