@@ -1,8 +1,8 @@
 {
   "name": "graffity",
   "short_name": "graffity",
-  "theme_color": "#1976d2",
-  "background_color": "#fafafa",
+  "theme_color": "#4fb0bd",
+  "background_color": "#4fb0bd",
   "display": "standalone",
   "scope": "./",
   "start_url": "./",
