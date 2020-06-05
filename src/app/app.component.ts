@@ -18,12 +18,12 @@ import { Router } from '@angular/router';
 export class AppComponent implements OnInit {
 
   constructor(
-    private themingSrv: ThemingService,
+    // private themingSrv: ThemingService,
   ) {}
 
   ngOnInit() {
     this.onResize();
-    this.themingSrv.loadTheme();
+    // this.themingSrv.loadTheme();
   }
 
   /** needed so we can get full height on mobile */
