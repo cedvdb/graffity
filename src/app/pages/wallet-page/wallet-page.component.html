@@ -1,7 +1,9 @@
 
 
 <ng-container *ngIf="nanoSrv.walletStatus$ | async as status">
-  <mat-progress-spinner *ngIf="status === 'pending'" mode="indeterminate"></mat-progress-spinner>
+  <div *ngIf="status === 'pending'" class="flex-center">
+    <mat-progress-spinner  mode="indeterminate"></mat-progress-spinner>
+  </div>
   <ng-container *ngIf="status === 'lost'">
     Wallet wasnt found. Recovery is being implemented as you read this
     <!-- <mat-form-field>
@@ -41,8 +43,10 @@
       
     </div>
 
-    <h3>Seed</h3>
-    <qrcode colordark="#4fb0bd" [qrdata]="(nanoSrv.wallet$ | async)?.seed" [width]="256"></qrcode>
+    <div class="flexColumn flexCenter">
+      <qrcode colordark="#4fb0bd" [qrdata]="(nanoSrv.wallet$ | async)?.seed" [width]="256"></qrcode>
+      <h3>Seed</h3>
+    </div>
     
 
 
