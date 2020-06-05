@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NanoService } from 'src/app/services/nano/nano.service';
 import { MatDialog } from '@angular/material/dialog';
-import { SendDialogComponent } from './send-dialog/send-dialog.component';
+import { SendDialogComponent } from '../../components/send-dialog/send-dialog.component';
 
 @Component({
   selector: 'app-wallet-page',

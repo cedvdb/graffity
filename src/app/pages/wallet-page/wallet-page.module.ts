@@ -3,7 +3,7 @@ import { SharedModule } from 'src/app/components/shared.module';
 import { WalletPageComponent } from './wallet-page.component';
 import { QRCodeModule } from 'angularx-qrcode';
 import { RouterModule } from '@angular/router';
-import { SendDialogComponent } from './send-dialog/send-dialog.component';
+import { SendDialogComponent } from '../../components/send-dialog/send-dialog.component';
 
 
 
