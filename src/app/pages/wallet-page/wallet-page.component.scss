@@ -8,3 +8,32 @@
   margin-bottom: var(--spacing-m);
   color: var(--color-warn);
 }
+
+.top {
+  margin-bottom: var(--spacing-m);
+  h2 {
+    margin: 0;
+    margin-right: var(--spacing-m);
+  }
+}
+
+
+.mg-right-m {
+  margin-right: var(--spacing-m);
+}
+
+.chip {
+  padding: var(--spacing-xs) var(--spacing-s);
+  margin-bottom: var(--spacing-s);
+  border-radius: 1rem;
+  display: inline-block;
+}
+
+.balance {
+  background: var(--color-primary);
+  color: white;
+}
+
+.address {
+  background: var(--color-accent);
+}

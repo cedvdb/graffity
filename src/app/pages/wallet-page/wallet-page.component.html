@@ -1,3 +1,5 @@
+
+
 <ng-container *ngIf="nanoSrv.walletStatus$ | async as status">
   <mat-progress-spinner *ngIf="status === 'pending'" mode="indeterminate"></mat-progress-spinner>
   <ng-container *ngIf="status === 'lost'">
@@ -12,21 +14,50 @@
   </ng-container>
 
   <ng-container *ngIf="status === 'success'">
-    <div class="disclaimer">This app is a work in progress, if you have any funds here, please backup your wallet. 
+    <!-- <div class="disclaimer">This app is a work in progress, if you have any funds here, please backup your wallet. 
       I didn't have much time until submission so there is a couple qr codes down there and a json.
+    </div> -->
+
+    <div class="flexBetween top">
+      <h2>Nano Wallet:</h2> 
+      <div>
+        <!-- <button mat-raised-button class="mg-right-m" color="primary" (click)="openSendDlg()">Add Funds</button> -->
+        <button mat-raised-button color="accent" (click)="openSendDlg()">Withdraw</button>
+      </div>
+    </div>
+    <div class="info">
+
+      <div>
+        <div class="balance chip z-1" >
+          {{ nanoSrv.balance$ | async}} Nano
+        </div>
+      </div>
+
+      <div>
+        <div class="address chip z-1">
+          {{ (nanoSrv.wallet$ | async)?.accounts[0].address }}
+        </div>
+      </div>
+      
     </div>
 
-    <h3>balance</h3>
-    {{ nanoSrv.balance$ | async}} Nano
+    <h3>Seed</h3>
+    <qrcode colordark="#4fb0bd" [qrdata]="(nanoSrv.wallet$ | async)?.seed" [width]="256"></qrcode>
+    
+
+
+
+<!-- 
+    <qrcode colordark="#4fb0bd" [qrdata]="(nanoSrv.wallet$ | async)?.accounts[0].address" [width]="256"></qrcode>
+
 
     <button mat-button color="primary" (click)="openSendDlg()">Withdrawal</button>
 
     <h3>Seed</h3>
     <qrcode colordark="#4fb0bd" [qrdata]="(nanoSrv.wallet$ | async)?.seed" [width]="256"></qrcode>
     <h3>Address</h3>
-    <qrcode colordark="#4fb0bd" [qrdata]="(nanoSrv.wallet$ | async)?.accounts[0].address" [width]="256"></qrcode>
     <h3>JSON</h3>
-    <span id="json-wallet">{{ nanoSrv.wallet$ | async | json }}</span>
+    <span id="json-wallet">{{ nanoSrv.wallet$ | async | json }}</span> -->
   </ng-container>
 </ng-container>
 
