@@ -1,7 +1,5 @@
 <ng-container *ngIf="nanoSrv.walletStatus$ | async as status">
-  <ng-container *ngIf="status === 'pending'">
-    Searching your wallet, please hold...
-  </ng-container>
+  <mat-progress-spinner *ngIf="status === 'pending'" mode="indeterminate"></mat-progress-spinner>
   <ng-container *ngIf="status === 'lost'">
     Seems like you lost your wallet. If you backed you'll have to wait for recovery 
     to be implemented here or contact me to tell you how to do it
@@ -11,18 +9,18 @@
     <div class="disclaimer">This app is a work in progress, if you have any funds here, please backup your wallet. 
       I didn't have much time until submission so there is a couple qr codes down there and a json.
     </div>
+
     <h3>balance</h3>
     {{ nanoSrv.balance$ | async}} Nano
-    <button mat-button color="primary" (click)="openSendDlg()">Send</button>
+
+    <button mat-button color="primary" (click)="openSendDlg()">Withdrawal</button>
 
     <h3>Seed</h3>
     <qrcode [qrdata]="(nanoSrv.wallet$ | async)?.seed" [width]="256"></qrcode>
-    <h3>Mnemonic</h3>
-    <qrcode [qrdata]="(nanoSrv.wallet$ | async)?.mnemonic" [width]="256"></qrcode>
     <h3>Address</h3>
     <qrcode [qrdata]="(nanoSrv.wallet$ | async)?.accounts[0].address" [width]="256"></qrcode>
     <h3>JSON</h3>
-    {{ nanoSrv.wallet$ | async | json }}
+    <span id="json-wallet">{{ nanoSrv.wallet$ | async | json }}</span>
   </ng-container>
 </ng-container>
 

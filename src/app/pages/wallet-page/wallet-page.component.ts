@@ -19,14 +19,7 @@ export class WalletPageComponent implements OnInit {
   }
 
   openSendDlg() {
-    const dialogRef = this.dialog.open(SendDialogComponent);
-
-    dialogRef.afterClosed().pipe(
-    ).subscribe(result => {
-      if (result) {
-        this.nanoSrv.send(result.toAddress, result.amountNano);
-      }
-    });
+    this.dialog.open(SendDialogComponent);
   }
 
 

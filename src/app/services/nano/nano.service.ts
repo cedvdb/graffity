@@ -47,18 +47,18 @@ export class NanoService {
       first(),
       switchMap(_ => this.wallet$),
       switchMap(wlt => this.fetchFunds(wlt)),
-      catchError(e => of(this.snackBar.open('There was an error retrieving your funds')))
+      catchError(e => of(this.snackBar.open('There was an error retrieving your funds', 'ok', { duration: 3000 })))
     ).subscribe();
   }
 
-  send(toAddress: string, amountNano: any) {
+  send(toAddress = '', amountNano: any = '0') {
     const amountRaw = tools.convert(amountNano, 'NANO', 'RAW');
     const isSendOk = this.isSendOk(toAddress, amountRaw);
 
     if (!isSendOk) {
       return;
     }
-    
+
     return this.getRepresentativeAddress(this.accountInfo).pipe(
         switchMap(representativeAddress => this.getSignedSendBlock(
           this.wallet,
@@ -201,11 +201,11 @@ export class NanoService {
 
   private isSendOk(address: string, amountRaw: any) {
     if (!tools.validateAddress(address)) {
-      this.snackBar.open('Invalid address');
+      this.snackBar.open('Invalid address', 'ok', { duration: 3000 });
       return false;
     }
-    if (!amountRaw || amountRaw > this.accountInfo.balance) {
-      this.snackBar.open('Invalid amount');
+    if (!Number(amountRaw) || amountRaw > this.accountInfo.balance) {
+      this.snackBar.open('Invalid amount', 'ok', { duration: 3000 });
       return false;
     }
     return true;

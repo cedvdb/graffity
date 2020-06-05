@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
+import { NanoService } from 'src/app/services/nano/nano.service';
 
 @Component({
   selector: 'app-send-dialog',
@@ -7,12 +8,24 @@ import { MatDialogRef } from '@angular/material/dialog';
   styleUrls: ['./send-dialog.component.scss']
 })
 export class SendDialogComponent implements OnInit {
-  data = {
-    address: '',
-    amount: 0,
-  };
-  constructor(private dialogRef: MatDialogRef<SendDialogComponent>) { }
+  address: '';
+  amount: 0;
+  pending = false;
+
+  constructor(
+    private dialogRef: MatDialogRef<SendDialogComponent>,
+    private nanoSrv: NanoService
+  ) { }
 
   ngOnInit(): void {
   }
+
+  send() {
+    this.pending = true;
+    this.nanoSrv.send(this.address, this.amount).subscribe(_ => {
+      this.pending = false;
+      this.dialogRef.close();
+    });
+  }
+
 }
