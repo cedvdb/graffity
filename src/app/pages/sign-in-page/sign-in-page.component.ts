@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { faPaintBrush } from '@fortawesome/free-solid-svg-icons';
+import { faComments } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-sign-in-page',
@@ -7,7 +7,7 @@ import { faPaintBrush } from '@fortawesome/free-solid-svg-icons';
   styleUrls: ['./sign-in-page.component.scss']
 })
 export class SignInPageComponent implements OnInit {
-  faPaintBrush = faPaintBrush;
+  faComments = faComments;
 
   constructor() { }
 
