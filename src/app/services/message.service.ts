@@ -48,7 +48,7 @@ export class MessageService {
         .filter(change => change.type === 'added')
         .map((change) => change.doc.data())
         .sort((a, b) => a.createdAt - b.createdAt);
-      this.messages.push(...messages);
+      this.messages = [...this.messages, ...messages];
       this.messagesSubj$.next(this.messages);
     });
 

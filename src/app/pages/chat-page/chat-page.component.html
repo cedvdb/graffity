@@ -1,7 +1,7 @@
 
 
 <div class="flexGrow messages">
-  <cdk-virtual-scroll-viewport autosize>
+  <cdk-virtual-scroll-viewport  autosize (scroll)="onScroll($event)">
     <app-message 
       *cdkVirtualFor="let message of (messages$ | async); trackBy"
       class="mg-bottom-s"

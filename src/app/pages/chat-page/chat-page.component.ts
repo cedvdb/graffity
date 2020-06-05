@@ -7,22 +7,28 @@ import { Message } from 'shared/collections';
 import { AutoUnsub } from 'src/app/components/abstract-auto-unsub.component';
 import { MessageService } from 'src/app/services/message.service';
 import { CdkAutoSizeVirtualScroll } from '@angular/cdk-experimental/scrolling';
+import { log } from 'simply-logs';
 
 
 @Component({
   selector: 'app-chat-page',
   templateUrl: './chat-page.component.html',
   styleUrls: ['./chat-page.component.scss'],
-  providers: [{provide: VIRTUAL_SCROLL_STRATEGY, useClass: CdkAutoSizeVirtualScroll }]
+  providers: [
+    { provide: VIRTUAL_SCROLL_STRATEGY, useClass: CdkAutoSizeVirtualScroll }
+  ]
 })
 export class ChatPageComponent extends AutoUnsub implements OnInit {
 
   newMsgContent = '';
   messages$: Observable<Message[]> = this.messageSrv.messages$;
   user: firebase.User;
+  private keepBottomScrolled = true;
   @ViewChild('inp') textarea: ElementRef<HTMLTextAreaElement>;
   @ViewChild(CdkVirtualScrollViewport, { static: false, read: ElementRef }) scrollCtnr: ElementRef<HTMLElement>;
-  trackBy: TrackByFunction<any> = (index, item) => index;
+  @ViewChild(CdkVirtualScrollViewport, { static: false}) scroller: CdkVirtualScrollViewport;
+
+  trackBy: TrackByFunction<any> = (index, item) => item.id;
 
   constructor(
     private messageSrv: MessageService,
@@ -36,9 +42,13 @@ export class ChatPageComponent extends AutoUnsub implements OnInit {
     ).subscribe(user => this.user = user);
     // scroll to bottom when we first get msgs;
     this.messages$.pipe(
-      delay(150),
-      take(1)
-    ).subscribe(_ => this.scrollToBottom());
+      delay(100),
+      takeUntil(this.destroy$)
+    ).subscribe(_ => {
+      if (this.keepBottomScrolled) {
+        this.scrollToBottom();
+      }
+    });
   }
 
   async postMessage(event: InputEvent) {
@@ -56,8 +66,20 @@ export class ChatPageComponent extends AutoUnsub implements OnInit {
     this.renderer.setStyle(el, 'height', el.scrollHeight + 'px');
   }
 
+  onScroll(event) {
+    const el = this.scrollCtnr.nativeElement;
+    // we check if we are at bottom minus 20 px to give a bit of marge
+    const isBottom = el.scrollTop > (el.scrollHeight - el.offsetHeight) - 20;
+    log.debug(el.scrollTop, (el.scrollHeight - el.offsetHeight));
+    if (isBottom) {
+      this.keepBottomScrolled = true;
+    } else {
+      this.keepBottomScrolled = false;
+    }
+  }
+
   scrollToBottom() {
-    this.scrollCtnr.nativeElement.scrollTop = this.scrollCtnr.nativeElement.scrollHeight;
+    this.scroller.scrollTo({ bottom: 0 });
   }
 
 }
