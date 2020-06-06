@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ReplaySubject } from 'rxjs';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 
 export interface Coordinates {
@@ -15,6 +16,8 @@ export class GeolocationService {
   // this is just temporary, until we can select a location
   userIsAt: 'NY' | 'LOC' = 'NY';
   hasLocation = false;
+
+  constructor(private snackBar: MatSnackBar) {}
 
   getUserCoordinates() {
     navigator.geolocation.getCurrentPosition(
@@ -33,6 +36,11 @@ export class GeolocationService {
         this.userCoordinates$.next(coords);
       },
       () => {
+        this.snackBar.open(
+          'Could not access geolocation, location set to New York',
+          'ok',
+          { duration: 3000 }
+        );
         this.userCoordinates = this.newYorkCoords;
         this.userIsAt = 'NY';
         this.hasLocation = false;
