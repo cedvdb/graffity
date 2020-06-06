@@ -11,6 +11,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 })
 export class WalletPageComponent implements OnInit {
   recoveryMnemonic: string;
+  recoveryPending = false;
 
   constructor(
     public nanoSrv: NanoService,
@@ -30,7 +31,9 @@ export class WalletPageComponent implements OnInit {
     if (!this.recoveryMnemonic) {
       return this.snackNar.open('you need to input your mnemonic in the field above (24words)');
     }
-    this.nanoSrv.recover(this.recoveryMnemonic);
+    this.recoveryPending = true;
+    this.nanoSrv.recover(this.recoveryMnemonic)
+    .then(_ => this.recoveryPending = false);
   }
 
 

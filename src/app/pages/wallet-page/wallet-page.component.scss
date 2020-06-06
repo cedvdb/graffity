@@ -1,7 +1,8 @@
 :host {
   display: block;
   height: 100%;
-  overflow: auto;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
 .disclaimer {
@@ -27,7 +28,7 @@
   margin-bottom: var(--spacing-s);
   border-radius: 1rem;
   display: inline-block;
-  word-wrap: break-word;
+  word-break: break-word;
 }
 
 .balance {
@@ -37,4 +38,8 @@
 
 .address {
   background: var(--color-accent);
+}
+
+.mnemonic {
+  width: 256px;
 }

@@ -11,6 +11,8 @@ import { Col, NanoAddressesDoc } from 'shared/collections';
 import { NanoRpcService } from './nano-rpc.service';
 import { AccountInfo, BlockInfo } from './nano.interfaces';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Helper } from './helper.utils';
+import { BlockService } from './block.service';
 
 @Injectable({ providedIn: 'root' })
 export class NanoService {
@@ -24,12 +26,12 @@ export class NanoService {
     map(balance => balance || '0'),
     map(raw => tools.convert(raw, 'RAW', 'NANO'))
   );
-  //  TODO add token
 
   constructor(
     private auth: AngularFireAuth,
     private firestore: AngularFirestore,
     private nanoRpc: NanoRpcService,
+    private blockSrv: BlockService,
     private snackBar: MatSnackBar
   ) {
     // on auth get wallet
@@ -44,10 +46,10 @@ export class NanoService {
       switchMap(wlt => this.getAccountInfo(wlt)),
     ).subscribe(info => this.accountInfo = info);
 
+    // on account info fetch funds
     this.accountInfo$.pipe(
       first(),
-      switchMap(_ => this.wallet$),
-      switchMap(wlt => this.fetchFunds()),
+      switchMap(_ => this.fetchFunds()),
       catchError(e => of(this.snackBar.open('There was an error retrieving your funds', 'ok', { duration: 3000 })))
     ).subscribe();
   }
@@ -56,10 +58,9 @@ export class NanoService {
     if (!this.wallet) {
       return;
     }
-    const address = this.getWalletAddr(this.wallet);
-    const rpc = this.nanoRpc;
+    const address = Helper.getWalletAddr(this.wallet);
 
-    return rpc.getPendingHashes(address).pipe(
+    return this.nanoRpc.getPendingHashes(address).pipe(
       filter(x => !!x),
       tap(_ => this.snackBar.open('Processing pending transactions, this will take a min', 'ok', { duration: 120000 })),
       map(hashes => hashes.map(hash => this.receiveBlock(this.wallet, hash))),
@@ -77,7 +78,7 @@ export class NanoService {
     }
 
     return this.getRepresentativeAddress(this.accountInfo).pipe(
-      switchMap(representativeAddress => this.getSignedSendBlock(
+      switchMap(representativeAddress => this.blockSrv.getSignedSendBlock(
         this.wallet,
         this.accountInfo,
         amountRaw,
@@ -88,8 +89,21 @@ export class NanoService {
     );
   }
 
-  recover(mnemonic: string) {
+  async recover(mnemonic: string) {
     const wlt = wallet.fromMnemonic(mnemonic);
+    const user = await this.auth.user.pipe(first()).toPromise();
+    const addressesDocRef = await this.firestore.collection(Col.NANO_ADDRESSES)
+    .doc(user.uid)
+    .get()
+    .pipe(first())
+    .toPromise();
+    const addressDoc = addressesDocRef.data();
+    const ok = this.checkWallet(wlt, addressDoc.address);
+    if (ok) {
+      const encryptedWallet = encrypt(JSON.stringify(wlt), user.uid).toString();
+      const key = this.getStorageKey(user.uid);
+      localStorage.setItem(key, encryptedWallet);
+    }
   }
 
   private getWallet(user: firebase.User) {
@@ -108,14 +122,14 @@ export class NanoService {
   }
 
   private createIfNotExist(addressesDoc: NanoAddressesDoc, uid: string) {
-    const key = `nano-${uid}`;
+    const key = this.getStorageKey(uid);
     if (!addressesDoc) {
       const wlt = wallet.generate();
-      const address = this.getWalletAddr(wlt);
+      const address = Helper.getWalletAddr(wlt);
       const encryptedWallet = encrypt(JSON.stringify(wlt), uid).toString();
       localStorage.setItem(key, encryptedWallet);
       return this.firestore.collection(Col.NANO_ADDRESSES).doc(uid)
-      .set({ addresses: [address] })
+      .set({ address })
       .then(_ => this.wallet$.next(wlt))
       .then(_ => this.walletStatus$.next('success'));
     } else {
@@ -124,13 +138,7 @@ export class NanoService {
         const bytes = decrypt(encryptedWallet, uid);
         const decryptedWallet = bytes.toString(enc.Utf8);
         const wlt = JSON.parse(decryptedWallet);
-        const found = addressesDoc.addresses.find(addr => addr === this.getWalletAddr(wlt));
-        if (found) {
-          this.wallet$.next(wlt);
-          this.walletStatus$.next('success');
-        } else {
-          this.walletStatus$.next('lost');
-        }
+        this.checkWallet(wlt, addressesDoc.address);
       } else {
         this.walletStatus$.next('lost');
       }
@@ -138,76 +146,32 @@ export class NanoService {
     }
   }
 
+  private checkWallet(wlt: Wallet, dbAddress: string) {
+    const found = dbAddress === Helper.getWalletAddr(wlt);
+    if (found) {
+      this.wallet$.next(wlt);
+      this.walletStatus$.next('success');
+      return true;
+    } else {
+      this.snackBar.open('Not the wallet tied to your account', 'ok', { duration: 3000 });
+      this.walletStatus$.next('lost');
+      return false;
+    }
+  }
+
+  private getStorageKey(uid: string) {
+    return `nano-${uid}`;
+  }
 
   private receiveBlock(wlt: Wallet, hash: string) {
     return this.nanoRpc.getBlockInfo(hash).pipe(
-      switchMap((blockInfo) => this.getSignedReceiveBlock(wlt, this.accountInfo, blockInfo, hash)),
+      switchMap((blockInfo) => this.blockSrv.getSignedReceiveBlock(wlt, this.accountInfo, blockInfo, hash)),
       switchMap(signedBlock => this.nanoRpc.process('receive', signedBlock)),
       switchMap(successResp => this.getAccountInfo(wlt)),
       tap(_ => this.snackBar.open('You just received nano, check your wallet', 'ok'))
     );
   }
 
-
-
-  private async getSignedReceiveBlock(wlt: Wallet, accountInfo: AccountInfo, info: BlockInfo, transactionHash: string) {
-    const worker = new Worker('./nano.worker', { type: 'module' });
-    const hashToCompute = accountInfo.frontier || wlt.accounts[0].publicKey;
-    const work: string = await new Promise(resolve => {
-      worker.postMessage(hashToCompute);
-      worker.onmessage = ev => {
-        resolve(ev.data);
-        worker.terminate();
-      };
-    });
-    const data = {
-      // Your current balance in RAW
-      walletBalanceRaw: accountInfo.balance || '0',
-      // Your address
-      toAddress: this.getWalletAddr(wlt),
-      // From wallet info
-      representativeAddress: info.contents.representative,
-      // From wallet info
-      frontier: accountInfo.frontier ||
-      '0000000000000000000000000000000000000000000000000000000000000000',
-      // From the pending transaction
-      transactionHash,
-      // From the pending transaction in RAW
-      amountRaw: info.amount,
-      work
-    };
-    // Returns a correctly formatted and signed block ready to be sent to the blockchain
-    return block.receive(data, wlt.accounts[0].privateKey);
-  }
-
-  private async getSignedSendBlock(
-    wlt: Wallet,
-    accountInfo: AccountInfo,
-    amountRaw: any,
-    toAddress: string,
-    representativeAddress: string
-  ) {
-    const worker = new Worker('./nano.worker', { type: 'module' });
-    const hashToCompute = accountInfo.frontier || wlt.accounts[0].publicKey;
-    const work: string = await new Promise(resolve => {
-      worker.postMessage(hashToCompute);
-      worker.onmessage = ev => {
-        resolve(ev.data);
-        worker.terminate();
-      };
-    });
-    const data = {
-      walletBalanceRaw: accountInfo.balance,
-      fromAddress: this.getWalletAddr(wlt),
-      toAddress,
-      representativeAddress,
-      frontier: accountInfo.frontier,
-      amountRaw,
-      work
-    };
-    // Returns a correctly formatted and signed block ready to be sent to the blockchain
-    return block.send(data, wlt.accounts[0].privateKey);
-  }
 
   private isSendOk(address: string, amountRaw: any) {
     if (!tools.validateAddress(address)) {
@@ -222,7 +186,7 @@ export class NanoService {
   }
 
   private getAccountInfo(wlt: Wallet): Observable<AccountInfo> {
-    return this.nanoRpc.getAccountInfo(this.getWalletAddr(wlt)).pipe(
+    return this.nanoRpc.getAccountInfo(Helper.getWalletAddr(wlt)).pipe(
       tap(info => this.accountInfo$.next(info))
     );
   }
@@ -231,8 +195,5 @@ export class NanoService {
     return this.nanoRpc.getBlockInfo(accountInfo.representative_block).pipe(map(info => info.contents.representative));
   }
 
-  private getWalletAddr(wlt: Wallet) {
-    return wlt.accounts[0].address;
-  }
 
 }

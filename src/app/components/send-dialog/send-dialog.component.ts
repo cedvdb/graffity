@@ -19,7 +19,6 @@ export class SendDialogComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    debugger;
     this.address = this.data?.address;
     this.amount = this.data?.amount;
   }

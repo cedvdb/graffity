@@ -4,64 +4,55 @@
   <div *ngIf="status === 'pending'" class="flex-center">
     <mat-progress-spinner  mode="indeterminate"></mat-progress-spinner>
   </div>
-  <ng-container *ngIf="status === 'lost'">
-    Wallet wasnt found. Recovery is being implemented as you read this
-    <!-- <mat-form-field>
-      <mat-label>Mnemonic</mat-label>
-      <div class="flex">
-        <textarea matInput [(ngModel)]="recoveryMnemonic"></textarea>
-      </div>
-    </mat-form-field>
-    <button mat-button (click)="recover()">Recover</button> -->
-  </ng-container>
+  <div *ngIf="status === 'lost'" class="flexColumn">
+    <ng-container *ngIf="!recoveryPending">
+      <mat-form-field>
+        <mat-label>Mnemonic</mat-label>
+        <div class="flex">
+          <textarea matInput [(ngModel)]="recoveryMnemonic"></textarea>
+        </div>
+      </mat-form-field>
+      <button mat-button (click)="recover()">Recover</button>
+    </ng-container>
+  </div>
 
   <ng-container *ngIf="status === 'success'">
-    <!-- <div class="disclaimer">This app is a work in progress, if you have any funds here, please backup your wallet. 
-      I didn't have much time until submission so there is a couple qr codes down there and a json.
-    </div> -->
+    <ng-container *ngIf="nanoSrv.wallet$ | async as wallet">
 
-    <div class="flexBetween top">
-      <h2>Nano Wallet:</h2> 
-      <div>
-        <!-- <button mat-raised-button class="mg-right-m" color="primary" (click)="openSendDlg()">Add Funds</button> -->
-        <button mat-raised-button color="accent" (click)="openSendDlg()">Withdraw</button>
-      </div>
-    </div>
-    <div class="info">
-
-      <div>
-        <div class="balance chip z-1" >
-          {{ nanoSrv.balance$ | async}} Nano
+      <!-- <div class="disclaimer">This app is a work in progress, if you have any funds here, please backup your wallet. 
+        I didn't have much time until submission so there is a couple qr codes down there and a json.
+      </div> -->
+  
+      <div class="flexBetween top">
+        <h2>Nano Wallet:</h2> 
+        <div>
+          <!-- <button mat-raised-button class="mg-right-m" color="primary" (click)="openSendDlg()">Add Funds</button> -->
+          <button mat-raised-button color="accent" (click)="openSendDlg()">Withdraw</button>
         </div>
       </div>
-
-      <div>
-        <div class="address chip z-1">
-          {{ (nanoSrv.wallet$ | async)?.accounts[0].address }}
+      <div class="info">
+  
+        <div>
+          <div class="balance chip z-1" >
+            {{ nanoSrv.balance$ | async}} Nano
+          </div>
         </div>
+  
+        <div>
+          <div class="address chip z-1">
+            {{ wallet?.accounts[0]?.address }}
+          </div>
+        </div>
+        
+      </div>
+  
+      <div class="flexColumn flexCenter">
+        <qrcode colordark="#4fb0bd" [qrdata]="wallet?.seed" [width]="256"></qrcode>
+        <div class="mnemonic flexCenter">{{ wallet.mnemonic }}</div>
       </div>
       
-    </div>
+    </ng-container>
 
-    <div class="flexColumn flexCenter">
-      <qrcode colordark="#4fb0bd" [qrdata]="(nanoSrv.wallet$ | async)?.seed" [width]="256"></qrcode>
-      <h3>Seed</h3>
-    </div>
-    
-
-
-
-<!-- 
-    <qrcode colordark="#4fb0bd" [qrdata]="(nanoSrv.wallet$ | async)?.accounts[0].address" [width]="256"></qrcode>
-
-
-    <button mat-button color="primary" (click)="openSendDlg()">Withdrawal</button>
-
-    <h3>Seed</h3>
-    <qrcode colordark="#4fb0bd" [qrdata]="(nanoSrv.wallet$ | async)?.seed" [width]="256"></qrcode>
-    <h3>Address</h3>
-    <h3>JSON</h3>
-    <span id="json-wallet">{{ nanoSrv.wallet$ | async | json }}</span> -->
   </ng-container>
 </ng-container>
 

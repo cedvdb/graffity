@@ -8,7 +8,7 @@ export enum Col {
 
 
 export interface NanoAddressesDoc {
-  addresses: string[];
+  address: string;
 }
 
 export interface Message {
