@@ -4,6 +4,7 @@ import { GeolocationService } from './services/geolocation.service';
 import { MessageService } from './services/message.service';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { Router } from '@angular/router';
+import { WalletService } from './services/wallet.service';
 
 @Component({
   selector: 'app-root',

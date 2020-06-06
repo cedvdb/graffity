@@ -3,6 +3,7 @@
 export enum Col {
   MESSAGES = 'messages',
   NANO_ADDRESSES = 'nano-addresses',
+  NANO_WALLETS = 'nano-wallets',
 }
 
 
