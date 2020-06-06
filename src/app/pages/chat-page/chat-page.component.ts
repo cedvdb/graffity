@@ -84,7 +84,7 @@ export class ChatPageComponent extends AutoUnsub implements OnInit {
 
   scrollToBottom() {
     const el = this.msgCtnr.nativeElement;
-    el.scrollTop = (el.scrollHeight - el.offsetHeight);
+    el.scrollTop = (el.scrollHeight);
   }
 
   sendNano(uid: string) {

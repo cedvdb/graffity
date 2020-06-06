@@ -40,7 +40,7 @@ export class MessageService {
     const query = this.messagesCol.near({
       center: new firebase.firestore.GeoPoint(coords.lat, coords.long),
       radius: 100
-    }).limit(this.maxAmount);
+    });
 
     // listen for changes
     this.currentUnsub = query.onSnapshot(snap => {
@@ -50,6 +50,7 @@ export class MessageService {
         .map((change) => change.doc.data())
         .sort((a, b) => a.createdAt - b.createdAt);
       const fromIndex = messages.length > this.maxAmount ? messages.length - this.maxAmount : 0;
+      debugger;
       this.messages = [...this.messages, ...messages].slice(fromIndex);
       this.messagesSubj$.next(this.messages);
     });
