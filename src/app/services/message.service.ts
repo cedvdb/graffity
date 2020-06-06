@@ -1,18 +1,16 @@
 import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
-import { AngularFirestore } from '@angular/fire/firestore';
 import * as firebase from 'firebase/app';
-import { GeoFirestore } from 'geofirestore';
 import { combineLatest, ReplaySubject } from 'rxjs';
 import { first, map, switchMap } from 'rxjs/operators';
 import { Col, Message } from 'shared/collections';
 import { log } from 'simply-logs';
+import { GeofireService } from './geofire.service';
 import { Coordinates, GeolocationService } from './geolocation.service';
 
 @Injectable({ providedIn: 'root' })
 export class MessageService {
-  geofirestore: GeoFirestore = new GeoFirestore(this.firestore.firestore);
-  messagesCol = this.geofirestore.collection(Col.MESSAGES);
+  messagesCol = this.geofireSrv.collection(Col.MESSAGES);
   private messages = [];
   private messagesSubj$ = new ReplaySubject<Message[]>(1);
   messages$ = this.messagesSubj$.asObservable().pipe();
@@ -20,7 +18,7 @@ export class MessageService {
   private maxAmount = 30;
 
   constructor(
-    private firestore: AngularFirestore,
+    private geofireSrv: GeofireService,
     private auth: AngularFireAuth,
     private geolocationSrv: GeolocationService,
   ) {
@@ -50,7 +48,6 @@ export class MessageService {
         .map((change) => change.doc.data())
         .sort((a, b) => a.createdAt - b.createdAt);
       const fromIndex = messages.length > this.maxAmount ? messages.length - this.maxAmount : 0;
-      debugger;
       this.messages = [...this.messages, ...messages].slice(fromIndex);
       this.messagesSubj$.next(this.messages);
     });

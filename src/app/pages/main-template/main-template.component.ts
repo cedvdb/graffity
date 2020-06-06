@@ -4,6 +4,7 @@ import { AngularFireAuth } from '@angular/fire/auth';
 import { faBars, faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
 import { GeolocationService } from 'src/app/services/geolocation.service';
 import { MessageService } from 'src/app/services/message.service';
+import { PresenceService } from 'src/app/services/presence.service';
 
 @Component({
   selector: 'app-main-template',
@@ -24,12 +25,14 @@ export class MainTemplateComponent implements OnInit {
     private router: Router,
     private geolocationSrv: GeolocationService,
     private messageSrv: MessageService,
+    private presenceSrv: PresenceService
   ) {
   }
 
   ngOnInit() {
     this.geolocationSrv.getUserCoordinates();
     this.messageSrv.init();
+    this.presenceSrv.init();
   }
 
   openNav(event: MouseEvent) {

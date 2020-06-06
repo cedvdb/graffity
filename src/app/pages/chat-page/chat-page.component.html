@@ -1,6 +1,16 @@
 
 <ng-container *ngIf="geolocationSrv.userCoordinates$ | async as coords">
-  <div>Chatting in a 100km radius around {{ coords.lat }}, {{ coords.long }}</div>
+  <div>
+    Chatting in a 100km radius around {{ coords.lat }}, {{ coords.long }}.
+  </div>
+  <div *ngIf="presenceSrv.onlineUsersAtLocation$ | async as onlineUsers">
+    {{ onlineUsers }} online users here
+    <ng-container *ngIf="onlineUsers === 1 && geolocationSrv.userIsAt === 'LOC'">
+      <span class="ny" (click)="geolocationSrv.goToNewYork()">
+        click here to go to New York
+      </span>
+    </ng-container>
+  </div>
 </ng-container>
 <div #msgCtnr class="flexGrow messages" (scroll)="onScroll()">
   <app-message 

@@ -9,7 +9,6 @@
   margin: 0.45rem;
   overflow-x: hidden;
   overflow-y: auto;
-  height: 80%;
 }
 
 textarea {
@@ -22,4 +21,9 @@ textarea {
   resize: none;
   overflow: hidden;
   height: 2rem;
+}
+
+.ny {
+  text-decoration: underline;
+  cursor: pointer;
 }

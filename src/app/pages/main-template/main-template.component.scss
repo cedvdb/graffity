@@ -8,6 +8,7 @@ main {
   flex-direction: column;
   .content {
     flex-grow: 1;
+    overflow: hidden;
   }
 }
 
@@ -27,8 +28,4 @@ nav {
 
 .location:hover {
   color: var(--color-accent);
-}
-
-.content {
-  height: 100%;
 }

@@ -1,4 +1,5 @@
 import { Component, HostListener, OnInit } from '@angular/core';
+import { PresenceService } from './services/presence.service';
 
 @Component({
   selector: 'app-root',

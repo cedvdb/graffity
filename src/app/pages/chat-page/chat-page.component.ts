@@ -11,6 +11,7 @@ import { SendDialogComponent } from 'src/app/components/send-dialog/send-dialog.
 import { MatDialog } from '@angular/material/dialog';
 import { GeolocationService } from 'src/app/services/geolocation.service';
 import { faPaperPlane } from '@fortawesome/free-solid-svg-icons';
+import { PresenceService } from 'src/app/services/presence.service';
 
 
 @Component({
@@ -37,7 +38,8 @@ export class ChatPageComponent extends AutoUnsub implements OnInit {
     private renderer: Renderer2,
     private addressSrv: AddressService,
     private dialog: MatDialog,
-    public geolocationSrv: GeolocationService
+    public geolocationSrv: GeolocationService,
+    public presenceSrv: PresenceService
   ) { super(); }
 
   ngOnInit(): void {
