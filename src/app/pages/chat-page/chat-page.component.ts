@@ -9,6 +9,7 @@ import { MessageService } from 'src/app/services/message.service';
 import { AddressService } from 'src/app/services/address.service';
 import { SendDialogComponent } from 'src/app/components/send-dialog/send-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
+import { GeolocationService } from 'src/app/services/geolocation.service';
 
 
 @Component({
@@ -34,7 +35,8 @@ export class ChatPageComponent extends AutoUnsub implements OnInit {
     private auth: AngularFireAuth,
     private renderer: Renderer2,
     private addressSrv: AddressService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    public geolocationSrv: GeolocationService
   ) { super(); }
 
   ngOnInit(): void {
