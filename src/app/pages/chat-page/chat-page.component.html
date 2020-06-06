@@ -31,4 +31,7 @@
     [(ngModel)]="newMsgContent"
     (keydown.enter)="postMessage($event)">
   </textarea>
+  <button mat-icon-button (click)="postMessage($event)" color="primary">
+    <fa-icon [icon]="faPaperPlane"></fa-icon>
+  </button>
 </div>

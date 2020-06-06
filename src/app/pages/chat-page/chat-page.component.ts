@@ -10,6 +10,7 @@ import { AddressService } from 'src/app/services/address.service';
 import { SendDialogComponent } from 'src/app/components/send-dialog/send-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { GeolocationService } from 'src/app/services/geolocation.service';
+import { faPaperPlane } from '@fortawesome/free-solid-svg-icons';
 
 
 @Component({
@@ -20,7 +21,7 @@ import { GeolocationService } from 'src/app/services/geolocation.service';
   ]
 })
 export class ChatPageComponent extends AutoUnsub implements OnInit {
-
+  faPaperPlane = faPaperPlane;
   newMsgContent = '';
   messages$: Observable<Message[]> = this.messageSrv.messages$;
   user: firebase.User;
@@ -59,9 +60,9 @@ export class ChatPageComponent extends AutoUnsub implements OnInit {
     if (! this.newMsgContent) {
       return;
     }
-
+    this.newMsgContent = '';
     this.messageSrv.send(this.newMsgContent)
-      .subscribe(_ => this.newMsgContent = '');
+      .subscribe();
   }
 
   onInput() {
