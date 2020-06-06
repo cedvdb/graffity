@@ -4,8 +4,7 @@
 }
 
 main {
-  background: linear-gradient(var(--color-bg), transparent), url('/assets/images/shattered.png');
-  display: flex;
+  background: linear-gradient(to bottom, #ffffff, #eeeeee);  display: flex;
   flex-direction: column;
   .content {
     flex-grow: 1;
