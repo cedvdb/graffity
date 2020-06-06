@@ -15,7 +15,7 @@ export class AddressService {
     .pipe(
       first(),
       map(doc => doc.data()),
-      map(data => data.addresses[0])
+      map(data => data.address)
     );
   }
 }

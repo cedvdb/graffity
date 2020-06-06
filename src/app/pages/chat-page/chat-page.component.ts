@@ -1,7 +1,7 @@
 import { Component, ElementRef, OnInit, Renderer2, TrackByFunction, ViewChild } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { Observable } from 'rxjs';
-import { delay, takeUntil } from 'rxjs/operators';
+import { delay, takeUntil, tap } from 'rxjs/operators';
 import { Message } from 'shared/collections';
 import { log } from 'simply-logs';
 import { AutoUnsub } from 'src/app/components/abstract-auto-unsub.component';
@@ -60,9 +60,9 @@ export class ChatPageComponent extends AutoUnsub implements OnInit {
     if (! this.newMsgContent) {
       return;
     }
+    this.messageSrv.send(this.newMsgContent).pipe(
+    ).subscribe();
     this.newMsgContent = '';
-    this.messageSrv.send(this.newMsgContent)
-      .subscribe();
   }
 
   onInput() {
