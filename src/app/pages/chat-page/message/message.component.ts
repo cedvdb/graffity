@@ -11,6 +11,8 @@ export class MessageComponent implements OnInit {
   @Input() message: Message;
   @Input() currentUserId: string;
   @Output() userClick = new EventEmitter<string>();
+  private colors = ['var(--color-primary)', '#e06860', '#6d7cd4' , '#ef749e', '#a47def'];
+  color = this.colors[0];
 
   mine = false;
 
@@ -20,6 +22,15 @@ export class MessageComponent implements OnInit {
     if (this.message.createdBy.uid === this.currentUserId) {
       this.mine = true;
     }
+    // this.computeColor();
   }
+
+  // computeColor() {
+  //   console.log(this.message);
+  //   const address = this.message?.createdBy?.nanoAddress;
+  //   if (address) {
+  //     this.color = this.colors[address.codePointAt(17) % 6];
+  //   }
+  // }
 
 }
