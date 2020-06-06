@@ -5,6 +5,7 @@ import { faBars, faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
 import { GeolocationService } from 'src/app/services/geolocation.service';
 import { MessageService } from 'src/app/services/message.service';
 import { PresenceService } from 'src/app/services/presence.service';
+import { A2HService } from 'src/app/services/a2h.service';
 
 @Component({
   selector: 'app-main-template',
@@ -25,7 +26,8 @@ export class MainTemplateComponent implements OnInit {
     private router: Router,
     private geolocationSrv: GeolocationService,
     private messageSrv: MessageService,
-    private presenceSrv: PresenceService
+    private presenceSrv: PresenceService,
+    public a2hSrv: A2HService
   ) {
   }
 
@@ -71,4 +73,5 @@ export class MainTemplateComponent implements OnInit {
   get hasLocation() {
     return this.geolocationSrv.hasLocation;
   }
+
 }

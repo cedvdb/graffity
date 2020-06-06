@@ -12,6 +12,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { GeolocationService } from 'src/app/services/geolocation.service';
 import { faPaperPlane } from '@fortawesome/free-solid-svg-icons';
 import { PresenceService } from 'src/app/services/presence.service';
+import { NatriconService } from 'src/app/services/natricon.service';
 
 
 @Component({
@@ -26,6 +27,7 @@ export class ChatPageComponent extends AutoUnsub implements OnInit {
   newMsgContent = '';
   messages$: Observable<Message[]> = this.messageSrv.messages$;
   user: firebase.User;
+  userAddress$ = this.addressSrv.getCurrentUserAddress();
   private keepBottomScrolled = true;
   @ViewChild('inp') textarea: ElementRef<HTMLTextAreaElement>;
   @ViewChild('msgCtnr') msgCtnr: ElementRef<HTMLElement>;
@@ -36,10 +38,10 @@ export class ChatPageComponent extends AutoUnsub implements OnInit {
     private messageSrv: MessageService,
     private auth: AngularFireAuth,
     private renderer: Renderer2,
-    private addressSrv: AddressService,
     private dialog: MatDialog,
+    public addressSrv: AddressService,
     public geolocationSrv: GeolocationService,
-    public presenceSrv: PresenceService
+    public presenceSrv: PresenceService,
   ) { super(); }
 
   ngOnInit(): void {
@@ -90,8 +92,10 @@ export class ChatPageComponent extends AutoUnsub implements OnInit {
   }
 
   sendNano(uid: string) {
-    this.addressSrv.getUserAddress(uid)
+    this.addressSrv.getAddress(uid)
       .subscribe(address => this.dialog.open(SendDialogComponent, { data: { address } }));
   }
+
+
 
 }

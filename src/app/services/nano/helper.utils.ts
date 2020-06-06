@@ -8,7 +8,7 @@ export class Helper {
   }
 
   static getWalletAddr(wlt: Wallet) {
-    return wlt.accounts[0].address;
+    return wlt?.accounts[0]?.address;
   }
 
 }

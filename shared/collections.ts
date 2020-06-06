@@ -1,3 +1,4 @@
+import * as firebase from 'firebase/app';
 
 
 export enum Col {
@@ -18,5 +19,8 @@ export interface Message {
     uid: string;
     name: string;
     picture: string;
+    nanoAddress: string
   };
+  createdAt: number;
+  coordinates: firebase.firestore.GeoPoint;
 }

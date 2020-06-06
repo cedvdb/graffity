@@ -6,7 +6,7 @@ import { decrypt, encrypt } from 'crypto-js/aes';
 import { block, wallet, tools } from 'nanocurrency-web';
 import { Wallet } from 'nanocurrency-web/dist/lib/address-importer';
 import { BehaviorSubject, combineLatest, ReplaySubject, Observable, of } from 'rxjs';
-import { concatAll, filter, first, map, switchMap, tap, catchError } from 'rxjs/operators';
+import { concatAll, filter, first, map, switchMap, tap, catchError, distinctUntilChanged, distinctUntilKeyChanged } from 'rxjs/operators';
 import { Col, NanoAddressesDoc } from 'shared/collections';
 import { NanoRpcService } from './nano-rpc.service';
 import { AccountInfo, BlockInfo } from './nano.interfaces';
@@ -17,7 +17,10 @@ import { BlockService } from './block.service';
 @Injectable({ providedIn: 'root' })
 export class NanoService {
   private wallet: Wallet;
-  wallet$ = new ReplaySubject<Wallet>(1);
+  private walletSubj$ = new ReplaySubject<Wallet>(1);
+  wallet$ = this.walletSubj$.asObservable().pipe(
+    distinctUntilKeyChanged('seed')
+  );
   walletStatus$ = new BehaviorSubject<'pending' | 'success' | 'lost'> ('pending');
   private accountInfo: AccountInfo;
   private accountInfo$ = new ReplaySubject<AccountInfo>(1);
@@ -41,7 +44,7 @@ export class NanoService {
     ).subscribe();
 
     // get account info when we have one
-    this.wallet$.pipe(
+    this.walletSubj$.pipe(
       tap(wlt => this.wallet = wlt),
       switchMap(wlt => this.getAccountInfo(wlt)),
     ).subscribe(info => this.accountInfo = info);
@@ -130,7 +133,7 @@ export class NanoService {
       localStorage.setItem(key, encryptedWallet);
       return this.firestore.collection(Col.NANO_ADDRESSES).doc(uid)
       .set({ address })
-      .then(_ => this.wallet$.next(wlt))
+      .then(_ => this.walletSubj$.next(wlt))
       .then(_ => this.walletStatus$.next('success'));
     } else {
       const encryptedWallet = localStorage.getItem(key);
@@ -149,7 +152,7 @@ export class NanoService {
   private checkWallet(wlt: Wallet, dbAddress: string) {
     const found = dbAddress === Helper.getWalletAddr(wlt);
     if (found) {
-      this.wallet$.next(wlt);
+      this.walletSubj$.next(wlt);
       this.walletStatus$.next('success');
       return true;
     } else {
@@ -193,6 +196,10 @@ export class NanoService {
 
   private getRepresentativeAddress(accountInfo: AccountInfo): Observable<string> {
     return this.nanoRpc.getBlockInfo(accountInfo.representative_block).pipe(map(info => info.contents.representative));
+  }
+
+  getAddressSync() {
+    return Helper.getWalletAddr(this.wallet);
   }
 
 

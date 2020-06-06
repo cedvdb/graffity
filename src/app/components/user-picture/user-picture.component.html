@@ -1,1 +1,7 @@
-<img [src]="url || '/assets/icons/icon-72x72.png'"/>
+
+<ng-container *ngIf="!(icon$ | async)">
+  <img [src]="url || '/assets/icons/icon-72x72.png'"/>
+</ng-container>
+<ng-container *ngIf="icon$ | async as icon">
+  <img [src]="icon"/>
+</ng-container>

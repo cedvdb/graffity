@@ -16,6 +16,11 @@
         (click)="goToMyLocation()">
         Here
       </div>
+      <div 
+        *ngIf="a2hSrv.showButton"
+        (click)="a2hSrv.addToHomeScreen()">
+        Add to Home Screen
+      </div>
     </div>
     <a [routerLink]="['/', 'wallet']" routerLinkActive="selected">Wallet</a>
     <!-- <a [routerLink]="['/', 'theming']" routerLinkActive="selected">Theming</a> -->
