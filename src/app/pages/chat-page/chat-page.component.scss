@@ -7,7 +7,6 @@
 .messages {
   /** small hack, flex grow will make it grow until it's good */
   margin: 0.45rem;
-  max-height: 80%;
   overflow-x: hidden;
   overflow-y: auto;
 }
