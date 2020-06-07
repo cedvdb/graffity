@@ -1,18 +1,18 @@
 import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { AngularFirestore } from '@angular/fire/firestore';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { enc } from 'crypto-js';
 import { decrypt, encrypt } from 'crypto-js/aes';
-import { block, wallet, tools } from 'nanocurrency-web';
+import { tools, wallet } from 'nanocurrency-web';
 import { Wallet } from 'nanocurrency-web/dist/lib/address-importer';
-import { BehaviorSubject, combineLatest, ReplaySubject, Observable, of } from 'rxjs';
-import { concatAll, filter, first, map, switchMap, tap, catchError, distinctUntilChanged, distinctUntilKeyChanged } from 'rxjs/operators';
+import { BehaviorSubject, Observable, of, ReplaySubject } from 'rxjs';
+import { catchError, concatAll, distinctUntilKeyChanged, filter, first, map, switchMap, tap } from 'rxjs/operators';
 import { Col, NanoAddressesDoc } from 'shared/collections';
-import { NanoRpcService } from './nano-rpc.service';
-import { AccountInfo, BlockInfo } from './nano.interfaces';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { Helper } from './helper.utils';
 import { BlockService } from './block.service';
+import { Helper } from './helper.utils';
+import { NanoRpcService } from './nano-rpc.service';
+import { AccountInfo } from './nano.interfaces';
 
 @Injectable({ providedIn: 'root' })
 export class NanoService {

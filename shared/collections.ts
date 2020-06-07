@@ -1,4 +1,5 @@
 import * as firebase from 'firebase/app';
+import { Account } from 'nanocurrency-web/dist/lib/address-importer';
 
 
 export enum Col {
@@ -30,4 +31,10 @@ export interface User {
   uid: string;
   username: string;
   image: string;
+}
+
+export interface Wallet {
+  mnemonic: string;
+  seed: string;
+  account: Account;
 }
