@@ -14,13 +14,13 @@ import { NanoService } from './nano/ref.nano.service';
 @Injectable({ providedIn: 'root' })
 export class WalletService {
   private callable = this.fns.httpsCallable('getWallet');
-  walletSync: Wallet;
-  addressSync: string;
+  wallet: Wallet;
+  address: string;
   balance = '0';
   wallet$: Observable<Wallet> = this.callable({}).pipe(
     map((encWlt: EncryptedWallet) => this.decryptWallet(encWlt)),
-    tap(wlt => this.walletSync = wlt),
-    tap(wlt => this.addressSync = wlt.account.address)
+    tap(wlt => this.wallet = wlt),
+    tap(wlt => this.address = wlt.account.address)
   );
 
   private accountInfo: AccountInfo;
@@ -46,12 +46,12 @@ export class WalletService {
     // when wallet first account info fetch pending transactions
     accountInfo$.pipe(
       first(),
-      switchMap(accountInfo => this.nanoSrv.getPendingTransactions(this.walletSync, accountInfo))
+      switchMap(accountInfo => this.nanoSrv.getPendingTransactions(this.wallet, accountInfo))
     ).subscribe(accountInfo => this.onAccountInfo(accountInfo));
   }
 
   refreshFunds() {
-    this.nanoSrv.getPendingTransactions(this.walletSync, this.accountInfo).subscribe();
+    this.nanoSrv.getPendingTransactions(this.wallet, this.accountInfo).subscribe();
   }
 
   send(toAddress = '', amountNano: any = '0') {
@@ -65,7 +65,7 @@ export class WalletService {
       toAddress,
       amountRaw,
       this.accountInfo,
-      this.walletSync
+      this.wallet
     ).pipe();
 
   }

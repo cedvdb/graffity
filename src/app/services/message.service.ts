@@ -67,7 +67,7 @@ export class MessageService {
           uid: user.uid,
           image: user.image,
           username: user.username,
-          nanoAddress: this.walletSrv.addressSync
+          nanoAddress: this.walletSrv.address
         },
         coordinates: new firebase.firestore.GeoPoint(coords.lat, coords.long),
         createdAt: Date.now()
