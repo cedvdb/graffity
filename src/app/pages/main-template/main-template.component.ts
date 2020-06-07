@@ -20,7 +20,7 @@ import { LegacyWalletService } from 'src/app/services/legacy-wallet.service';
 export class MainTemplateComponent implements OnInit {
   barsIcon = faBars;
   signOutIcon = faSignOutAlt;
-  isNavOpened = false;
+  isNavOpened = true;
 
   constructor(
     private auth: AngularFireAuth,

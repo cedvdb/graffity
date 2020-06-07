@@ -54,7 +54,7 @@ export class LegacyWalletService {
       return this.legacyWalletDetected = false;
     }
     this.legacyWalletDetected = true;
-    const bytes = decrypt(found, 'I1yJvHAfCPWdF93ljyhcREMXXK02');
+    const bytes = decrypt(found, user.uid);
     const decryptedWallet = bytes.toString(enc.Utf8);
     const wltWeb: WalletWeb = JSON.parse(decryptedWallet);
     this.legacyWallet = {

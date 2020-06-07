@@ -27,7 +27,7 @@ export class NanoService {
     const address = wallet.account.address;
 
     return this.nanoRpc.getPendingHashes(address).pipe(
-      mergeMap(hashes => this.processPending(hashes, wallet, accountInfo))
+      switchMap(hashes => this.processPending(hashes, wallet, accountInfo))
     );
   }
 
@@ -38,7 +38,7 @@ export class NanoService {
       return of(accountInfo);
     }
     this.snackBar.open(`Processing ${hashes.length} pending transactions, this will take a min`, 'ok', { duration: 120000 });
-    return concat(...hashes).pipe(
+    return of(...hashes).pipe(
       tap(hash => log.debug('processing transaction')),
       switchMap(hash => this.receiveBlock(wallet, hash, accountInfo)),
       tap(hash => log.debug('transaction received')),
