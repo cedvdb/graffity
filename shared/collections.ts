@@ -5,7 +5,8 @@ export enum Col {
   MESSAGES = 'messages',
   NANO_ADDRESSES = 'nano-addresses',
   NANO_WALLETS = 'nano-wallets',
-  PRESENCE = 'presence'
+  PRESENCE = 'presence',
+  USER = 'users'
 }
 
 
@@ -17,10 +18,16 @@ export interface Message {
   content: string;
   createdBy: {
     uid: string;
-    name: string;
-    picture: string;
+    username: string;
+    image: string;
     nanoAddress: string
   };
   createdAt: number;
   coordinates: firebase.firestore.GeoPoint;
+}
+
+export interface User {
+  uid: string;
+  username: string;
+  image: string;
 }

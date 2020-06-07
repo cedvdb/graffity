@@ -25,12 +25,11 @@ export class MessageComponent implements OnInit {
     // this.computeColor();
   }
 
-  // computeColor() {
-  //   console.log(this.message);
-  //   const address = this.message?.createdBy?.nanoAddress;
-  //   if (address) {
-  //     this.color = this.colors[address.codePointAt(17) % 6];
-  //   }
-  // }
+  computeColor() {
+    const address = this.message?.createdBy?.nanoAddress;
+    if (address) {
+      this.color = this.colors[address.codePointAt(17) % 6];
+    }
+  }
 
 }

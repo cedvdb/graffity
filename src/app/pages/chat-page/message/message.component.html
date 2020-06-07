@@ -1,9 +1,14 @@
 <app-user-picture 
   (click)="userClick.emit(message?.createdBy?.uid)"
-  [url]="message?.createdBy?.picture"
+  [url]="message?.createdBy?.image"
   matTooltip='Send nano'>
 </app-user-picture>
 
-<div class="content" [ngStyle]="{ 'background': color }">
-  {{ message?.content }}
+<div class="content" [ngClass]="{ 'mine': mine }" [ngStyle]="{ 'background': color }">
+  <div class="author"*ngIf="message?.createdBy?.username as username">
+    {{ username }}:
+  </div>
+  <div>
+    {{ message?.content }}
+  </div>
 </div>

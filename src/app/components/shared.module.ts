@@ -2,7 +2,7 @@ import { TextFieldModule } from '@angular/cdk/text-field';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { UserPictureModule } from './user-picture/user-picture.module';
@@ -14,6 +14,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatChipsModule } from '@angular/material/chips';
+import { MatCardModule } from '@angular/material/card';
 
 @NgModule({
   declarations: [],
@@ -22,6 +23,7 @@ import { MatChipsModule } from '@angular/material/chips';
     RouterModule,
     HttpClientModule,
     FormsModule,
+    ReactiveFormsModule,
     // libs
     FontAwesomeModule,
     // cdk
@@ -34,6 +36,7 @@ import { MatChipsModule } from '@angular/material/chips';
     MatProgressSpinnerModule,
     MatTooltipModule,
     MatChipsModule,
+    MatCardModule,
     // here
     UserPictureModule
   ]

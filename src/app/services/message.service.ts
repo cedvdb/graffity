@@ -8,6 +8,7 @@ import { log } from 'simply-logs';
 import { GeofireService } from './geofire.service';
 import { Coordinates, GeolocationService } from './geolocation.service';
 import { NanoService } from './nano/nano.service';
+import { UserService } from './user.service';
 
 @Injectable({ providedIn: 'root' })
 export class MessageService {
@@ -20,9 +21,9 @@ export class MessageService {
 
   constructor(
     private geofireSrv: GeofireService,
-    private auth: AngularFireAuth,
     private geolocationSrv: GeolocationService,
-    private nanoSrv: NanoService
+    private nanoSrv: NanoService,
+    private userSrv: UserService
   ) {
 
   }
@@ -59,15 +60,15 @@ export class MessageService {
   send(content: string) {
     return combineLatest([
       this.geolocationSrv.userCoordinates$,
-      this.auth.user,
+      this.userSrv.user$,
     ]).pipe(
       map(([coords, user]) => ({
         content,
         createdBy: {
           uid: user.uid,
-          picture: user.photoURL,
-          name: user.displayName,
-          nanoAddress: this.nanoSrv.getAddressSync()
+          image: user.image,
+          username: user.username,
+          nanoAddress: this.nanoSrv.getAddressSync() || ''
         },
         coordinates: new firebase.firestore.GeoPoint(coords.lat, coords.long),
         createdAt: Date.now()

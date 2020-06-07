@@ -24,3 +24,29 @@ $graffity-theme: mat-light-theme($graffity-primary, $graffity-accent, $graffity-
 // Alternatively, you can import and @include the theme mixins for each component
 // that you are using.
 @include angular-material-theme($graffity-theme);
+
+
+// special classes
+
+mat-form-field.light {
+  color: white;
+  mat-label {
+    color: #ffffffcc;
+  }
+  input {
+    color: white;
+    caret-color: white;
+  }
+  input::placeholder {
+    color: #ffffff66;
+  }
+  .mat-form-field-label {
+    color: white !important;
+  }
+  .mat-form-field-underline, .mat-form-field-underline::before { 
+    background-color: white !important;;
+  }
+  .mat-form-field-ripple {
+    background-color: white !important;
+  }
+}
