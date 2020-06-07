@@ -11,8 +11,8 @@
         <mat-label>Username</mat-label>
         <input matInput autofocus placeholder="NanoRockstar" [formControl]="usernameCtrl" required>
       </mat-form-field>
-  
-      <button type="submit" mat-raised-button *ngIf="usernameCtrl.valid">Let's gooo!</button>
+
+      <button type="submit" mat-raised-button [ngClass]="{ 'hidden': !usernameCtrl.valid }">Let's gooo!</button>
     </form>
 
 

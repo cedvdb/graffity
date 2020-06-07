@@ -11,6 +11,7 @@ export class UserService {
 
   userSync: User;
   user$ = this.auth.user.pipe(
+    filter(user => !!user),
     switchMap(user => this.firestore.collection(Col.USER).doc<User>(user.uid).valueChanges()),
     tap(user => this.userSync = user),
     shareReplay(1)

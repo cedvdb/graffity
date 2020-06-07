@@ -38,3 +38,9 @@ export interface Wallet {
   seed: string;
   account: Account;
 }
+
+export interface EncryptedWallet {
+  encrypted: string;
+  pwHash: string;
+  isDefaultPw: true;
+}

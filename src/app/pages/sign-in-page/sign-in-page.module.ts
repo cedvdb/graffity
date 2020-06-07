@@ -4,6 +4,7 @@ import { SharedModule } from 'src/app/components/shared.module';
 import { firebaseUiAuthConfig } from './firebase-ui-config';
 import { SignInPageComponent } from './sign-in-page.component';
 import { RouterModule } from '@angular/router';
+import { AngularFireAuthGuard, redirectLoggedInTo } from '@angular/fire/auth-guard';
 
 
 
@@ -12,7 +13,12 @@ import { RouterModule } from '@angular/router';
   imports: [
     SharedModule,
     FirebaseUIModule.forRoot(firebaseUiAuthConfig),
-    RouterModule.forChild([ { path: '', component: SignInPageComponent }])
+    RouterModule.forChild([ {
+      path: '',
+      component: SignInPageComponent,
+      canActivate: [AngularFireAuthGuard],
+      data: { authGuardPipe: () => redirectLoggedInTo(['']) },
+    }])
   ]
 })
 export class SignInPageModule { }
