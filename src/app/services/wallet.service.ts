@@ -5,7 +5,7 @@ import { Col, Wallet } from 'shared/collections';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { UserService } from './user.service';
 import { wallet as WalletWeb } from 'nanocurrency-web';
-
+import functions from 'firebase/functions';
 
 @Injectable({ providedIn: 'root' })
 export class WalletService {
@@ -33,11 +33,9 @@ export class WalletService {
 
 
   private createIfNotExist(wlt: Wallet) {
-    this.userSrv.user$.pipe(
-      filter(user => !!user),
-      switchMap(user => this.firestore.collection(Col.NANO_WALLETS)
-        .doc(user.uid).set(this.getAppWallet()))
-    ).subscribe();
+    if (!wlt) {
+      functions().httpsCallable('addMessage');
+    }
   }
 
   private getAppWallet(): Wallet {
