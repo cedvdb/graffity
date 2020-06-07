@@ -16,6 +16,7 @@
     "crypto-js": "^4.0.0",
     "firebase-admin": "^8.12.1",
     "firebase-functions": "^3.3.0",
+    "nanocurrency-web": "^1.2.1",
     "uuid": "^8.1.0"
   },
   "devDependencies": {

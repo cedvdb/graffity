@@ -22,7 +22,7 @@ export class MessageComponent implements OnInit {
     if (this.message.createdBy.uid === this.currentUserId) {
       this.mine = true;
     }
-    // this.computeColor();
+    this.computeColor();
   }
 
   computeColor() {

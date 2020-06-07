@@ -1,13 +1,12 @@
 
 
-<!-- <mat-card> -->
-  <ng-container *ngIf="!pending">
+  <ng-container *ngIf="!( pending$ | async); else spinner">
     <form (ngSubmit)="submit()" class="flexColumn flexCenter">
-    <!-- <mat-card-title> -->
+
       <h3>
         Pick an username
       </h3>
-    <!-- </mat-card-title> -->
+
       <mat-form-field class="light" appearance="fill" [hideRequiredMarker]="true">
         <mat-label>Username</mat-label>
         <input matInput autofocus placeholder="NanoRockstar" [formControl]="usernameCtrl" required>
@@ -20,6 +19,5 @@
   </ng-container>
   
   <ng-template #spinner>
-    <mat-spinner></mat-spinner>
+    <mat-spinner class="light"></mat-spinner>
   </ng-template>
-<!-- </mat-card> -->
