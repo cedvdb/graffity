@@ -14,7 +14,6 @@ import { AddressDialogComponent } from './address-dialog/address-dialog.componen
   imports: [
     SharedModule,
     RouterModule.forChild([ { path: '', component: WalletPageComponent }]),
-    QRCodeModule
   ]
 })
 export class WalletPageModule { }

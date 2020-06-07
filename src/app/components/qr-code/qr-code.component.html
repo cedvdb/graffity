@@ -1,0 +1,13 @@
+<div class="flexColumn flexCenter">
+  <qrcode 
+    colordark="#4fb0bd" 
+    [qrdata]="data" 
+    [width]="256">
+  </qrcode>
+  <div class="flexCenter under-qr"
+    matTooltip="copy"
+    [cdkCopyToClipboard]="text">
+    <fa-icon [icon]="faClone"></fa-icon>
+    {{ text }}
+  </div>
+</div>

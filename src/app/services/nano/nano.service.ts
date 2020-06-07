@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Observable } from 'rxjs';
-import { concatAll, filter, map, retry, switchMap, tap } from 'rxjs/operators';
+import { concat, Observable, of } from 'rxjs';
+import { map, mergeMap, retry, switchMap, tap } from 'rxjs/operators';
 import { Wallet } from 'shared/collections';
+import { log } from 'simply-logs';
 import { BlockService } from './block.service';
 import { NanoRpcService } from './nano-rpc.service';
 import { AccountInfo } from './nano.interfaces';
@@ -18,7 +19,7 @@ export class NanoService {
 
   getAccountInfo(address: string): Observable<AccountInfo> {
     return this.nanoRpc.getAccountInfo(address).pipe(
-      retry(10)
+      // retry(10)
     );
   }
 
@@ -26,16 +27,26 @@ export class NanoService {
     const address = wallet.account.address;
 
     return this.nanoRpc.getPendingHashes(address).pipe(
-      filter(x => !!x),
-      tap(_ => this.snackBar.open('Processing pending transactions, this will take a min', 'ok', { duration: 120000 })),
-      map(hashes => hashes.map(hash => this.receiveBlock(wallet, hash, accountInfo))),
-      concatAll(),
-      concatAll(),
-      retry(10)
+      mergeMap(hashes => this.processPending(hashes, wallet, accountInfo))
+    );
+  }
+
+  private processPending(hashes: string[], wallet: Wallet, accountInfo: AccountInfo) {
+    // if nothing to be done we just return account info and bypass all
+    if (!hashes) {
+      log.debug(`no pending transaction found`);
+      return of(accountInfo);
+    }
+    this.snackBar.open(`Processing ${hashes.length} pending transactions, this will take a min`, 'ok', { duration: 120000 });
+    return concat(...hashes).pipe(
+      tap(hash => log.debug('processing transaction')),
+      switchMap(hash => this.receiveBlock(wallet, hash, accountInfo)),
+      tap(hash => log.debug('transaction received')),
     );
   }
 
   send(toAddress = '', amountRaw: any = '0', accountInfo: AccountInfo, wallet: Wallet) {
+    log.debug(`sending ${amountRaw} to ${toAddress}`);
     return this.nanoRpc.getBlockInfo(accountInfo.representative_block).pipe(
       map(blockInfo => blockInfo.contents.representative),
       switchMap(representativeAddress => this.blockSrv.getSignedSendBlock(

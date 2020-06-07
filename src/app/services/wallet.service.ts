@@ -9,7 +9,7 @@ import { map, tap, switchMap, filter, first } from 'rxjs/operators';
 import { EncryptedWallet, Wallet } from 'shared/collections';
 import { tools } from 'nanocurrency-web';
 import { AccountInfo } from './nano/nano.interfaces';
-import { NanoService } from './nano/ref.nano.service';
+import { NanoService } from './nano/nano.service';
 
 @Injectable({ providedIn: 'root' })
 export class WalletService {
@@ -51,7 +51,7 @@ export class WalletService {
   }
 
   refreshFunds() {
-    this.nanoSrv.getPendingTransactions(this.wallet, this.accountInfo).subscribe();
+    return this.nanoSrv.getPendingTransactions(this.wallet, this.accountInfo);
   }
 
   send(toAddress = '', amountNano: any = '0') {
@@ -66,7 +66,9 @@ export class WalletService {
       amountRaw,
       this.accountInfo,
       this.wallet
-    ).pipe();
+    ).pipe(
+      switchMap(_ => this.refreshFunds())
+    );
 
   }
 

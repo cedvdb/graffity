@@ -34,6 +34,48 @@
        seed
     </div>
   </div>
+
+  <div *ngIf="legacyWalletSrv.legacyWalletDetected">
+
+    <hr/>
+    <h3>A legacy wallet was detected</h3>
+
+    <ng-template #spinner>
+      <mat-spinner></mat-spinner>
+    </ng-template>
+    <ng-container *ngIf="!legacySyncPending; else spinner">
+
+      <p>
+        A legacy wallet detected. Graffity switched to cloud wallets to be more
+        welcoming to new nanocomers. It's easier to switch device and not lose account 
+        and so on. <br/> <br/>
+  
+        You can choose to send the funds to your cloud wallet by clicking sync funds. 
+        This will destroy your local wallet after the funds are sent, you can back it up now with the info 
+        down the if you want to. <br/> <br/>
+  
+        If you don't care about this you can just remove the legacy wallet by
+        clicking I don't care. This will also destroy your local wallet.
+  
+        <br/> <br/>
+  
+      </p>
+  
+      <button mat-raised-button color="primary" class="mg-right-m" (click)="syncLegacy()">
+        Sync funds and destroy
+      </button>
+  
+      <button mat-raised-button color="warn" (click)="destroyLegacy()">
+        Destroy
+      </button>
+    </ng-container>
+
+    <app-qr-code 
+      [data]="legacyWalletSrv.legacyWallet.seed"
+      [text]="legacyWalletSrv.legacyWallet.mnemonic">
+    </app-qr-code>
+
+  </div>
   
 </div>
 

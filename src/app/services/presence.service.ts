@@ -38,7 +38,6 @@ export class PresenceService {
           center: new firebase.firestore.GeoPoint(coords.lat, coords.long),
           radius: 100
         }).onSnapshot(snap => {
-          log.debug('presence snapshot');
           snap.docChanges()
           .filter(change => change.doc.data().date > Date.now() - this.timeInterval)
           .filter(change => change.doc.data().uid !== user.uid)

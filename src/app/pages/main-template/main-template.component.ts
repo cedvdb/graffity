@@ -5,6 +5,8 @@ import { faBars, faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
 import { GeolocationService } from 'src/app/services/geolocation.service';
 import { MessageService } from 'src/app/services/message.service';
 import { PresenceService } from 'src/app/services/presence.service';
+import { WalletService } from 'src/app/services/wallet.service';
+import { LegacyWalletService } from 'src/app/services/legacy-wallet.service';
 
 @Component({
   selector: 'app-main-template',
@@ -26,6 +28,8 @@ export class MainTemplateComponent implements OnInit {
     private geolocationSrv: GeolocationService,
     private messageSrv: MessageService,
     private presenceSrv: PresenceService,
+    private walletSrv: WalletService,
+    private legacyWalletSrv: LegacyWalletService
   ) {
   }
 
@@ -33,6 +37,8 @@ export class MainTemplateComponent implements OnInit {
     this.geolocationSrv.getUserCoordinates();
     this.messageSrv.init();
     this.presenceSrv.init();
+    this.walletSrv.init();
+    this.legacyWalletSrv.init();
   }
 
   openNav(event: MouseEvent) {

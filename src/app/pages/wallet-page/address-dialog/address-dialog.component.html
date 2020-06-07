@@ -2,13 +2,10 @@
 <div class="flexCenter flexColumn" mat-dialog-content>
 
   <div class="flexColumn flexCenter">
-    <qrcode colordark="#4fb0bd" [qrdata]="walletSrv.address" [width]="256"></qrcode>
-    <div class="address flexCenter under-qr" 
-      matTooltip="copy"
-      [cdkCopyToClipboard]="walletSrv.address">
-      <fa-icon [icon]="faClone"></fa-icon>
-      {{ walletSrv.address }}
-    </div>
+    <app-qr-code 
+      [data]="walletSrv.address"
+      [text]="walletSrv.address">
+    </app-qr-code>
   </div>
   
   <div mat-dialog-actions class="flexBetween">
