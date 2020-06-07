@@ -1,18 +1,17 @@
 import { Component, ElementRef, OnInit, Renderer2, TrackByFunction, ViewChild } from '@angular/core';
-import { AngularFireAuth } from '@angular/fire/auth';
+import { MatDialog } from '@angular/material/dialog';
+import { faPaperPlane } from '@fortawesome/free-solid-svg-icons';
 import { Observable } from 'rxjs';
-import { delay, takeUntil, tap } from 'rxjs/operators';
-import { Message } from 'shared/collections';
+import { delay, takeUntil } from 'rxjs/operators';
+import { Message, User } from 'shared/collections';
 import { log } from 'simply-logs';
 import { AutoUnsub } from 'src/app/components/abstract-auto-unsub.component';
-import { MessageService } from 'src/app/services/message.service';
-import { AddressService } from 'src/app/services/address.service';
 import { SendDialogComponent } from 'src/app/components/send-dialog/send-dialog.component';
-import { MatDialog } from '@angular/material/dialog';
+import { AddressService } from 'src/app/services/address.service';
 import { GeolocationService } from 'src/app/services/geolocation.service';
-import { faPaperPlane } from '@fortawesome/free-solid-svg-icons';
+import { MessageService } from 'src/app/services/message.service';
 import { PresenceService } from 'src/app/services/presence.service';
-import { NatriconService } from 'src/app/services/natricon.service';
+import { UserService } from 'src/app/services/user.service';
 
 
 @Component({
@@ -26,7 +25,7 @@ export class ChatPageComponent extends AutoUnsub implements OnInit {
   faPaperPlane = faPaperPlane;
   newMsgContent = '';
   messages$: Observable<Message[]> = this.messageSrv.messages$;
-  user: firebase.User;
+  user = this.userSrv.userSync;
   userAddress$ = this.addressSrv.getCurrentUserAddress();
   private keepBottomScrolled = true;
   @ViewChild('inp') textarea: ElementRef<HTMLTextAreaElement>;
@@ -36,7 +35,7 @@ export class ChatPageComponent extends AutoUnsub implements OnInit {
 
   constructor(
     private messageSrv: MessageService,
-    private auth: AngularFireAuth,
+    private userSrv: UserService,
     private renderer: Renderer2,
     private dialog: MatDialog,
     public addressSrv: AddressService,
@@ -45,9 +44,6 @@ export class ChatPageComponent extends AutoUnsub implements OnInit {
   ) { super(); }
 
   ngOnInit(): void {
-    this.auth.user.pipe(
-      takeUntil(this.destroy$)
-    ).subscribe(user => this.user = user);
     // scroll to bottom when we first get msgs;
     this.messages$.pipe(
       delay(100),

@@ -18,19 +18,19 @@ export const createWallet = functions.auth.user().onCreate((user) => {
   return createDefaultWallet(user.uid);
 });
 
-export const createWalletIfNotExist = functions.https.onCall(async (data, context) => {
+export const getWallet = functions.https.onCall(async (data, context) => {
   const uid = context.auth?.uid;
   if (!uid) {
     return;
   }
   const currentWlt = await db.collection(Col.NANO_WALLETS).doc(uid).get();
   if (currentWlt.exists) {
-    return;
+    return currentWlt.data();
   }
   return createDefaultWallet(uid);
 });
 
-function createDefaultWallet(uid: string) {
+async function createDefaultWallet(uid: string) {
   // default password: NanoRocks, hashed with https://emn178.github.io/online-tools/sha256.html
   const DEFAULT_PW = 'NanoRocks';
   const DEFAULT_PW_HASH = '44e6c658d0164e0f3f8d5f2f68dc0e471ece755272d641e33cdab27c1976a899';
@@ -49,5 +49,6 @@ function createDefaultWallet(uid: string) {
     pwHash: DEFAULT_PW_HASH,
     isDefaultPw: true
   };
-  return db.collection(Col.NANO_WALLETS).doc(uid).set(wltDoc);
+  await db.collection(Col.NANO_WALLETS).doc(uid).create(wltDoc);
+  return wltDoc;
 }
