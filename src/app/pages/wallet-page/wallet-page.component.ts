@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { NanoService } from 'src/app/services/nano/nano.service';
 import { MatDialog } from '@angular/material/dialog';
 import { SendDialogComponent } from '../../components/send-dialog/send-dialog.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { WalletService } from 'src/app/services/wallet.service';
 
 @Component({
   selector: 'app-wallet-page',
@@ -14,27 +14,16 @@ export class WalletPageComponent implements OnInit {
   recoveryPending = false;
 
   constructor(
-    public nanoSrv: NanoService,
+    public walletSrv: WalletService,
     public dialog: MatDialog,
-    private snackNar: MatSnackBar
   ) { }
 
   ngOnInit(): void {
-    this.nanoSrv.fetchFunds();
+    this.walletSrv.refreshFunds();
   }
 
   openSendDlg() {
     this.dialog.open(SendDialogComponent);
   }
-
-  recover() {
-    if (!this.recoveryMnemonic) {
-      return this.snackNar.open('you need to input your mnemonic in the field above (24words)');
-    }
-    this.recoveryPending = true;
-    this.nanoSrv.recover(this.recoveryMnemonic)
-    .then(_ => this.recoveryPending = false);
-  }
-
 
 }

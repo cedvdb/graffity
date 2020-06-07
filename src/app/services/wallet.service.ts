@@ -4,8 +4,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { enc } from 'crypto-js';
 import { decrypt } from 'crypto-js/aes';
 import { } from 'firebase/functions';
-import { Observable } from 'rxjs';
-import { map, tap, switchMap } from 'rxjs/operators';
+import { Observable, ReplaySubject } from 'rxjs';
+import { map, tap, switchMap, filter, first } from 'rxjs/operators';
 import { EncryptedWallet, Wallet } from 'shared/collections';
 import { tools } from 'nanocurrency-web';
 import { AccountInfo } from './nano/nano.interfaces';
@@ -16,15 +16,14 @@ export class WalletService {
   private callable = this.fns.httpsCallable('getWallet');
   walletSync: Wallet;
   addressSync: string;
+  balance = '0';
   wallet$: Observable<Wallet> = this.callable({}).pipe(
     map((encWlt: EncryptedWallet) => this.decryptWallet(encWlt)),
     tap(wlt => this.walletSync = wlt),
     tap(wlt => this.addressSync = wlt.account.address)
   );
-  accountInfo$: Observable<AccountInfo> = this.wallet$.pipe(
-    map(wlt => wlt.account.address),
-    switchMap(address => this.nanoSrv.getAccountInfo(address))
-  );
+
+  private accountInfo: AccountInfo;
 
   constructor(
     private fns: AngularFireFunctions,
@@ -33,9 +32,43 @@ export class WalletService {
   ) { }
 
   init() {
-    this.nanoSrv.fetchFunds().subscribe();
+    // get account info for address
+    const accountInfo$ = this.wallet$.pipe(
+      map(wlt => wlt.account.address),
+      switchMap(address => this.nanoSrv.getAccountInfo(address)),
+    );
+    // when wallet account info set the balance to nano
+    accountInfo$.pipe(
+      // no account info when wallet just created
+      filter(accountInfo => !!accountInfo),
+    ).subscribe(accountInfo => this.onAccountInfo(accountInfo));
+
+    // when wallet first account info fetch pending transactions
+    accountInfo$.pipe(
+      first(),
+      switchMap(accountInfo => this.nanoSrv.getPendingTransactions(this.walletSync, accountInfo))
+    ).subscribe(accountInfo => this.onAccountInfo(accountInfo));
   }
 
+  refreshFunds() {
+    this.nanoSrv.getPendingTransactions(this.walletSync, this.accountInfo).subscribe();
+  }
+
+  send(toAddress = '', amountNano: any = '0') {
+    const isSendOk = this.isSendOk(toAddress, amountNano);
+    if (!isSendOk) {
+      return;
+    }
+    const amountRaw = tools.convert(amountNano, 'NANO', 'RAW');
+
+    return this.nanoSrv.send(
+      toAddress,
+      amountRaw,
+      this.accountInfo,
+      this.walletSync
+    ).pipe();
+
+  }
 
   private decryptWallet(encWlt: EncryptedWallet): Wallet {
     if (encWlt.isDefaultPw) {
@@ -47,26 +80,22 @@ export class WalletService {
     }
   }
 
-  send(toAddress = '', amountNano: any = '0') {
-    const amountRaw = tools.convert(amountNano, 'NANO', 'RAW');
-    const isSendOk = this.isSendOk(toAddress, amountRaw);
-
-    if (!isSendOk) {
-      return;
+  private isSendOk(address: string, amountNano: any) {
+    if (!this.accountInfo) {
+      this.snackBar.open('Failed, please make sure you have the fund', 'ok', { duration: 3000 });
     }
-
-  }
-
-  private isSendOk(address: string, amountRaw: any) {
     if (!tools.validateAddress(address)) {
       this.snackBar.open('Invalid address', 'ok', { duration: 3000 });
       return false;
     }
-    if (!Number(amountRaw) || amountRaw > this.nanoSrv.ac) {
+    if (!Number(amountNano) || amountNano > this.balance) {
       this.snackBar.open('Invalid amount', 'ok', { duration: 3000 });
       return false;
     }
     return true;
+  }
+
+  private onAccountInfo(accountInfo: AccountInfo) {
   }
 
 }

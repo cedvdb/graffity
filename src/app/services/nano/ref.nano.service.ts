@@ -1,15 +1,9 @@
 import { Injectable } from '@angular/core';
-import { AngularFireAuth } from '@angular/fire/auth';
-import { AngularFirestore } from '@angular/fire/firestore';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { enc } from 'crypto-js';
-import { decrypt, encrypt } from 'crypto-js/aes';
-import { tools, wallet } from 'nanocurrency-web';
-import { BehaviorSubject, Observable, of, ReplaySubject } from 'rxjs';
-import { catchError, concatAll, distinctUntilKeyChanged, filter, first, map, switchMap, tap, retry } from 'rxjs/operators';
-import { Col, NanoAddressesDoc, Wallet } from 'shared/collections';
+import { Observable } from 'rxjs';
+import { concatAll, filter, map, retry, switchMap, tap } from 'rxjs/operators';
+import { Wallet } from 'shared/collections';
 import { BlockService } from './block.service';
-import { Helper } from './helper.utils';
 import { NanoRpcService } from './nano-rpc.service';
 import { AccountInfo } from './nano.interfaces';
 
@@ -28,23 +22,44 @@ export class NanoService {
     );
   }
 
-  fetchFunds(wallet: Wallet) {
+  getPendingTransactions(wallet: Wallet, accountInfo: AccountInfo) {
     const address = wallet.account.address;
 
     return this.nanoRpc.getPendingHashes(address).pipe(
       filter(x => !!x),
       tap(_ => this.snackBar.open('Processing pending transactions, this will take a min', 'ok', { duration: 120000 })),
-      map(hashes => hashes.map(hash => this.receiveBlock(wallet, hash))),
+      map(hashes => hashes.map(hash => this.receiveBlock(wallet, hash, accountInfo))),
       concatAll(),
-      concatAll()
+      concatAll(),
+      retry(10)
     );
   }
 
-  private receiveBlock(wlt: Wallet, hash: string) {
+  send(toAddress = '', amountRaw: any = '0', accountInfo: AccountInfo, wallet: Wallet) {
+    return this.nanoRpc.getBlockInfo(accountInfo.representative_block).pipe(
+      map(blockInfo => blockInfo.contents.representative),
+      switchMap(representativeAddress => this.blockSrv.getSignedSendBlock(
+        wallet,
+        accountInfo,
+        amountRaw,
+        toAddress,
+        representativeAddress
+      )),
+      switchMap(sendBlock => this.nanoRpc.process('send', sendBlock))
+    );
+  }
+
+  private receiveBlock(wallet: Wallet, hash: string, accountInfo: AccountInfo) {
     return this.nanoRpc.getBlockInfo(hash).pipe(
-      switchMap((blockInfo) => this.blockSrv.getSignedReceiveBlock(wlt, this.accountInfo, blockInfo, hash)),
+      switchMap((blockInfo) => this.blockSrv.getSignedReceiveBlock(
+        wallet,
+        accountInfo,
+        blockInfo,
+        hash
+        )
+      ),
       switchMap(signedBlock => this.nanoRpc.process('receive', signedBlock)),
-      switchMap(successResp => this.getAccountInfo(wlt)),
+      switchMap(successResp => this.getAccountInfo(wallet.account.address)),
       tap(_ => this.snackBar.open('You just received nano, check your wallet', 'ok'))
     );
   }
