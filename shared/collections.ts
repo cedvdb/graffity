@@ -3,6 +3,7 @@ import * as firebase from 'firebase/app';
 
 export enum Col {
   MESSAGES = 'messages',
+  MESSAGES_GLOBAL = '',
   NANO_ADDRESSES = 'nano-addresses',
   NANO_WALLETS = 'nano-wallets',
   PRESENCE = 'presence',

@@ -25,8 +25,7 @@ import { NatriconService } from 'src/app/services/natricon.service';
 export class ChatPageComponent extends AutoUnsub implements OnInit {
   faPaperPlane = faPaperPlane;
   newMsgContent = '';
-  messages$: Observable<Message[]> = this.messageSrv.messages$;
-  user: firebase.User;
+  messages$: Observable<Message[]> = this.messageSrv.messages$essages$r; : firebase; .User;
   userAddress$ = this.addressSrv.getCurrentUserAddress();
   private keepBottomScrolled = true;
   @ViewChild('inp') textarea: ElementRef<HTMLTextAreaElement>;

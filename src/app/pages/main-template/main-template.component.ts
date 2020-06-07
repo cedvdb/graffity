@@ -50,23 +50,6 @@ export class MainTemplateComponent implements OnInit {
     this.router.navigate(['sign-in']);
   }
 
-  goToNewYork(): void {
-    this.router.navigate(['chat']);
-    this.geolocationSrv.goToNewYork();
-  }
-
-  goToMyLocation(): void {
-    this.router.navigate(['chat']);
-    this.geolocationSrv.goToMyLocation();
-  }
-
-  isLoc() {
-    return this.geolocationSrv.userIsAt === 'LOC';
-  }
-
-  isNy() {
-    return this.geolocationSrv.userIsAt === 'NY';
-  }
 
   get hasLocation() {
     return this.geolocationSrv.hasLocation;
