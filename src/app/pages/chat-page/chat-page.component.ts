@@ -91,6 +91,10 @@ export class ChatPageComponent extends AutoUnsub implements OnInit {
     el.scrollTop = (el.scrollHeight);
   }
 
+  onInputFocus() {
+    this.scrollToBottom();
+  }
+
   sendNano(uid: string) {
     this.addressSrv.getAddress(uid)
       .subscribe(address => this.dialog.open(SendDialogComponent, { data: { address } }));

@@ -39,6 +39,7 @@
     cdkAutosizeMinRows="1"
     cdkAutosizeMaxRows="5"
     [(ngModel)]="newMsgContent"
+    (focus)="onInputFocus()"
     (keydown.enter)="postMessage($event)">
   </textarea>
   <button mat-icon-button (click)="postMessage($event)" color="primary">

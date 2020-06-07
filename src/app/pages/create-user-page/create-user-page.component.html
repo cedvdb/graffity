@@ -10,7 +10,7 @@
     <!-- </mat-card-title> -->
       <mat-form-field class="light" appearance="fill" [hideRequiredMarker]="true">
         <mat-label>Username</mat-label>
-        <input matInput placeholder="NanoRockstar" [formControl]="usernameCtrl" required>
+        <input matInput autofocus placeholder="NanoRockstar" [formControl]="usernameCtrl" required>
       </mat-form-field>
   
       <button type="submit" mat-raised-button *ngIf="usernameCtrl.valid">Let's gooo!</button>
