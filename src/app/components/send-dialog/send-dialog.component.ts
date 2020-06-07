@@ -1,6 +1,6 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { NanoService } from 'src/app/services/nano/nano.service';
+import { WalletService } from 'src/app/services/wallet.service';
 
 @Component({
   selector: 'app-send-dialog',
@@ -14,7 +14,7 @@ export class SendDialogComponent implements OnInit {
 
   constructor(
     private dialogRef: MatDialogRef<SendDialogComponent>,
-    private nanoSrv: NanoService,
+    private walletSrv: WalletService,
     @Inject(MAT_DIALOG_DATA) private data: { address: string, amount: number }
   ) { }
 
@@ -25,7 +25,7 @@ export class SendDialogComponent implements OnInit {
 
   send() {
     this.pending = true;
-    this.nanoSrv.send(this.address, this.amount).subscribe(_ => {
+    this.walletSrv.send(this.address, this.amount).subscribe(_ => {
       this.pending = false;
       this.dialogRef.close();
     });

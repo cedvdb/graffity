@@ -1,10 +1,15 @@
 <app-user-picture 
-  (click)="userClick.emit(message?.createdBy?.uid)"
+  (click)="sendNanoClick()"
   [url]="message?.createdBy?.image"
-  matTooltip='Send nano'>
+  [matTooltip]="mine ? 'This is you' : 'Send nano to ' + message?.createdBy?.username">
 </app-user-picture>
 
-<div class="content" [ngClass]="{ 'mine': mine }" [ngStyle]="{ 'background': color }">
+<div 
+   
+  class="content" 
+  [ngClass]="{ 'mine': mine }" 
+  [ngStyle]="{ 'background': color }"
+  [matTooltip]="mine ? 'This is you' : 'Send nano to ' + message?.createdBy?.username">
   <div class="author"*ngIf="message?.createdBy?.username as username">
     {{ username }}:
   </div>

@@ -7,11 +7,11 @@ import { Message, User } from 'shared/collections';
 import { log } from 'simply-logs';
 import { AutoUnsub } from 'src/app/components/abstract-auto-unsub.component';
 import { SendDialogComponent } from 'src/app/components/send-dialog/send-dialog.component';
-import { AddressService } from 'src/app/services/address.service';
 import { GeolocationService } from 'src/app/services/geolocation.service';
 import { MessageService } from 'src/app/services/message.service';
 import { PresenceService } from 'src/app/services/presence.service';
 import { UserService } from 'src/app/services/user.service';
+import { WalletService } from 'src/app/services/wallet.service';
 
 
 @Component({
@@ -26,7 +26,6 @@ export class ChatPageComponent extends AutoUnsub implements OnInit {
   newMsgContent = '';
   messages$: Observable<Message[]> = this.messageSrv.messages$;
   user = this.userSrv.userSync;
-  userAddress$ = this.addressSrv.getCurrentUserAddress();
   private keepBottomScrolled = true;
   @ViewChild('inp') textarea: ElementRef<HTMLTextAreaElement>;
   @ViewChild('msgCtnr') msgCtnr: ElementRef<HTMLElement>;
@@ -38,7 +37,7 @@ export class ChatPageComponent extends AutoUnsub implements OnInit {
     private userSrv: UserService,
     private renderer: Renderer2,
     private dialog: MatDialog,
-    public addressSrv: AddressService,
+    public walletSrv: WalletService,
     public geolocationSrv: GeolocationService,
     public presenceSrv: PresenceService,
   ) { super(); }
@@ -91,11 +90,8 @@ export class ChatPageComponent extends AutoUnsub implements OnInit {
     this.scrollToBottom();
   }
 
-  sendNano(uid: string) {
-    this.addressSrv.getAddress(uid)
-      .subscribe(address => this.dialog.open(SendDialogComponent, { data: { address } }));
+  sendNano(address: string) {
+    this.dialog.open(SendDialogComponent, { data: { address } });
   }
-
-
 
 }

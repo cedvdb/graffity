@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { AngularFireAuth } from '@angular/fire/auth';
 import * as firebase from 'firebase/app';
 import { combineLatest, ReplaySubject } from 'rxjs';
 import { first, map, switchMap } from 'rxjs/operators';
@@ -7,8 +6,8 @@ import { Col, Message } from 'shared/collections';
 import { log } from 'simply-logs';
 import { GeofireService } from './geofire.service';
 import { Coordinates, GeolocationService } from './geolocation.service';
-import { NanoService } from './nano/nano.service';
 import { UserService } from './user.service';
+import { WalletService } from './wallet.service';
 
 @Injectable({ providedIn: 'root' })
 export class MessageService {
@@ -22,7 +21,7 @@ export class MessageService {
   constructor(
     private geofireSrv: GeofireService,
     private geolocationSrv: GeolocationService,
-    private nanoSrv: NanoService,
+    private walletSrv: WalletService,
     private userSrv: UserService
   ) {
 
@@ -68,7 +67,7 @@ export class MessageService {
           uid: user.uid,
           image: user.image,
           username: user.username,
-          nanoAddress: this.nanoSrv.getAddressSync() || ''
+          nanoAddress: this.walletSrv.addressSync
         },
         coordinates: new firebase.firestore.GeoPoint(coords.lat, coords.long),
         createdAt: Date.now()
