@@ -22,23 +22,22 @@
   </div>
 
   <div>
-    <div class="address chip z-1 pointer">
+    <div class="address chip z-1 pointer" (click)="openAddressDlg()">
+      <fa-icon [icon]="faEye"></fa-icon> 
       {{ walletSrv.address }}
     </div>
   </div>
 
   <div>
-    <div class="chip pointer z-1">
-      view seed
+    <div class="chip pointer z-1" (click)="openSeedDlg()">
+       <fa-icon [icon]="faEye"></fa-icon> 
+       seed
     </div>
   </div>
   
 </div>
 
-<!-- <div class="flexColumn flexCenter">
-  <qrcode colordark="#4fb0bd" [qrdata]="wallet?.seed" [width]="256"></qrcode>
-  <div class="mnemonic flexCenter">{{ wallet.mnemonic }}</div>
-</div> -->
+
       
 
 

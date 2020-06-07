@@ -15,6 +15,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatCardModule } from '@angular/material/card';
+import { ClipboardModule } from '@angular/cdk/clipboard';
 
 @NgModule({
   declarations: [],
@@ -37,6 +38,7 @@ import { MatCardModule } from '@angular/material/card';
     MatTooltipModule,
     MatChipsModule,
     MatCardModule,
+    ClipboardModule,
     // here
     UserPictureModule
   ]
