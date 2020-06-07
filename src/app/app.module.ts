@@ -9,6 +9,7 @@ import { SharedModule } from './components/shared.module';
 import { AppRoutingModule } from './pages/app-routing.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AngularFireFunctionsModule } from '@angular/fire/functions';
+import { AngularFirestoreModule } from '@angular/fire/firestore';
 
 
 @NgModule({
@@ -23,6 +24,7 @@ import { AngularFireFunctionsModule } from '@angular/fire/functions';
     AngularFireModule.initializeApp(environment.firebase),
     AngularFireAuthModule,
     AngularFireFunctionsModule,
+    AngularFirestoreModule.enablePersistence(),
     BrowserAnimationsModule,
   ],
   providers: [],

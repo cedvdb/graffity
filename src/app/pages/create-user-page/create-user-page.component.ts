@@ -23,7 +23,7 @@ export class CreateUserPageComponent implements OnInit {
     this.pending$.next(true);
     const username = this.usernameCtrl.value;
     this.userSrv.createUser(username).pipe(
-      switchMap(_ => this.userSrv.user$.pipe(filter(user => !!user)))
+      switchMap(_ => this.userSrv.user$.pipe(filter(user => !!user))),
     ).subscribe(_ => {
       this.pending$.next(false);
       this.router.navigate(['']);

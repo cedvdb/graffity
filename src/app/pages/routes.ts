@@ -1,12 +1,4 @@
-import { AngularFireAuthGuard, redirectLoggedInTo, redirectUnauthorizedTo } from '@angular/fire/auth-guard';
 import { Routes } from '@angular/router';
-import { SignInPageComponent } from './sign-in-page/sign-in-page.component';
-import { MainTemplateComponent } from './main-template/main-template.component';
-import { WalletPageComponent } from './wallet-page/wallet-page.component';
-import { HasUser } from '../guards/has-user.guard';
-import { HasWallet } from '../guards/has-wallet.guard';
-
-
 
 
 export const routes: Routes = [

@@ -1,0 +1,7 @@
+
+<router-outlet></router-outlet>
+<div
+  *ngIf="hasUserGuard.loading || hasWalletGuard.loading"
+  class="spinner-ctnr">
+  <mat-spinner class="light"></mat-spinner>
+</div>
