@@ -36,7 +36,7 @@ export class MainTemplateComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.geolocationSrv.getUserCoordinates();
+    this.geolocationSrv.init();
     this.chatRouterSrv.init();
     this.messageSrv.init();
     this.presenceSrv.init();
@@ -74,9 +74,5 @@ export class MainTemplateComponent implements OnInit {
     return this.chatRouterSrv.isGlobal;
   }
 
-
-  get hasLocation() {
-    return this.geolocationSrv.hasLocation;
-  }
 
 }

@@ -19,6 +19,9 @@ export const environment = {
   },
   nanoApi: {
     url: 'https://mynano.ninja/api/node'
+  },
+  geoIpApi: {
+    url: 'http://ip-api.com/json/'
   }
 };
 

@@ -3,7 +3,7 @@
   <div>
     <div class="header">Graffity</div>
     <a [routerLink]="['/', 'chat']" routerLinkActive="selected">Chat</a>
-    <div class="flexColumn pd-left-m" *ngIf="hasLocation">
+    <div class="flexColumn pd-left-m">
       <div 
         class="location mg-bottom-s" 
         [ngClass]="{ 'here': isGlobal }"
@@ -14,7 +14,7 @@
         class="location mg-bottom-m" 
         [ngClass]="{ 'here': !isGlobal }"
         (click)="goToLocalChat()">
-        Here
+        My location
       </div>
     </div>
     <a [routerLink]="['/', 'wallet']" routerLinkActive="selected">Wallet</a>
