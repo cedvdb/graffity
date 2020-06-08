@@ -5,7 +5,7 @@ import { enc } from 'crypto-js';
 import { decrypt } from 'crypto-js/aes';
 import { } from 'firebase/functions';
 import { Observable, ReplaySubject } from 'rxjs';
-import { map, tap, switchMap, filter, first } from 'rxjs/operators';
+import { map, tap, switchMap, filter, first, distinctUntilChanged, distinctUntilKeyChanged } from 'rxjs/operators';
 import { EncryptedWallet, Wallet } from 'shared/collections';
 import { tools } from 'nanocurrency-web';
 import { AccountInfo } from './nano/nano.interfaces';
@@ -18,6 +18,7 @@ export class WalletService {
   address: string;
   balance = '0';
   wallet$: Observable<Wallet> = this.callable({}).pipe(
+    distinctUntilKeyChanged('uid'),
     map((encWlt: EncryptedWallet) => this.decryptWallet(encWlt)),
     tap(wlt => this.wallet = wlt),
     tap(wlt => this.address = wlt.account.address)

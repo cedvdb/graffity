@@ -41,6 +41,7 @@
     <h3>A legacy wallet was detected</h3>
 
     <ng-template #spinner>
+      <div>This will take a while, hang on</div>
       <mat-spinner></mat-spinner>
     </ng-template>
     <ng-container *ngIf="!legacySyncPending; else spinner">

@@ -4,6 +4,7 @@ import { UserService } from 'src/app/services/user.service';
 import { Router } from '@angular/router';
 import { switchMap, filter } from 'rxjs/operators';
 import { Subject, BehaviorSubject } from 'rxjs';
+import { WalletService } from 'src/app/services/wallet.service';
 
 @Component({
   selector: 'app-create-user-page',
@@ -14,7 +15,11 @@ export class CreateUserPageComponent implements OnInit {
   pending$ = new Subject<boolean>();
   usernameCtrl = new FormControl('', Validators.required);
 
-  constructor(private userSrv: UserService, private router: Router) { }
+  constructor(
+    private userSrv: UserService,
+    private router: Router,
+    private walletSrv: WalletService
+  ) { }
 
   ngOnInit(): void {
   }
@@ -24,6 +29,7 @@ export class CreateUserPageComponent implements OnInit {
     const username = this.usernameCtrl.value;
     this.userSrv.createUser(username).pipe(
       switchMap(_ => this.userSrv.user$.pipe(filter(user => !!user))),
+      switchMap(_ => this.walletSrv.wallet$)
     ).subscribe(_ => {
       this.pending$.next(false);
       this.router.navigate(['']);

@@ -38,6 +38,7 @@ async function createDefaultWallet(uid: string) {
   // we don't need multiple accounts so we convert it
   const wlt = WalletWeb.generate();
   const wallet = {
+    uid,
     seed: wlt.seed,
     mnemonic: wlt.mnemonic,
     account: wlt.accounts[0]
