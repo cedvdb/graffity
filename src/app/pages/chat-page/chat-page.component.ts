@@ -3,12 +3,12 @@ import { MatDialog } from '@angular/material/dialog';
 import { faPaperPlane } from '@fortawesome/free-solid-svg-icons';
 import { Observable } from 'rxjs';
 import { delay, takeUntil } from 'rxjs/operators';
-import { Message, User } from 'shared/collections';
+import { Message } from 'shared/collections';
 import { log } from 'simply-logs';
 import { AutoUnsub } from 'src/app/components/abstract-auto-unsub.component';
 import { SendDialogComponent } from 'src/app/components/send-dialog/send-dialog.component';
 import { GeolocationService } from 'src/app/services/geolocation.service';
-import { GeoMessageService } from 'src/app/services/message.service';
+import { MessageService } from 'src/app/services/message.service';
 import { PresenceService } from 'src/app/services/presence.service';
 import { UserService } from 'src/app/services/user.service';
 import { WalletService } from 'src/app/services/wallet.service';
@@ -33,7 +33,7 @@ export class ChatPageComponent extends AutoUnsub implements OnInit {
   trackBy: TrackByFunction<any> = (index, item) => item.id;
 
   constructor(
-    private messageSrv: GeoMessageService,
+    private messageSrv: MessageService,
     private userSrv: UserService,
     private renderer: Renderer2,
     private dialog: MatDialog,

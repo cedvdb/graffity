@@ -3,7 +3,7 @@ import { Account } from 'nanocurrency-web/dist/lib/address-importer';
 
 
 export enum Col {
-  MESSAGES = 'messages',
+  GLOBAL_MESSAGES = 'global-messages',
   GEO_MESSAGES = 'geo-messages',
   NANO_ADDRESSES = 'nano-addresses',
   NANO_WALLETS = 'nano-wallets',

@@ -6,14 +6,14 @@
     <div class="flexColumn pd-left-m" *ngIf="hasLocation">
       <div 
         class="location mg-bottom-s" 
-        [ngClass]="{ 'here': isNy() }"
-        (click)="goToNewYork()">
+        [ngClass]="{ 'here': isGlobal }"
+        (click)="listenToGlobalMessages()">
         Global Room
       </div>
       <div 
         class="location mg-bottom-m" 
-        [ngClass]="{ 'here': isLoc() }"
-        (click)="goToMyLocation()">
+        [ngClass]="{ 'here': !isGlobal }"
+        (click)="listenToLocationMessages()">
         Here
       </div>
     </div>

@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, Renderer2, ElementRef, OnChanges, SimpleChanges } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
-import { NatriconService } from 'src/app/services/natricon.service';
+import { NatriconService } from 'src/app/services/_nano/natricon.service';
 import { switchMap } from 'rxjs/operators';
 
 @Component({

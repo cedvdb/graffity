@@ -1,12 +1,12 @@
-import { Component, OnInit, HostListener } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
+import { Router } from '@angular/router';
 import { faBars, faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
 import { GeolocationService } from 'src/app/services/geolocation.service';
-import { GeoMessageService } from 'src/app/services/message.service';
+import { MessageService } from 'src/app/services/message.service';
 import { PresenceService } from 'src/app/services/presence.service';
 import { WalletService } from 'src/app/services/wallet.service';
-import { LegacyWalletService } from 'src/app/services/legacy-wallet.service';
+import { LegacyWalletService } from 'src/app/services/_nano/legacy-wallet.service';
 
 @Component({
   selector: 'app-main-template',
@@ -26,7 +26,7 @@ export class MainTemplateComponent implements OnInit {
     private auth: AngularFireAuth,
     private router: Router,
     private geolocationSrv: GeolocationService,
-    private messageSrv: GeoMessageService,
+    private messageSrv: MessageService,
     private presenceSrv: PresenceService,
     private walletSrv: WalletService,
     private legacyWalletSrv: LegacyWalletService
@@ -54,6 +54,21 @@ export class MainTemplateComponent implements OnInit {
   signOut() {
     this.auth.signOut();
     this.router.navigate(['sign-in']);
+  }
+
+  listenToLocationMessages() {
+    // navigate back in case we are in wallet
+    this.router.navigate(['chat']);
+    this.messageSrv.listenToLocationMessages();
+  }
+
+  listenToGlobalMessages() {
+    this.router.navigate(['chat']);
+    this.messageSrv.listenToGlobalMessages();
+  }
+
+  get isGlobal() {
+    return this.messageSrv.isGlobal();
   }
 
 

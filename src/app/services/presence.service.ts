@@ -5,7 +5,7 @@ import { combineLatest, interval, timer, BehaviorSubject } from 'rxjs';
 import { filter, switchMap, tap } from 'rxjs/operators';
 import { Col } from 'shared/collections';
 import { log } from 'simply-logs';
-import { GeofireService } from './geofire.service';
+import { GeofireService } from './_messaging/geofire.service';
 import { GeolocationService } from './geolocation.service';
 
 
