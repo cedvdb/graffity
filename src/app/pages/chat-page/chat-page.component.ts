@@ -3,7 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { faPaperPlane } from '@fortawesome/free-solid-svg-icons';
 import { Observable } from 'rxjs';
 import { delay, takeUntil } from 'rxjs/operators';
-import { Message, User } from 'shared/collections';
+import { Message } from 'shared/collections';
 import { log } from 'simply-logs';
 import { AutoUnsub } from 'src/app/components/abstract-auto-unsub.component';
 import { SendDialogComponent } from 'src/app/components/send-dialog/send-dialog.component';
@@ -12,6 +12,7 @@ import { MessageService } from 'src/app/services/message.service';
 import { PresenceService } from 'src/app/services/presence.service';
 import { UserService } from 'src/app/services/user.service';
 import { WalletService } from 'src/app/services/wallet.service';
+import { ChatRouterService } from 'src/app/services/chat-router.service';
 
 
 @Component({
@@ -40,6 +41,7 @@ export class ChatPageComponent extends AutoUnsub implements OnInit {
     public walletSrv: WalletService,
     public geolocationSrv: GeolocationService,
     public presenceSrv: PresenceService,
+    public chatRouterSrv: ChatRouterService
   ) { super(); }
 
   ngOnInit(): void {
@@ -59,8 +61,7 @@ export class ChatPageComponent extends AutoUnsub implements OnInit {
     if (! this.newMsgContent) {
       return;
     }
-    this.messageSrv.send(this.newMsgContent).pipe(
-    ).subscribe();
+    this.messageSrv.send(this.newMsgContent);
     this.newMsgContent = '';
   }
 

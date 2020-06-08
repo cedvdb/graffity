@@ -3,18 +3,18 @@
   <div>
     <div class="header">Graffity</div>
     <a [routerLink]="['/', 'chat']" routerLinkActive="selected">Chat</a>
-    <div class="flexColumn pd-left-m" *ngIf="hasLocation">
+    <div class="flexColumn pd-left-m">
       <div 
         class="location mg-bottom-s" 
-        [ngClass]="{ 'here': isNy() }"
-        (click)="goToNewYork()">
-        New York
+        [ngClass]="{ 'here': isGlobal }"
+        (click)="goToGlobalChat()">
+        Global
       </div>
       <div 
         class="location mg-bottom-m" 
-        [ngClass]="{ 'here': isLoc() }"
-        (click)="goToMyLocation()">
-        Here
+        [ngClass]="{ 'here': !isGlobal }"
+        (click)="goToLocalChat()">
+        My location
       </div>
     </div>
     <a [routerLink]="['/', 'wallet']" routerLinkActive="selected">Wallet</a>
@@ -28,7 +28,7 @@
 </nav>
 
 <main class="z-2">
-  <fa-icon class="trigger" [icon]="barsIcon" (click)="openNav($event)"></fa-icon>
+  <fa-icon class="trigger" [icon]="faBars" (click)="openNav($event)"></fa-icon>
   <div class="content">
     <router-outlet></router-outlet>
   </div>

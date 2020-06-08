@@ -6,7 +6,7 @@ import { WalletService } from 'src/app/services/wallet.service';
 import { faEye } from '@fortawesome/free-solid-svg-icons';
 import { AddressDialogComponent } from './address-dialog/address-dialog.component';
 import { SeedDialogComponent } from './seed-dialog/seed-dialog.component';
-import { LegacyWalletService } from 'src/app/services/legacy-wallet.service';
+import { LegacyWalletService } from 'src/app/services/_nano/legacy-wallet.service';
 import { AutoUnsub } from 'src/app/components/abstract-auto-unsub.component';
 import { first, takeUntil, take } from 'rxjs/operators';
 

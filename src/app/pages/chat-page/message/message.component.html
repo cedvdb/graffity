@@ -14,7 +14,7 @@
     class="flexBetween"
     *ngIf="message?.createdBy?.username as username">
     <div class="author">{{ username }}</div>
-    <div>{{ message?.createdAt | timeAgo }}</div>
+    <div class="time">{{ message?.createdAt | timeAgo }}</div>
   </div>
   <div>
     {{ message?.content }}

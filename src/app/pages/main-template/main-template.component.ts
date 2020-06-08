@@ -1,12 +1,13 @@
-import { Component, OnInit, HostListener } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
+import { Router } from '@angular/router';
 import { faBars, faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
+import { ChatRouterService } from 'src/app/services/chat-router.service';
 import { GeolocationService } from 'src/app/services/geolocation.service';
 import { MessageService } from 'src/app/services/message.service';
 import { PresenceService } from 'src/app/services/presence.service';
 import { WalletService } from 'src/app/services/wallet.service';
-import { LegacyWalletService } from 'src/app/services/legacy-wallet.service';
+import { LegacyWalletService } from 'src/app/services/_nano/legacy-wallet.service';
 
 @Component({
   selector: 'app-main-template',
@@ -18,7 +19,7 @@ import { LegacyWalletService } from 'src/app/services/legacy-wallet.service';
   }
 })
 export class MainTemplateComponent implements OnInit {
-  barsIcon = faBars;
+  faBars = faBars;
   signOutIcon = faSignOutAlt;
   isNavOpened = true;
 
@@ -26,6 +27,7 @@ export class MainTemplateComponent implements OnInit {
     private auth: AngularFireAuth,
     private router: Router,
     private geolocationSrv: GeolocationService,
+    private chatRouterSrv: ChatRouterService,
     private messageSrv: MessageService,
     private presenceSrv: PresenceService,
     private walletSrv: WalletService,
@@ -34,7 +36,8 @@ export class MainTemplateComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.geolocationSrv.getUserCoordinates();
+    this.geolocationSrv.init();
+    this.chatRouterSrv.init();
     this.messageSrv.init();
     this.presenceSrv.init();
     this.walletSrv.init();
@@ -56,26 +59,20 @@ export class MainTemplateComponent implements OnInit {
     this.router.navigate(['sign-in']);
   }
 
-  goToNewYork(): void {
+  goToLocalChat() {
+    // navigate back in case we are in wallet
     this.router.navigate(['chat']);
-    this.geolocationSrv.goToNewYork();
+    this.chatRouterSrv.goToLocalChat();
   }
 
-  goToMyLocation(): void {
+  goToGlobalChat() {
     this.router.navigate(['chat']);
-    this.geolocationSrv.goToMyLocation();
+    this.chatRouterSrv.goToGlobalChat();
   }
 
-  isLoc() {
-    return this.geolocationSrv.userIsAt === 'LOC';
+  get isGlobal() {
+    return this.chatRouterSrv.isGlobal;
   }
 
-  isNy() {
-    return this.geolocationSrv.userIsAt === 'NY';
-  }
-
-  get hasLocation() {
-    return this.geolocationSrv.hasLocation;
-  }
 
 }

@@ -6,9 +6,9 @@ import { Wallet as WalletWeb } from 'nanocurrency-web/dist/lib/address-importer'
 import { of } from 'rxjs';
 import { filter, switchMap, tap } from 'rxjs/operators';
 import { Wallet } from 'shared/collections';
-import { AccountInfo } from './nano/nano.interfaces';
-import { NanoService } from './nano/nano.service';
-import { WalletService } from './wallet.service';
+import { AccountInfo } from './nano.interfaces';
+import { NanoService } from './nano.service';
+import { WalletService } from '../wallet.service';
 
 @Injectable({ providedIn: 'root' })
 export class LegacyWalletService {

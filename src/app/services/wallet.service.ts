@@ -7,9 +7,9 @@ import { } from 'firebase/functions';
 import { tools } from 'nanocurrency-web';
 import { Observable } from 'rxjs';
 import { distinctUntilKeyChanged, filter, map, switchMap, tap } from 'rxjs/operators';
-import { EncryptedWallet, Wallet } from 'shared/collections';
-import { AccountInfo } from './nano/nano.interfaces';
-import { NanoService } from './nano/nano.service';
+import { AccountInfo } from './_nano/nano.interfaces';
+import { NanoService } from './_nano/nano.service';
+import { Wallet, EncryptedWallet } from 'shared/collections';
 
 @Injectable({ providedIn: 'root' })
 export class WalletService {

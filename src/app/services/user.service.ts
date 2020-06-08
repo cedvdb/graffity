@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { switchMap, filter, shareReplay, tap, map, first } from 'rxjs/operators';
-import { Col } from 'shared/collections';
-import { User } from 'shared/collections';
+import { filter, first, shareReplay, switchMap, tap } from 'rxjs/operators';
+import { Col, User } from 'shared/collections';
 
 
 @Injectable({ providedIn: 'root' })

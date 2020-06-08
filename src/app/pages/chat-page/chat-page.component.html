@@ -1,14 +1,12 @@
 
 <ng-container *ngIf="geolocationSrv.userCoordinates$ | async as coords">
-  <div>
-    Chatting in a 100km radius around {{ coords.lat }}, {{ coords.long }}.
+  <div *ngIf="!chatRouterSrv.isGlobal">
+    Chatting in a 100km radius around {{ coords.country }}, {{ coords.city }}.
   </div>
-  <div *ngIf="presenceSrv.onlineUsersAtLocation$ | async as onlineUsers">
+  <div *ngIf="presenceSrv.onlineUsers$ | async as onlineUsers">
     {{ onlineUsers }} online users here
-    <ng-container *ngIf="onlineUsers === 1 && geolocationSrv.userIsAt === 'LOC'">
-      <span class="ny" (click)="geolocationSrv.goToNewYork()">
-        click here to go to New York
-      </span>
+    <ng-container *ngIf="onlineUsers === 1 && !chatRouterSrv.isGlobal">
+      <span (click)="chatRouterSrv.goToGlobalChat()">Click here to go to the global chat</span>
     </ng-container>
   </div>
 </ng-container>
