@@ -1,20 +1,18 @@
 import { Component, HostListener, OnInit } from '@angular/core';
 import { PresenceService } from './services/presence.service';
+import { HasUserGuard } from './guards/has-user.guard';
+import { HasWalletGuard } from './guards/has-wallet.guard';
 
 @Component({
   selector: 'app-root',
-  template: '<router-outlet></router-outlet>',
-  styles: [`
-    :host {
-      display: block;
-      height: var(--vh);
-    }
-  `]
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
 
   constructor(
-    // private themingSrv: ThemingService,
+    public hasUserGuard: HasUserGuard,
+    public hasWalletGuard: HasWalletGuard
   ) {}
 
   ngOnInit() {

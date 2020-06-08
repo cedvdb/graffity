@@ -9,6 +9,7 @@
     }
   },
   "projects": {
-    "default": "graffity-42ed2"
+    "default": "graffity-42ed2",
+    "dev": "graffity-dev-b0fa1"
   }
 }

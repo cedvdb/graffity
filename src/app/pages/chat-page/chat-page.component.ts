@@ -1,18 +1,17 @@
 import { Component, ElementRef, OnInit, Renderer2, TrackByFunction, ViewChild } from '@angular/core';
-import { AngularFireAuth } from '@angular/fire/auth';
+import { MatDialog } from '@angular/material/dialog';
+import { faPaperPlane } from '@fortawesome/free-solid-svg-icons';
 import { Observable } from 'rxjs';
-import { delay, takeUntil, tap } from 'rxjs/operators';
-import { Message } from 'shared/collections';
+import { delay, takeUntil } from 'rxjs/operators';
+import { Message, User } from 'shared/collections';
 import { log } from 'simply-logs';
 import { AutoUnsub } from 'src/app/components/abstract-auto-unsub.component';
-import { MessageService } from 'src/app/services/message.service';
-import { AddressService } from 'src/app/services/address.service';
 import { SendDialogComponent } from 'src/app/components/send-dialog/send-dialog.component';
-import { MatDialog } from '@angular/material/dialog';
 import { GeolocationService } from 'src/app/services/geolocation.service';
-import { faPaperPlane } from '@fortawesome/free-solid-svg-icons';
+import { GeoMessageService } from 'src/app/services/message.service';
 import { PresenceService } from 'src/app/services/presence.service';
-import { NatriconService } from 'src/app/services/natricon.service';
+import { UserService } from 'src/app/services/user.service';
+import { WalletService } from 'src/app/services/wallet.service';
 
 
 @Component({
@@ -25,8 +24,8 @@ import { NatriconService } from 'src/app/services/natricon.service';
 export class ChatPageComponent extends AutoUnsub implements OnInit {
   faPaperPlane = faPaperPlane;
   newMsgContent = '';
-  messages$: Observable<Message[]> = this.messageSrv.messages$essages$r; : firebase; .User;
-  userAddress$ = this.addressSrv.getCurrentUserAddress();
+  messages$: Observable<Message[]> = this.messageSrv.messages$;
+  user = this.userSrv.userSync;
   private keepBottomScrolled = true;
   @ViewChild('inp') textarea: ElementRef<HTMLTextAreaElement>;
   @ViewChild('msgCtnr') msgCtnr: ElementRef<HTMLElement>;
@@ -34,19 +33,16 @@ export class ChatPageComponent extends AutoUnsub implements OnInit {
   trackBy: TrackByFunction<any> = (index, item) => item.id;
 
   constructor(
-    private messageSrv: MessageService,
-    private auth: AngularFireAuth,
+    private messageSrv: GeoMessageService,
+    private userSrv: UserService,
     private renderer: Renderer2,
     private dialog: MatDialog,
-    public addressSrv: AddressService,
+    public walletSrv: WalletService,
     public geolocationSrv: GeolocationService,
     public presenceSrv: PresenceService,
   ) { super(); }
 
   ngOnInit(): void {
-    this.auth.user.pipe(
-      takeUntil(this.destroy$)
-    ).subscribe(user => this.user = user);
     // scroll to bottom when we first get msgs;
     this.messages$.pipe(
       delay(100),
@@ -90,11 +86,12 @@ export class ChatPageComponent extends AutoUnsub implements OnInit {
     el.scrollTop = (el.scrollHeight);
   }
 
-  sendNano(uid: string) {
-    this.addressSrv.getAddress(uid)
-      .subscribe(address => this.dialog.open(SendDialogComponent, { data: { address } }));
+  onInputFocus() {
+    this.scrollToBottom();
   }
 
-
+  sendNano(address: string) {
+    this.dialog.open(SendDialogComponent, { data: { address } });
+  }
 
 }

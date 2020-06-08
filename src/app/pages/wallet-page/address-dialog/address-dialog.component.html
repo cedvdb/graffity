@@ -1,0 +1,16 @@
+<h1 mat-dialog-title>Account</h1>
+<div class="flexCenter flexColumn" mat-dialog-content>
+
+  <div class="flexColumn flexCenter">
+    <app-qr-code 
+      [data]="walletSrv.address"
+      [text]="walletSrv.address">
+    </app-qr-code>
+  </div>
+  
+  <div mat-dialog-actions class="flexBetween">
+    <div class="spacer"></div>
+    <button mat-button mat-dialog-close>close</button>
+  </div>
+
+</div>

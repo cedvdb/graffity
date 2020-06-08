@@ -10,7 +10,7 @@ import { Message } from 'shared/collections';
 export class MessageComponent implements OnInit {
   @Input() message: Message;
   @Input() currentUserId: string;
-  @Output() userClick = new EventEmitter<string>();
+  @Output() sendNano = new EventEmitter<string>();
   private colors = ['var(--color-primary)', '#e06860', '#6d7cd4' , '#ef749e', '#a47def'];
   color = this.colors[0];
 
@@ -22,7 +22,7 @@ export class MessageComponent implements OnInit {
     if (this.message.createdBy.uid === this.currentUserId) {
       this.mine = true;
     }
-    // this.computeColor();
+    this.computeColor();
   }
 
   computeColor() {
@@ -30,6 +30,17 @@ export class MessageComponent implements OnInit {
     if (address) {
       this.color = this.colors[address.codePointAt(17) % 6];
     }
+  }
+
+  sendNanoClick() {
+    if (this.mine) {
+      return;
+    }
+    const address = this.message?.createdBy?.nanoAddress;
+    if (!address) {
+      return;
+    }
+    this.sendNano.emit(address);
   }
 
 }

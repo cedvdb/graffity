@@ -18,7 +18,7 @@
     class="mg-bottom-s"
     [message]="message"
     [currentUserId]="user?.uid"
-    (userClick)="sendNano($event)">
+    (sendNano)="sendNano($event)">
   </app-message>
 </div>
 
@@ -26,7 +26,7 @@
   <app-user-picture 
     class="mg-right-s"
     size="2"
-    [url]="user?.photoURL">
+    [url]="user.image">
   </app-user-picture>
   <textarea 
     #inp 
@@ -39,6 +39,7 @@
     cdkAutosizeMinRows="1"
     cdkAutosizeMaxRows="5"
     [(ngModel)]="newMsgContent"
+    (focus)="onInputFocus()"
     (keydown.enter)="postMessage($event)">
   </textarea>
   <button mat-icon-button (click)="postMessage($event)" color="primary">

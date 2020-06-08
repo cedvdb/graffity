@@ -1,9 +1,10 @@
 import * as firebase from 'firebase/app';
+import { Account } from 'nanocurrency-web/dist/lib/address-importer';
 
 
 export enum Col {
   MESSAGES = 'messages',
-  MESSAGES_GLOBAL = '',
+  GEO_MESSAGES = 'geo-messages',
   NANO_ADDRESSES = 'nano-addresses',
   NANO_WALLETS = 'nano-wallets',
   PRESENCE = 'presence',
@@ -24,6 +25,9 @@ export interface Message {
     nanoAddress: string
   };
   createdAt: number;
+}
+
+export interface GeoMessage extends Message {
   coordinates: firebase.firestore.GeoPoint;
 }
 
@@ -31,4 +35,16 @@ export interface User {
   uid: string;
   username: string;
   image: string;
+}
+
+export interface Wallet {
+  mnemonic: string;
+  seed: string;
+  account: Account;
+}
+
+export interface EncryptedWallet {
+  encrypted: string;
+  pwHash: string;
+  isDefaultPw: true;
 }

@@ -1,61 +1,91 @@
 
 
-<ng-container *ngIf="nanoSrv.walletStatus$ | async as status">
-  <div *ngIf="status === 'pending'" class="flex-center">
-    <mat-progress-spinner  mode="indeterminate"></mat-progress-spinner>
+  
+<div class="flexBetween top">
+  <h2>Nano Wallet:</h2> 
+  <div>
+    <button 
+      mat-raised-button 
+      color="accent" 
+      (click)="openSendDlg()">
+      Withdraw
+    </button>
   </div>
-  <div *ngIf="status === 'lost'" class="flexColumn">
-    <ng-container *ngIf="!recoveryPending">
-      <mat-form-field>
-        <mat-label>Mnemonic</mat-label>
-        <div class="flex">
-          <textarea matInput [(ngModel)]="recoveryMnemonic"></textarea>
-        </div>
-      </mat-form-field>
-      <button mat-button (click)="recover()">Recover</button>
+</div>
+
+<div class="info">
+
+  <div>
+    <div class="balance chip z-1" >
+      {{ walletSrv.balance}} Nano
+    </div>
+  </div>
+
+  <div>
+    <div class="address chip z-1 pointer" (click)="openAddressDlg()">
+      <fa-icon [icon]="faEye"></fa-icon> 
+      {{ walletSrv.address }}
+    </div>
+  </div>
+
+  <div>
+    <div class="chip pointer z-1" (click)="openSeedDlg()">
+       <fa-icon [icon]="faEye"></fa-icon> 
+       seed
+    </div>
+  </div>
+
+  <div *ngIf="legacyWalletSrv.legacyWalletDetected">
+
+    <hr/>
+    <h3>A legacy wallet was detected</h3>
+
+    <ng-template #spinner>
+      <div>This will take a while, hang on</div>
+      <mat-spinner></mat-spinner>
+    </ng-template>
+    <ng-container *ngIf="!legacySyncPending; else spinner">
+
+      <p>
+        A legacy wallet detected. Graffity switched to cloud wallets to be more
+        welcoming to new nanocomers. It's easier to switch device and not lose account 
+        and so on. <br/> <br/>
+  
+        You can choose to send the funds to your cloud wallet by clicking sync funds. 
+        This will destroy your local wallet after the funds are sent, you can back it up now with the info 
+        down the if you want to. <br/> <br/>
+  
+        If you don't care about this you can just remove the legacy wallet by
+        clicking I don't care. This will also destroy your local wallet.
+  
+        <br/> <br/>
+  
+      </p>
+
+      <div class="disclaimer">
+        If you have significant funds here (you shouldn't) back up your wallet
+      </div>
+  
+      <button mat-raised-button color="primary" class="mg-right-m" (click)="syncLegacy()">
+        Sync funds and destroy
+      </button>
+  
+      <button mat-raised-button color="warn" (click)="destroyLegacy()">
+        Destroy, I did not have funds
+      </button>
     </ng-container>
+
+    <app-qr-code 
+      [data]="legacyWalletSrv.legacyWallet.seed"
+      [text]="legacyWalletSrv.legacyWallet.mnemonic">
+    </app-qr-code>
+
   </div>
+  
+</div>
 
-  <ng-container *ngIf="status === 'success'">
-    <ng-container *ngIf="nanoSrv.wallet$ | async as wallet">
 
-      <!-- <div class="disclaimer">This app is a work in progress, if you have any funds here, please backup your wallet. 
-        I didn't have much time until submission so there is a couple qr codes down there and a json.
-      </div> -->
-  
-      <div class="flexBetween top">
-        <h2>Nano Wallet:</h2> 
-        <div>
-          <!-- <button mat-raised-button class="mg-right-m" color="primary" (click)="openSendDlg()">Add Funds</button> -->
-          <button mat-raised-button color="accent" (click)="openSendDlg()">Withdraw</button>
-        </div>
-      </div>
-      <div class="info">
-  
-        <div>
-          <div class="balance chip z-1" >
-            {{ nanoSrv.balance$ | async}} Nano
-          </div>
-        </div>
-  
-        <div>
-          <div class="address chip z-1">
-            {{ wallet?.accounts[0]?.address }}
-          </div>
-        </div>
-        
-      </div>
-  
-      <div class="flexColumn flexCenter">
-        <qrcode colordark="#4fb0bd" [qrdata]="wallet?.seed" [width]="256"></qrcode>
-        <div class="mnemonic flexCenter">{{ wallet.mnemonic }}</div>
-      </div>
       
-    </ng-container>
-
-  </ng-container>
-</ng-container>
-
 
 
 

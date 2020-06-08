@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { switchMap, filter, shareReplay, tap, map } from 'rxjs/operators';
+import { switchMap, filter, shareReplay, tap, map, first } from 'rxjs/operators';
 import { Col } from 'shared/collections';
 import { User } from 'shared/collections';
 
@@ -11,6 +11,7 @@ export class UserService {
 
   userSync: User;
   user$ = this.auth.user.pipe(
+    filter(user => !!user),
     switchMap(user => this.firestore.collection(Col.USER).doc<User>(user.uid).valueChanges()),
     tap(user => this.userSync = user),
     shareReplay(1)
@@ -24,6 +25,8 @@ export class UserService {
 
   createUser(username: string) {
     return this.auth.user.pipe(
+      filter(user => !!user),
+      first(),
       switchMap(user => this.firestore.collection(Col.USER).doc(user.uid).set({
           uid: user.uid,
           username: username.substr(0, 24),

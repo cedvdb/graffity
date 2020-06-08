@@ -1,40 +1,57 @@
 import { Component, OnInit } from '@angular/core';
-import { NanoService } from 'src/app/services/nano/nano.service';
 import { MatDialog } from '@angular/material/dialog';
 import { SendDialogComponent } from '../../components/send-dialog/send-dialog.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { WalletService } from 'src/app/services/wallet.service';
+import { faEye } from '@fortawesome/free-solid-svg-icons';
+import { AddressDialogComponent } from './address-dialog/address-dialog.component';
+import { SeedDialogComponent } from './seed-dialog/seed-dialog.component';
+import { LegacyWalletService } from 'src/app/services/legacy-wallet.service';
+import { AutoUnsub } from 'src/app/components/abstract-auto-unsub.component';
+import { first, takeUntil, take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-wallet-page',
   templateUrl: './wallet-page.component.html',
   styleUrls: ['./wallet-page.component.scss']
 })
-export class WalletPageComponent implements OnInit {
-  recoveryMnemonic: string;
-  recoveryPending = false;
+export class WalletPageComponent extends AutoUnsub implements OnInit {
+  faEye = faEye;
+  legacySyncPending = false;
 
   constructor(
-    public nanoSrv: NanoService,
+    public walletSrv: WalletService,
+    public legacyWalletSrv: LegacyWalletService,
     public dialog: MatDialog,
-    private snackNar: MatSnackBar
-  ) { }
+  ) {
+    super();
+  }
 
   ngOnInit(): void {
-    this.nanoSrv.fetchFunds();
+    this.walletSrv.refreshFunds()
+      .pipe(take(1), takeUntil(this.destroy$))
+      .subscribe();
   }
 
   openSendDlg() {
     this.dialog.open(SendDialogComponent);
   }
 
-  recover() {
-    if (!this.recoveryMnemonic) {
-      return this.snackNar.open('you need to input your mnemonic in the field above (24words)');
-    }
-    this.recoveryPending = true;
-    this.nanoSrv.recover(this.recoveryMnemonic)
-    .then(_ => this.recoveryPending = false);
+  openAddressDlg() {
+    this.dialog.open(AddressDialogComponent);
   }
 
+  openSeedDlg() {
+    this.dialog.open(SeedDialogComponent);
+  }
 
+  syncLegacy() {
+    this.legacySyncPending = true;
+    this.legacyWalletSrv.transferFundsToSynced()
+      .subscribe(_ => this.legacySyncPending = false);
+  }
+
+  destroyLegacy() {
+    this.legacyWalletSrv.destroy();
+  }
 }

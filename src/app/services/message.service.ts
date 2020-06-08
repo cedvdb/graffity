@@ -1,18 +1,17 @@
 import { Injectable } from '@angular/core';
-import { AngularFireAuth } from '@angular/fire/auth';
 import * as firebase from 'firebase/app';
 import { combineLatest, ReplaySubject } from 'rxjs';
 import { first, map, switchMap } from 'rxjs/operators';
-import { Col, Message } from 'shared/collections';
+import { Col, Message, GeoMessage } from 'shared/collections';
 import { log } from 'simply-logs';
 import { GeofireService } from './geofire.service';
 import { Coordinates, GeolocationService } from './geolocation.service';
-import { NanoService } from './nano/nano.service';
 import { UserService } from './user.service';
+import { WalletService } from './wallet.service';
 
 @Injectable({ providedIn: 'root' })
-export class MessageService {
-  messagesCol = this.geofireSrv.collection(Col.MESSAGES);
+export class GeoMessageService {
+  messagesCol = this.geofireSrv.collection(Col.GEO_MESSAGES);
   private messages = [];
   private messagesSubj$ = new ReplaySubject<Message[]>(1);
   messages$ = this.messagesSubj$.asObservable().pipe();
@@ -22,7 +21,7 @@ export class MessageService {
   constructor(
     private geofireSrv: GeofireService,
     private geolocationSrv: GeolocationService,
-    private nanoSrv: NanoService,
+    private walletSrv: WalletService,
     private userSrv: UserService
   ) {
 
@@ -68,11 +67,11 @@ export class MessageService {
           uid: user.uid,
           image: user.image,
           username: user.username,
-          nanoAddress: this.nanoSrv.getAddressSync() || ''
+          nanoAddress: this.walletSrv.address
         },
         coordinates: new firebase.firestore.GeoPoint(coords.lat, coords.long),
         createdAt: Date.now()
-      } as Message)),
+      } as GeoMessage)),
       switchMap(message => this.messagesCol.add(message))
     ).pipe(first());
   }

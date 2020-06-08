@@ -15,6 +15,8 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatCardModule } from '@angular/material/card';
+import { ClipboardModule } from '@angular/cdk/clipboard';
+import { QrCodeModule } from './qr-code/qr-code.module';
 
 @NgModule({
   declarations: [],
@@ -34,11 +36,13 @@ import { MatCardModule } from '@angular/material/card';
     MatInputModule,
     MatSnackBarModule,
     MatProgressSpinnerModule,
-    MatTooltipModule,
     MatChipsModule,
     MatCardModule,
+    MatTooltipModule,
+    ClipboardModule,
     // here
-    UserPictureModule
+    UserPictureModule,
+    QrCodeModule
   ]
 })
 export class SharedModule { }

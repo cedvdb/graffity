@@ -1,0 +1,14 @@
+
+
+.under-qr {
+  width: 226px;
+  background: #eee;
+  word-break: break-word;
+  padding: var(--spacing-s);
+  border-radius: var(--spacing-border-radius-s);
+  box-sizing: border-box;
+  cursor: pointer;
+  fa-icon {
+    margin-right: var(--spacing-s);
+  }
+}

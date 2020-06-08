@@ -5,10 +5,6 @@
   overflow-y: auto;
 }
 
-.disclaimer {
-  margin-bottom: var(--spacing-m);
-  color: var(--color-warn);
-}
 
 .top {
   margin-bottom: var(--spacing-m);
@@ -29,6 +25,7 @@
   border-radius: 1rem;
   display: inline-block;
   word-break: break-word;
+  background: #eee;
 }
 
 .balance {
@@ -40,6 +37,7 @@
   background: var(--color-accent);
 }
 
-.mnemonic {
-  width: 256px;
+.disclaimer {
+  color: var(--color-warn);
+  margin: var(--spacing-m) 0;
 }

@@ -1,17 +1,22 @@
 import { Injectable } from '@angular/core';
 import { block } from 'nanocurrency-web';
-import { Wallet } from 'nanocurrency-web/dist/lib/address-importer';
 import { AccountInfo, BlockInfo } from './nano.interfaces';
 import { Helper } from './helper.utils';
+import { Wallet } from 'shared/collections';
 
 
 @Injectable({ providedIn: 'root' })
 export class BlockService {
 
 
-  async getSignedReceiveBlock(wlt: Wallet, accountInfo: AccountInfo, info: BlockInfo, transactionHash: string) {
+  async getSignedReceiveBlock(
+    wallet: Wallet,
+    accountInfo: AccountInfo,
+    info: BlockInfo,
+    transactionHash: string
+  ) {
     const worker = new Worker('./nano.worker', { type: 'module' });
-    const hashToCompute = accountInfo.frontier || Helper.getWalletAccount(wlt).publicKey;
+    const hashToCompute = accountInfo?.frontier || wallet.account.publicKey;
     const work: string = await new Promise(resolve => {
       worker.postMessage(hashToCompute);
       worker.onmessage = ev => {
@@ -21,13 +26,13 @@ export class BlockService {
     });
     const data = {
       // Your current balance in RAW
-      walletBalanceRaw: accountInfo.balance || '0',
+      walletBalanceRaw: accountInfo?.balance || '0',
       // Your address
-      toAddress: Helper.getWalletAddr(wlt),
+      toAddress: wallet.account.address,
       // From wallet info
       representativeAddress: info.contents.representative,
       // From wallet info
-      frontier: accountInfo.frontier ||
+      frontier: accountInfo?.frontier ||
       '0000000000000000000000000000000000000000000000000000000000000000',
       // From the pending transaction
       transactionHash,
@@ -36,18 +41,18 @@ export class BlockService {
       work
     };
     // Returns a correctly formatted and signed block ready to be sent to the blockchain
-    return block.receive(data, Helper.getWalletAccount(wlt).privateKey);
+    return block.receive(data, wallet.account.privateKey);
   }
 
   async getSignedSendBlock(
-    wlt: Wallet,
+    wallet: Wallet,
     accountInfo: AccountInfo,
     amountRaw: any,
     toAddress: string,
     representativeAddress: string
   ) {
     const worker = new Worker('./nano.worker', { type: 'module' });
-    const hashToCompute = accountInfo.frontier || Helper.getWalletAccount(wlt).publicKey;
+    const hashToCompute = accountInfo.frontier;
     const work: string = await new Promise(resolve => {
       worker.postMessage(hashToCompute);
       worker.onmessage = ev => {
@@ -57,7 +62,7 @@ export class BlockService {
     });
     const data = {
       walletBalanceRaw: accountInfo.balance,
-      fromAddress: Helper.getWalletAddr(wlt),
+      fromAddress: wallet.account.address,
       toAddress,
       representativeAddress,
       frontier: accountInfo.frontier,
@@ -65,6 +70,6 @@ export class BlockService {
       work
     };
     // Returns a correctly formatted and signed block ready to be sent to the blockchain
-    return block.send(data, Helper.getWalletAccount(wlt).privateKey);
+    return block.send(data, wallet.account.privateKey);
   }
 }
