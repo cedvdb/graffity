@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { Message, Col } from 'shared/collections';
 import { UserService } from '../user.service';
 import { WalletService } from '../wallet.service';
+import { map } from 'rxjs/operators';
 
 
 @Injectable({ providedIn: 'root' })
@@ -21,7 +22,9 @@ export class GlobalMessageService {
     this.messages$ = this.firestore.collection<Message>(
       Col.GLOBAL_MESSAGES,
       ref => ref.orderBy('createdAt', 'desc').limit(50)
-    ).valueChanges();
+    ).valueChanges().pipe(
+      map((messages: Message[]) => messages.reverse())
+    );
   }
 
   send(content: string) {
