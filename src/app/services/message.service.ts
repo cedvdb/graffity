@@ -11,7 +11,7 @@ import { WalletService } from './wallet.service';
 
 @Injectable({ providedIn: 'root' })
 export class MessageService {
-  messagesCol = this.geofireSrv.collection(Col.MESSAGES);
+  messagesCol = this.geofireSrv.collection(Col.GEO_MESSAGES);
   private messages = [];
   private messagesSubj$ = new ReplaySubject<Message[]>(1);
   messages$ = this.messagesSubj$.asObservable().pipe();
