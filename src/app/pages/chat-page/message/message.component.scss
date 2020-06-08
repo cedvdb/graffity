@@ -25,6 +25,14 @@
     // so we override the style color
     background: #dcdcdc!important;
     color: #333!important;
+    .time {
+      color: #333333cc;
+    }
+  }
+
+  .time {
+    font-size: 0.8rem;
+    color: #ffffffcc;
   }
 }
 
