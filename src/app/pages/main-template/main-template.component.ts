@@ -2,6 +2,7 @@ import { Component, HostListener, OnInit } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { Router } from '@angular/router';
 import { faBars, faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
+import { ChatRouterService } from 'src/app/services/chat-router.service';
 import { GeolocationService } from 'src/app/services/geolocation.service';
 import { MessageService } from 'src/app/services/message.service';
 import { PresenceService } from 'src/app/services/presence.service';
@@ -18,7 +19,7 @@ import { LegacyWalletService } from 'src/app/services/_nano/legacy-wallet.servic
   }
 })
 export class MainTemplateComponent implements OnInit {
-  barsIcon = faBars;
+  faBars = faBars;
   signOutIcon = faSignOutAlt;
   isNavOpened = true;
 
@@ -26,6 +27,7 @@ export class MainTemplateComponent implements OnInit {
     private auth: AngularFireAuth,
     private router: Router,
     private geolocationSrv: GeolocationService,
+    private chatRouterSrv: ChatRouterService,
     private messageSrv: MessageService,
     private presenceSrv: PresenceService,
     private walletSrv: WalletService,
@@ -35,6 +37,7 @@ export class MainTemplateComponent implements OnInit {
 
   ngOnInit() {
     this.geolocationSrv.getUserCoordinates();
+    this.chatRouterSrv.init();
     this.messageSrv.init();
     this.presenceSrv.init();
     this.walletSrv.init();
@@ -56,19 +59,19 @@ export class MainTemplateComponent implements OnInit {
     this.router.navigate(['sign-in']);
   }
 
-  listenToLocationMessages() {
+  goToLocalChat() {
     // navigate back in case we are in wallet
     this.router.navigate(['chat']);
-    this.messageSrv.listenToLocationMessages();
+    this.chatRouterSrv.goToLocalChat();
   }
 
-  listenToGlobalMessages() {
+  goToGlobalChat() {
     this.router.navigate(['chat']);
-    this.messageSrv.listenToGlobalMessages();
+    this.chatRouterSrv.goToGlobalChat();
   }
 
   get isGlobal() {
-    return this.messageSrv.isGlobal();
+    return this.chatRouterSrv.isGlobal;
   }
 
 

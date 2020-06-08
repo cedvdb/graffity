@@ -7,7 +7,8 @@ export enum Col {
   GEO_MESSAGES = 'geo-messages',
   NANO_ADDRESSES = 'nano-addresses',
   NANO_WALLETS = 'nano-wallets',
-  PRESENCE = 'presence',
+  GLOBAL_PRESENCE = 'global-presence',
+  GEO_PRESENCE = 'geo-presence',
   USER = 'users'
 }
 
@@ -47,4 +48,15 @@ export interface EncryptedWallet {
   encrypted: string;
   pwHash: string;
   isDefaultPw: true;
+}
+
+export interface GlobalPresence {
+  // uid: number
+  [key: string]: number;
+}
+
+export interface GeoPresence {
+  uid: string;
+  date: number;
+  coordinates: firebase.firestore.GeoPoint;
 }

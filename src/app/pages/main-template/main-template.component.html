@@ -7,13 +7,13 @@
       <div 
         class="location mg-bottom-s" 
         [ngClass]="{ 'here': isGlobal }"
-        (click)="listenToGlobalMessages()">
-        Global Room
+        (click)="goToGlobalChat()">
+        Global
       </div>
       <div 
         class="location mg-bottom-m" 
         [ngClass]="{ 'here': !isGlobal }"
-        (click)="listenToLocationMessages()">
+        (click)="goToLocalChat()">
         Here
       </div>
     </div>
@@ -28,7 +28,7 @@
 </nav>
 
 <main class="z-2">
-  <fa-icon class="trigger" [icon]="barsIcon" (click)="openNav($event)"></fa-icon>
+  <fa-icon class="trigger" [icon]="faBars" (click)="openNav($event)"></fa-icon>
   <div class="content">
     <router-outlet></router-outlet>
   </div>

@@ -56,12 +56,10 @@ export class GeoMessageService {
 
   }
 
-  send(content: string) {
-    return combineLatest([
-      this.geolocationSrv.userCoordinates$,
-      this.userSrv.user$,
-    ]).pipe(
-      map(([coords, user]) => ({
+  async send(content: string) {
+    const coords = await this.geolocationSrv.userCoordinates$.pipe(first()).toPromise();
+    const user = this.userSrv.userSync;
+    const message: GeoMessage = {
         content,
         createdBy: {
           uid: user.uid,
@@ -71,9 +69,8 @@ export class GeoMessageService {
         },
         coordinates: new firebase.firestore.GeoPoint(coords.lat, coords.long),
         createdAt: Date.now()
-      } as GeoMessage)),
-      switchMap(message => this.messagesCol.add(message))
-    ).pipe(first());
+    };
+    return this.messagesCol.add(message);
   }
 
 }
