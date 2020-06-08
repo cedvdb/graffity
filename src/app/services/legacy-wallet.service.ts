@@ -7,6 +7,8 @@ import { filter, switchMap, tap, delay } from 'rxjs/operators';
 import { Wallet } from 'shared/collections';
 import { NanoService } from './nano/nano.service';
 import { WalletService } from './wallet.service';
+import { AccountInfo } from './nano/nano.interfaces';
+import { of } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class LegacyWalletService {
@@ -25,26 +27,31 @@ export class LegacyWalletService {
   init() {
     this.auth.user.pipe(
       filter(user => !!user),
-      tap(d => { debugger; })
-     ).subscribe(user => this.checkLegacyWallet(user));
+    ).subscribe(user => this.checkLegacyWallet(user));
   }
 
   transferFundsToSynced() {
-    const currentAddress = this.walletSrv.wallet.account.address;
     const legacyAddress = this.legacyWallet.account.address;
     return this.nanoSrv.getAccountInfo(legacyAddress).pipe(
-      switchMap(accountInfo => this.nanoSrv.getPendingTransactions(this.legacyWallet, accountInfo)),
-      switchMap(accountInfo => this.nanoSrv.send(
-        currentAddress,
+      switchMap(accountInfo => this.nanoSrv
+          .getPendingTransactions(this.legacyWallet, accountInfo)),
+      switchMap(accountInfo => this.sendIfNeeded(accountInfo)),
+      delay(2000),
+      switchMap(_ => this.walletSrv.refreshFunds())
+    );
+  }
+
+  private sendIfNeeded(accountInfo: AccountInfo) {
+    if (Number(accountInfo.balance) > 0) {
+      return this.nanoSrv.send(
+        this.walletSrv.address,
         accountInfo.balance,
         accountInfo,
         this.legacyWallet
-        )
-      ),
-      delay(4000),
-      switchMap(_ => this.walletSrv.refreshFunds())
-    );
-
+      );
+    } else {
+      return of(false);
+    }
   }
 
   private checkLegacyWallet(user: firebase.User) {

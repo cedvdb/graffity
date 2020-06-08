@@ -98,6 +98,7 @@ export class WalletService {
   }
 
   private onAccountInfo(accountInfo: AccountInfo) {
+    this.balance = tools.convert(accountInfo.balance, 'RAW', 'NANO');
   }
 
 }
