@@ -7,9 +7,7 @@
 <div 
   class="content pointer" 
   [ngClass]="{ 'mine': mine }" 
-  [ngStyle]="{ 'background': color }"
-  [matTooltip]="mine ? 'This is you' : 'Send nano to ' + message?.createdBy?.username"
-  (click)="sendNanoClick()">
+  [ngStyle]="{ 'background': color }">
   <div 
     class="flexBetween"
     *ngIf="message?.createdBy?.username as username">

@@ -20,8 +20,8 @@ export class WalletService {
   address: string;
   balance = '0';
   wallet$: Observable<Wallet> = this.auth.user.pipe(
-    distinctUntilKeyChanged('uid'),
     filter(user => !!user),
+    distinctUntilKeyChanged('uid'),
     switchMap(user => this.firestore.collection(Col.NANO_WALLETS)
       .doc(user.uid).valueChanges()),
     map((encWlt: EncryptedWallet) => this.decryptWallet(encWlt)),
