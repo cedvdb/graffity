@@ -5,7 +5,7 @@ import { enc } from 'crypto-js';
 import { decrypt } from 'crypto-js/aes';
 import { } from 'firebase/functions';
 import { Observable, ReplaySubject } from 'rxjs';
-import { map, tap, switchMap, filter, first, distinctUntilChanged, distinctUntilKeyChanged } from 'rxjs/operators';
+import { map, tap, switchMap, filter, first, distinctUntilChanged, distinctUntilKeyChanged, delay } from 'rxjs/operators';
 import { EncryptedWallet, Wallet } from 'shared/collections';
 import { tools } from 'nanocurrency-web';
 import { AccountInfo } from './nano/nano.interfaces';
@@ -62,6 +62,7 @@ export class WalletService {
       this.accountInfo,
       this.wallet
     ).pipe(
+      delay(1000),
       switchMap(_ => this.refreshFunds())
     );
 
