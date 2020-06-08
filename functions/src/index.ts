@@ -31,6 +31,7 @@ export const getWallet = functions.https.onCall(async (data, context) => {
 });
 
 async function createDefaultWallet(uid: string) {
+  console.log('creating for user ', uid);
   // default password: NanoRocks, hashed with https://emn178.github.io/online-tools/sha256.html
   const DEFAULT_PW = 'NanoRocks';
   const DEFAULT_PW_HASH = '44e6c658d0164e0f3f8d5f2f68dc0e471ece755272d641e33cdab27c1976a899';

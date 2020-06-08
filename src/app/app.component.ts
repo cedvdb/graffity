@@ -1,5 +1,5 @@
 import { Component, HostListener, OnInit } from '@angular/core';
-import { PresenceService } from './services/presence.service';
+import { AngularFireFunctions } from '@angular/fire/functions';
 import { HasUserGuard } from './guards/has-user.guard';
 import { HasWalletGuard } from './guards/has-wallet.guard';
 
@@ -12,7 +12,7 @@ export class AppComponent implements OnInit {
 
   constructor(
     public hasUserGuard: HasUserGuard,
-    public hasWalletGuard: HasWalletGuard
+    public hasWalletGuard: HasWalletGuard,
   ) {}
 
   ngOnInit() {
