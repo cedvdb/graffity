@@ -4,7 +4,7 @@ import { enc } from 'crypto-js';
 import { decrypt } from 'crypto-js/aes';
 import { Wallet as WalletWeb } from 'nanocurrency-web/dist/lib/address-importer';
 import { of } from 'rxjs';
-import { delay, filter, switchMap, tap } from 'rxjs/operators';
+import { filter, switchMap, tap } from 'rxjs/operators';
 import { Wallet } from 'shared/collections';
 import { AccountInfo } from './nano/nano.interfaces';
 import { NanoService } from './nano/nano.service';
@@ -36,7 +36,6 @@ export class LegacyWalletService {
       switchMap(accountInfo => this.nanoSrv
           .getPendingTransactions(this.legacyWallet, accountInfo)),
       switchMap(accountInfo => this.sendIfNeeded(accountInfo)),
-      delay(2000),
       switchMap(_ => this.walletSrv.refreshFunds()),
       tap(_ => this.destroy())
     );

@@ -4,10 +4,10 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { enc } from 'crypto-js';
 import { decrypt } from 'crypto-js/aes';
 import { } from 'firebase/functions';
-import { Observable, ReplaySubject } from 'rxjs';
-import { map, tap, switchMap, filter, first, distinctUntilChanged, distinctUntilKeyChanged, delay } from 'rxjs/operators';
-import { EncryptedWallet, Wallet } from 'shared/collections';
 import { tools } from 'nanocurrency-web';
+import { Observable } from 'rxjs';
+import { distinctUntilKeyChanged, filter, map, switchMap, tap } from 'rxjs/operators';
+import { EncryptedWallet, Wallet } from 'shared/collections';
 import { AccountInfo } from './nano/nano.interfaces';
 import { NanoService } from './nano/nano.service';
 
@@ -62,8 +62,7 @@ export class WalletService {
       this.accountInfo,
       this.wallet
     ).pipe(
-      delay(1000),
-      switchMap(_ => this.refreshFunds())
+      tap(accountInfo => this.onAccountInfo(accountInfo))
     );
 
   }

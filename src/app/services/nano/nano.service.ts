@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { concat, Observable, of } from 'rxjs';
-import { map, mergeMap, retry, switchMap, tap } from 'rxjs/operators';
+import { map, mergeMap, retry, switchMap, tap, delay } from 'rxjs/operators';
 import { Wallet } from 'shared/collections';
 import { log } from 'simply-logs';
 import { BlockService } from './block.service';
@@ -56,7 +56,10 @@ export class NanoService {
         toAddress,
         representativeAddress
       )),
-      switchMap(sendBlock => this.nanoRpc.process('send', sendBlock))
+      switchMap(sendBlock => this.nanoRpc.process('send', sendBlock)),
+      delay(2000),
+      switchMap(successResp => this.getAccountInfo(wallet.account.address)),
+      tap(_ => this.snackBar.open('nanos sent', 'ok', { duration: 3000 }))
     );
   }
 
@@ -70,6 +73,7 @@ export class NanoService {
         )
       ),
       switchMap(signedBlock => this.nanoRpc.process('receive', signedBlock)),
+      delay(2000),
       switchMap(successResp => this.getAccountInfo(wallet.account.address)),
       tap(_ => this.snackBar.open('You just received nano, check your wallet', 'ok'))
     );
