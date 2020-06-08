@@ -3,12 +3,12 @@ import { AngularFireAuth } from '@angular/fire/auth';
 import { enc } from 'crypto-js';
 import { decrypt } from 'crypto-js/aes';
 import { Wallet as WalletWeb } from 'nanocurrency-web/dist/lib/address-importer';
-import { filter, switchMap, tap, delay } from 'rxjs/operators';
+import { of } from 'rxjs';
+import { delay, filter, switchMap, tap } from 'rxjs/operators';
 import { Wallet } from 'shared/collections';
+import { AccountInfo } from './nano/nano.interfaces';
 import { NanoService } from './nano/nano.service';
 import { WalletService } from './wallet.service';
-import { AccountInfo } from './nano/nano.interfaces';
-import { of } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class LegacyWalletService {
@@ -37,7 +37,8 @@ export class LegacyWalletService {
           .getPendingTransactions(this.legacyWallet, accountInfo)),
       switchMap(accountInfo => this.sendIfNeeded(accountInfo)),
       delay(2000),
-      switchMap(_ => this.walletSrv.refreshFunds())
+      switchMap(_ => this.walletSrv.refreshFunds()),
+      tap(_ => this.destroy())
     );
   }
 
@@ -71,7 +72,7 @@ export class LegacyWalletService {
     };
   }
 
-  remove() {
+  destroy() {
     localStorage.removeItem(this.storageKey);
     this.legacyWallet = undefined;
     this.legacyWalletDetected = undefined;

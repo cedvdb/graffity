@@ -52,6 +52,6 @@ export class WalletPageComponent extends AutoUnsub implements OnInit {
   }
 
   destroyLegacy() {
-    this.legacyWalletSrv.remove();
+    this.legacyWalletSrv.destroy();
   }
 }

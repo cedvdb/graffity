@@ -33,21 +33,15 @@ export class WalletService {
 
   init() {
     // get account info for address
-    const accountInfo$ = this.wallet$.pipe(
+    this.wallet$.pipe(
       map(wlt => wlt.account.address),
       switchMap(address => this.nanoSrv.getAccountInfo(address)),
-    );
-    // when wallet account info set the balance to nano
-    accountInfo$.pipe(
+      tap(accountInfo => this.onAccountInfo(accountInfo)),
       // no account info when wallet just created
       filter(accountInfo => !!accountInfo),
-    ).subscribe(accountInfo => this.onAccountInfo(accountInfo));
-
-    // when wallet first account info fetch pending transactions
-    accountInfo$.pipe(
-      first(),
       switchMap(accountInfo => this.nanoSrv.getPendingTransactions(this.wallet, accountInfo))
     ).subscribe(accountInfo => this.onAccountInfo(accountInfo));
+    // when wallet account info set the balance to nano
   }
 
   refreshFunds() {
@@ -98,7 +92,8 @@ export class WalletService {
   }
 
   private onAccountInfo(accountInfo: AccountInfo) {
-    this.balance = tools.convert(accountInfo.balance, 'RAW', 'NANO');
+    this.accountInfo = accountInfo;
+    this.balance = tools.convert(accountInfo?.balance || '0' , 'RAW', 'NANO');
   }
 
 }

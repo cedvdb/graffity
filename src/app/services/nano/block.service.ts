@@ -16,7 +16,7 @@ export class BlockService {
     transactionHash: string
   ) {
     const worker = new Worker('./nano.worker', { type: 'module' });
-    const hashToCompute = accountInfo.frontier || wallet.account.publicKey;
+    const hashToCompute = accountInfo?.frontier || wallet.account.publicKey;
     const work: string = await new Promise(resolve => {
       worker.postMessage(hashToCompute);
       worker.onmessage = ev => {
@@ -26,13 +26,13 @@ export class BlockService {
     });
     const data = {
       // Your current balance in RAW
-      walletBalanceRaw: accountInfo.balance || '0',
+      walletBalanceRaw: accountInfo?.balance || '0',
       // Your address
       toAddress: wallet.account.address,
       // From wallet info
       representativeAddress: info.contents.representative,
       // From wallet info
-      frontier: accountInfo.frontier ||
+      frontier: accountInfo?.frontier ||
       '0000000000000000000000000000000000000000000000000000000000000000',
       // From the pending transaction
       transactionHash,
@@ -52,7 +52,7 @@ export class BlockService {
     representativeAddress: string
   ) {
     const worker = new Worker('./nano.worker', { type: 'module' });
-    const hashToCompute = accountInfo.frontier || wallet.account.publicKey;
+    const hashToCompute = accountInfo.frontier;
     const work: string = await new Promise(resolve => {
       worker.postMessage(hashToCompute);
       worker.onmessage = ev => {
