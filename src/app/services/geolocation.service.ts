@@ -27,9 +27,9 @@ export class GeolocationService {
   init() {
     this.http.get(environment.geoIpApi.url).pipe(
       map((resp: any) => ({
-        lat: resp.lat,
-        long: resp.lon,
-        country: resp.country,
+        lat: parseFloat(resp.latitude),
+        long: parseFloat(resp.longitude),
+        country: resp.country_name,
         city: resp.city
       }))
     ).subscribe(coords => this.userCoordinates$.next(coords));

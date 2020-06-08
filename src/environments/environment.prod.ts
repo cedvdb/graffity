@@ -17,6 +17,6 @@ export const environment = {
     url: 'https://mynano.ninja/api/node'
   },
   geoIpApi: {
-    url: 'http://ip-api.com/json/'
+    url: 'https://api.ipgeolocation.io/ipgeo?apiKey=38c87cf94d044b69a4a7bf3c2234260f'
   }
 };
